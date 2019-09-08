@@ -22,8 +22,10 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-      ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
 
 logging:
   file: logs/bjs-api.log
