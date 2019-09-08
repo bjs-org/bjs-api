@@ -3,11 +3,16 @@ server:
   address: 0.0.0.0
 
 spring:
+  data:
+    rest:
+      base-path: /api/v1
+  
   datasource:
     url: jdbc:postgresql://bjs.system.model.db:5432/bjs-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+  
   jpa:
     properties:
       hibernate:
@@ -21,5 +26,5 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
 
 logging:
-  file: bjs-api.log
+  file: logs/bjs-api.log
 

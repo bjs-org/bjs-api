@@ -1,5 +1,6 @@
 package com.bjs.bjsapi.database.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,8 +13,9 @@ public class Class {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	private Long id;
 
+	@Column(nullable = false)
 	private String className;
 
 	private String classTeacherName;
@@ -33,4 +35,5 @@ public class Class {
 	public void setClassTeacherName(String classTeacherName) {
 		this.classTeacherName = classTeacherName;
 	}
+
 }
