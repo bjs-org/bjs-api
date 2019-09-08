@@ -3,7 +3,7 @@ ENV APP_HOME=/usr/src/app/
 WORKDIR $APP_HOME
 
 COPY . /usr/src/app
-RUN cd /usr/src/app && ./gradlew bootJar
+RUN cd /usr/src/app && ./gradlew bootJar --console=plain
 
 FROM balenalib/%%BALENA_MACHINE_NAME%%-openjdk:8-jdk-latest
 

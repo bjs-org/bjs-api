@@ -1,8 +1,7 @@
 version: '2'
 
 volumes:
-  db-data:
-    driver: local
+  db-data: {}
 
 services:
   bjs.system.model.api:
@@ -12,6 +11,8 @@ services:
     ports:
       - 8080:8080
   bjs.system.model.db:
-    extends:
-      file: docker-compose.db.yml
-      service: db
+    build: db
+    volumes:
+      - db-data:/var/lib/postgresql/10/main
+    ports:
+      - 5432:5432

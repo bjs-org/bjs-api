@@ -43,3 +43,7 @@ dependencies {
 wrapper {
 	gradleVersion = "5.4"
 }
+
+test {
+	systemProperty 'spring.profiles.active', 'local'
+}

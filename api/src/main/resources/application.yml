@@ -8,9 +8,9 @@ spring:
       base-path: /api/v1
   
   datasource:
-    url: jdbc:postgresql://bjs.system.model.db:5432/bjs-db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://bjs.system.model.db:5432/db
+    username: docker
+    password: docker
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -22,7 +22,7 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     generate-ddl: true
     hibernate:
       ddl-auto: update
