@@ -17,9 +17,7 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
-@Table(name = "students", uniqueConstraints = {
-	@UniqueConstraint(columnNames = { "firstName", "lastName" })
-})
+@Table(name = "students")
 public class Student {
 
 	@Id
