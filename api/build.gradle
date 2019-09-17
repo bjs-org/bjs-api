@@ -1,8 +1,9 @@
 plugins {
-	id 'java'
-	id 'idea'
-	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id 'org.springframework.boot' version '2.1.9.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.3'
+	id 'idea'
+	id 'java'
 }
 
 group = 'com.bjs'
@@ -23,30 +24,40 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	compile 'org.postgresql:postgresql'
-	compile 'org.springframework.boot:spring-boot-starter'
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compile 'org.springframework.boot:spring-boot-starter-data-rest'
-	compile 'org.springframework.boot:spring-boot-starter-jdbc'
-	compile 'org.springframework.data:spring-data-rest-hal-browser'
-	compile 'com.fasterxml.jackson.core:jackson-core'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation "junit:junit:4.12"
-	testImplementation "org.assertj:assertj-core:3.10.0"
+ext {
+	snippetsDir = file('build/generated-snippets')
 }
 
-wrapper {
-	gradleVersion = "5.4"
+dependencies {
+	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.0.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.data:spring-data-rest-hal-browser'
+	implementation 'com.fasterxml.jackson.core:jackson-core'
+	compile 'org.springframework.security:spring-security-data'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-core'
 }
 
 test {
-	systemProperty 'spring.profiles.active', 'local'
+	outputs.dir snippetsDir
+	useJUnit()
+	System.setProperty("line.separator","\n")
 }
 
-compileJava.dependsOn(processResources)
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}

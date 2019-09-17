@@ -1,0 +1,67 @@
+{
+  "_embedded" : {
+    "students" : [ {
+      "firstName" : "second",
+      "lastName" : "Student",
+      "birthDay" : "2002-03-28",
+      "female" : true,
+      "_links" : {
+        "self" : {
+          "href" : "[MASK]"
+        },
+        "student" : {
+          "href" : "[MASK]"
+        },
+        "score" : {
+          "href" : "[MASK]"
+        },
+        "class" : {
+          "href" : "[MASK]"
+        }
+      }
+    }, {
+      "firstName" : "fourth",
+      "lastName" : "Student",
+      "birthDay" : "2002-03-28",
+      "female" : false,
+      "_links" : {
+        "self" : {
+          "href" : "[MASK]"
+        },
+        "student" : {
+          "href" : "[MASK]"
+        },
+        "score" : {
+          "href" : "[MASK]"
+        },
+        "class" : {
+          "href" : "[MASK]"
+        }
+      }
+    }, {
+      "firstName" : "sixth",
+      "lastName" : "Student",
+      "birthDay" : "2002-03-28",
+      "female" : true,
+      "_links" : {
+        "self" : {
+          "href" : "[MASK]"
+        },
+        "student" : {
+          "href" : "[MASK]"
+        },
+        "score" : {
+          "href" : "[MASK]"
+        },
+        "class" : {
+          "href" : "[MASK]"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "[MASK]"
+    }
+  }
+}

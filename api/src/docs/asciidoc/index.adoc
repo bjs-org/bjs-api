@@ -1,0 +1,61 @@
+= BJS-API Documentation
+:doctype: book
+:toc: left
+:toclevels: 4
+:source-highlighter: highlightjs
+:highlightjs-theme: github
+:operation-http-request-title: Example request
+:operation-http-response-title: Example response
+
+== Introduction
+
+This API was made for a sport event called https://www.bundesjugendspiele.de[BJS].
+With this API all events, results and classes can be managed.
+
+=== Usage of HTTP Verbs
+
+|===
+|HTTP Verb|Usage
+
+|GET
+|GET is used to retrieve information/get objects from the api
+
+|POST
+|POST is used to create new objects
+
+|DELETE
+|DELETE is used to delete objects at the api
+
+|PUT
+|PUT is used to replace information regarding an existing object
+
+|PATCH
+|PATCH is used to change and update information of an existing object
+|===
+
+== User management
+
+This API puts value on security (authentication and authorization).
+That means it protects the students' sport results, so only those with given access can see and change the information.
+
+=== Login
+
+To authenticate as an user, this API uses *Basic Authentication* meaning the user information has to be passed in the HTTP-Header.
+
+=== Registration
+
+User accounts can only be created by admins.
+See * for more information.
+// TODO add link to user creation
+
+=== User Rights
+
+In general only authenticated users can communicate with this API.
+To get and change information this user must have the privileges to do so.
+Also only admins can create and delete objects.
+
+include::classes.adoc[]
+
+include::students.adoc[]
+
+include::users.adoc[]

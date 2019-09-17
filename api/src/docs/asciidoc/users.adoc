@@ -1,0 +1,31 @@
+== Users
+
+=== Create User
+
+operation::users-post[snippets='request-fields,http-request,response-fields,http-response']
+
+=== Get all users
+
+operation::users-get-all[snippets='http-request,response-fields,http-response']
+
+=== Get user by ID
+
+operation::users-get-byId[snippets='path-parameters,http-request,response-fields,http-response']
+
+=== Get user by username
+
+operation::users-get-byUsername[snippets='request-parameters,http-request,response-fields,http-response']
+
+=== Edit student
+
+operation::users-patch[snippets='path-parameters,request-fields,http-request,response-fields,http-response']
+
+=== Replace student
+
+operation::users-put[snippets='path-parameters,request-fields,http-request,response-fields,http-response']
+
+=== Delete student
+
+operation::users-delete[snippets='path-parameters,http-request,http-response']
+
+
