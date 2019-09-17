@@ -1,0 +1,29 @@
+{
+  "_embedded" : {
+    "students" : [ {
+      "firstName" : "first",
+      "lastName" : "Student",
+      "birthDay" : "2002-03-28",
+      "female" : true,
+      "_links" : {
+        "self" : {
+          "href" : "[MASK]"
+        },
+        "student" : {
+          "href" : "[MASK]"
+        },
+        "score" : {
+          "href" : "[MASK]"
+        },
+        "class" : {
+          "href" : "[MASK]"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "[MASK]"
+    }
+  }
+}

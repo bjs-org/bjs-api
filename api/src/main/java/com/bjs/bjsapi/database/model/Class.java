@@ -15,7 +15,7 @@ public class Class {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String className;
 
 	private String classTeacherName;
@@ -34,6 +34,17 @@ public class Class {
 
 	public void setClassTeacherName(String classTeacherName) {
 		this.classTeacherName = classTeacherName;
+	}
+
+	public Class() {
+	}
+
+	public Class(String className) {
+		this.className = className;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }

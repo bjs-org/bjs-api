@@ -1,0 +1,21 @@
+{
+  "_embedded" : {
+    "classes" : [ {
+      "className" : "privilegedClass",
+      "classTeacherName" : "ClassTeacher",
+      "_links" : {
+        "self" : {
+          "href" : "[MASK]"
+        },
+        "class" : {
+          "href" : "[MASK]"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "[MASK]"
+    }
+  }
+}
