@@ -59,4 +59,8 @@ public class SportResult {
 		this.discipline = discipline;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
 }

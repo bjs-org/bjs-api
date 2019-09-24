@@ -35,17 +35,22 @@ dependencies {
 	compile 'org.springframework.data:spring-data-rest-hal-browser'
 	compile 'com.fasterxml.jackson.core:jackson-core'
 	compile 'org.springframework.security:spring-security-data'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	compile 'org.springframework.security:spring-security-test'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation "junit:junit:4.12"
-	testImplementation "org.assertj:assertj-core:3.10.0"
+	testImplementation 'junit:junit:4.12'
+	testImplementation 'org.assertj:assertj-core:3.10.0'
+	testCompile 'org.testcontainers:postgresql:1.12.1'
+	testCompile 'com.h2database:h2'
+
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 wrapper {
-	gradleVersion = "5.4"
+	gradleVersion = '5.4'
 }
 
 test {

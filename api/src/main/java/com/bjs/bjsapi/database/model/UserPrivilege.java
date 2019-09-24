@@ -40,4 +40,16 @@ public class UserPrivilege {
 		this.accessibleClass = accessibleClass;
 	}
 
+	public UserPrivilege() {
+	}
+
+	public UserPrivilege(User user, Class accessibleClass) {
+		this.user = user;
+		this.accessibleClass = accessibleClass;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
 }

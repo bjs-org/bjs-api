@@ -32,3 +32,5 @@ out/
 .vscode/
 
 logs
+
+data/test/output/

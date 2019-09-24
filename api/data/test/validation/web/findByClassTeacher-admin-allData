@@ -1,0 +1,32 @@
+{
+  "_embedded" : {
+    "classes" : [ {
+      "className" : "unprivilegedClass1",
+      "classTeacherName" : "ClassTeacherus",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost/api/v1/classes/[MASK]"
+        },
+        "class" : {
+          "href" : "http://localhost/api/v1/classes/[MASK]"
+        }
+      }
+    }, {
+      "className" : "unprivilegedClass2",
+      "classTeacherName" : "ClassTeacherus",
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost/api/v1/classes/[MASK]"
+        },
+        "class" : {
+          "href" : "http://localhost/api/v1/classes/[MASK]"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost/api/v1/classes/search/findByClassTeacherName?classTeacherName=ClassTeacherus"
+    }
+  }
+}
