@@ -1,4 +1,4 @@
-package com.bjs.bjsapi;
+package com.bjs.bjsapi.controllers;
 
 import java.security.Principal;
 

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import org.assertj.core.api.Assertions;
 
@@ -47,7 +48,7 @@ public class ValidationFiles {
 
 	public static void writeToFile(Path path, String string) throws IOException {
 		path.getParent().toFile().mkdirs();
-		Files.write(path, string.getBytes(UTF_8));
+		Files.write(path, string.getBytes(UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 	}
 
 	public static String mask(String input, Object... toMaskObjects) {

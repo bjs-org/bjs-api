@@ -1,0 +1,10 @@
+{
+  "_embedded" : {
+    "students" : [ ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost/api/v1/students/search/findByFirstName?firstName=second"
+    }
+  }
+}

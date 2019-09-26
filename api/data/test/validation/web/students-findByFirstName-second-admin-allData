@@ -1,0 +1,29 @@
+{
+  "_embedded" : {
+    "students" : [ {
+      "firstName" : "second",
+      "lastName" : "Student",
+      "birthDay" : "2002-03-28",
+      "female" : true,
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost/api/v1/students[MASK]"
+        },
+        "student" : {
+          "href" : "http://localhost/api/v1/students[MASK]"
+        },
+        "score" : {
+          "href" : "http://localhost/api/v1/students[MASK]/score"
+        },
+        "class" : {
+          "href" : "http://localhost/api/v1/students[MASK]/class"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost/api/v1/students/search/findByFirstName?firstName=second"
+    }
+  }
+}

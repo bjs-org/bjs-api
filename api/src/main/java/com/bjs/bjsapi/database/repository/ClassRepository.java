@@ -13,16 +13,16 @@ import com.bjs.bjsapi.database.model.Class;
 @RepositoryRestResource(collectionResourceRel = "classes", path = "classes")
 public interface ClassRepository extends CrudRepository<Class, Long> {
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasAuthority('ROLE_ADMIN') or hasPermission(filterObject,'read')")
 	List<Class> findAll();
 
-	@PostAuthorize("hasRole('ROLE_ADMIN') or hasPermission(returnObject.orElse(null),'read')")
+	@PostAuthorize("hasAuthority('ROLE_ADMIN') or hasPermission(returnObject.orElse(null),'read')")
 	Optional<Class> findByClassName(String className);
 
-	@PostAuthorize("hasRole('ROLE_ADMIN') or hasPermission(returnObject.orElse(null),'read')")
+	@PostAuthorize("hasAuthority('ROLE_ADMIN') or hasPermission(returnObject.orElse(null),'read')")
 	Optional<Class> findById(Long id);
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasAuthority('ROLE_ADMIN') or hasPermission(filterObject,'read')")
 	List<Class> findByClassTeacherName(String classTeacherName);
 
 }

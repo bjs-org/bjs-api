@@ -61,4 +61,11 @@ public class User {
 		return id;
 	}
 
+	public User() {
+	}
+
+	public User(String username) {
+		this.username = username;
+	}
+
 }

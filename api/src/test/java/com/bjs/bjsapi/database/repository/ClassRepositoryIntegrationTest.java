@@ -4,32 +4,20 @@ import static com.bjs.bjsapi.helper.ValidationFiles.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.UserPrivilege;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("in-memory-db")
-@AutoConfigureMockMvc
-public class ClassRepositoryIntegrationTest {
-
-	@Autowired
-	private MockMvc mvc;
+public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -44,14 +32,16 @@ public class ClassRepositoryIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		clearDB();
-
 		user = new User();
 		user.setUsername("test");
 		user.setPassword(new BCryptPasswordEncoder().encode("123456"));
 
 		userRepository.save(user);
+	}
 
+	@After
+	public void tearDown() throws Exception {
+		clearDB();
 	}
 
 	private void clearDB() {
@@ -61,16 +51,9 @@ public class ClassRepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_unauthorized() throws Exception {
+	public void test_findAll_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes"))
 			.andExpect(status().isUnauthorized());
-	}
-
-	@Test
-	@WithMockUser(username = "test", password = "123456", roles = "USER")
-	public void test_authorized() throws Exception {
-		mvc.perform(get("/api/v1/classes"))
-			.andExpect(status().isOk());
 	}
 
 	@Test
@@ -90,7 +73,7 @@ public class ClassRepositoryIntegrationTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andReturn().getResponse();
 
-		checkWithValidationFile("web/findAll-authorized-onlyPrivileged", mask(response.getContentAsString(), privilegedClass.getId().toString()));
+		checkWithValidationFile("web/classes-findAll-authorized-onlyPrivileged", mask(response.getContentAsString(), privilegedClass.getId().toString()));
 	}
 
 	@Test
@@ -108,7 +91,7 @@ public class ClassRepositoryIntegrationTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andReturn().getResponse();
 
-		checkWithValidationFile("web/findAll-admin-allData", mask(response.getContentAsString(), unprivilegedClass1.getId().toString(), unprivilegedClass2.getId().toString()));
+		checkWithValidationFile("web/classes-findAll-admin-allData", mask(response.getContentAsString(), unprivilegedClass1.getId().toString(), unprivilegedClass2.getId().toString()));
 	}
 
 	@Test
@@ -202,7 +185,7 @@ public class ClassRepositoryIntegrationTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andReturn().getResponse();
 
-		checkWithValidationFile("web/findByClassTeacher-authorized-onlyPrivileged", mask(response1.getContentAsString(), privilegedClass.getId().toString(), unprivilegedClass.getId().toString()));
+		checkWithValidationFile("web/classes-findByClassTeacher-authorized-onlyPrivileged", mask(response1.getContentAsString(), privilegedClass.getId().toString(), unprivilegedClass.getId().toString()));
 	}
 
 	@Test
@@ -222,7 +205,7 @@ public class ClassRepositoryIntegrationTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andReturn().getResponse().getContentAsString();
 
-		checkWithValidationFile("web/findByClassTeacher-admin-allData", mask(response, unprivilegedClass1.getId().toString(), unprivilegedClass2.getId().toString()));
+		checkWithValidationFile("web/classes-findByClassTeacher-admin-allData", mask(response, unprivilegedClass1.getId().toString(), unprivilegedClass2.getId().toString()));
 	}
 
 }

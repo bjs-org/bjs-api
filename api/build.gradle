@@ -54,7 +54,6 @@ wrapper {
 }
 
 test {
-	systemProperty 'spring.profiles.active', 'local'
+	useJUnit()
+	System.setProperty("line.separator","\n")
 }
-
-compileJava.dependsOn(processResources)

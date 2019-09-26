@@ -13,11 +13,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.hateoas.Identifiable;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 @Table(name = "students")
-public class Student implements Identifiable<Long> {
+public class Student {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,7 +34,8 @@ public class Student implements Identifiable<Long> {
 	private Date birthDay;
 
 	@ManyToOne
-	@JoinColumn
+	@RestResource(path = "class", rel = "class")
+	@JoinColumn(nullable = false)
 	private Class schoolClass;
 
 	@Column(nullable = false)
@@ -83,5 +84,18 @@ public class Student implements Identifiable<Long> {
 	public Long getId() {
 		return id;
 	}
+
+	public Student() {
+	}
+
+	public Student(String firstName, String lastName, Date birthDay, Class schoolClass, Boolean female) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.birthDay = birthDay;
+		this.schoolClass = schoolClass;
+		this.female = female;
+	}
+
+
 
 }
