@@ -12,13 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 
-import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.hateoas.Identifiable;
 
 @Entity
 @Table(name = "students")
-public class Student {
+public class Student implements Identifiable<Long> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,7 +34,6 @@ public class Student {
 	private Date birthDay;
 
 	@ManyToOne
-	@RestResource(path = "class", rel = "class")
 	@JoinColumn
 	private Class schoolClass;
 
@@ -80,6 +78,10 @@ public class Student {
 
 	public void setSchoolClass(Class schoolClass) {
 		this.schoolClass = schoolClass;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }
