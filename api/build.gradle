@@ -32,6 +32,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-rest'
 	compile 'org.springframework.boot:spring-boot-starter-jdbc'
 	compile 'org.springframework.data:spring-data-rest-hal-browser'
+	compile 'com.fasterxml.jackson.core:jackson-core'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -47,3 +48,5 @@ wrapper {
 test {
 	systemProperty 'spring.profiles.active', 'local'
 }
+
+compileJava.dependsOn(processResources)

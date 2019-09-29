@@ -13,6 +13,7 @@ import com.bjs.bjsapi.database.model.Student;
 @Configuration
 public class RepositoryConfig {
 
+	@SuppressWarnings("Convert2Lambda")
 	@Bean
 	public ResourceProcessor<Resource<Student>> personProcessor() {
 
