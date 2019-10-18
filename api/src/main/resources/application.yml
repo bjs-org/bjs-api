@@ -27,6 +27,8 @@ spring:
     hibernate:
       ddl-auto: update
 
+  main:
+    allow-bean-definition-overriding: true
 logging:
   file: logs/bjs-api.log
 

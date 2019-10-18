@@ -7,16 +7,16 @@
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     }, {
@@ -26,16 +26,16 @@
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     }, {
@@ -45,16 +45,16 @@
       "female" : false,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     }, {
@@ -64,16 +64,16 @@
       "female" : false,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     }, {
@@ -83,16 +83,16 @@
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     }, {
@@ -102,29 +102,29 @@
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "student" : {
-          "href" : "http://localhost/api/v1/students[MASK]"
+          "href" : "[MASK]"
         },
         "score" : {
-          "href" : "http://localhost/api/v1/students[MASK]/score"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/students[MASK]/class"
+          "href" : "[MASK]"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost/api/v1/students/"
+      "href" : "[MASK]/"
     },
     "profile" : {
-      "href" : "http://localhost/api/v1/profile/students"
+      "href" : "[MASK]"
     },
     "search" : {
-      "href" : "http://localhost/api/v1/students/search"
+      "href" : "[MASK]"
     }
   }
 }

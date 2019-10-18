@@ -33,13 +33,13 @@ public class Student {
 	@Column(nullable = false)
 	private Date birthDay;
 
+	@Column(nullable = false)
+	private Boolean female;
+
 	@ManyToOne
 	@RestResource(path = "class", rel = "class")
 	@JoinColumn(nullable = false)
 	private Class schoolClass;
-
-	@Column(nullable = false)
-	private Boolean female;
 
 	public Boolean getFemale() {
 		return female;

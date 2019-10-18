@@ -2,26 +2,26 @@
   "_embedded" : {
     "classes" : [ {
       "className" : "privilegedClass",
-      "classTeacherName" : null,
+      "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost/api/v1/classes"
+      "href" : "[MASK]"
     },
     "profile" : {
-      "href" : "http://localhost/api/v1/profile/classes"
+      "href" : "[MASK]"
     },
     "search" : {
-      "href" : "http://localhost/api/v1/classes/search"
+      "href" : "[MASK]"
     }
   }
 }

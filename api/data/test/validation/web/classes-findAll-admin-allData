@@ -1,38 +1,38 @@
 {
   "_embedded" : {
     "classes" : [ {
-      "className" : "unprivilegedClass1",
-      "classTeacherName" : null,
+      "className" : "privilegedClass",
+      "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         }
       }
     }, {
-      "className" : "unprivilegedClass2",
-      "classTeacherName" : null,
+      "className" : "unprivilegedClass",
+      "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         },
         "class" : {
-          "href" : "http://localhost/api/v1/classes/[MASK]"
+          "href" : "[MASK]"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost/api/v1/classes"
+      "href" : "[MASK]"
     },
     "profile" : {
-      "href" : "http://localhost/api/v1/profile/classes"
+      "href" : "[MASK]"
     },
     "search" : {
-      "href" : "http://localhost/api/v1/classes/search"
+      "href" : "[MASK]"
     }
   }
 }
