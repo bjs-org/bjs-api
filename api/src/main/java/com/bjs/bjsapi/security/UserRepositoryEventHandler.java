@@ -5,15 +5,16 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.data.rest.core.event.AbstractRepositoryEventListener;
+import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
+import org.springframework.data.rest.core.annotation.HandleBeforeSave;
+import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
-@Component
-public class UserRepositoryEventHandler extends AbstractRepositoryEventListener<User> {
+@RepositoryEventHandler
+public class UserRepositoryEventHandler {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -26,17 +27,18 @@ public class UserRepositoryEventHandler extends AbstractRepositoryEventListener<
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	@Override
+	@HandleBeforeCreate
 	protected void onBeforeCreate(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 	}
 
-	@Override
+	@HandleBeforeSave
 	protected void onBeforeSave(User user) {
 
 		if (entityManager != null) {
 			entityManager.detach(user);
 		}
+
 
 		Optional<User> optionalUserInDB = userRepository.findById(user.getId());
 
@@ -44,7 +46,7 @@ public class UserRepositoryEventHandler extends AbstractRepositoryEventListener<
 			// Only change user
 			User userInDB = optionalUserInDB.get();
 
-			if (user.getPassword() != null && !userInDB.getPassword().equals(user.getPassword()) && !passwordEncoder.matches(user.getPassword(), userInDB.getPassword())) {
+			if (user.getPassword() != null && !userInDB.getPassword().equals(user.getPassword())) {
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 			}
 		}

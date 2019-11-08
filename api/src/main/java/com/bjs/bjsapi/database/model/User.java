@@ -64,6 +64,13 @@ public class User {
 	public User() {
 	}
 
+	public User(String username, String password, Boolean enabled, Boolean isAdministrator) {
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.isAdministrator = isAdministrator;
+	}
+
 	public User(String username) {
 		this.username = username;
 	}

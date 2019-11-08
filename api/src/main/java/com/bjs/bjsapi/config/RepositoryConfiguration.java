@@ -11,7 +11,7 @@ import com.bjs.bjsapi.security.UserRepositoryEventHandler;
 public class RepositoryConfiguration {
 
 	@Bean
-	public UserRepositoryEventHandler userRepositoryEventHandler(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	public UserRepositoryEventHandler userRepositoryEventHandler(PasswordEncoder passwordEncoder, UserRepository userRepository) {
 		return new UserRepositoryEventHandler(userRepository, passwordEncoder);
 	}
 

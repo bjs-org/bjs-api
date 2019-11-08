@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.ParameterDescriptor;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
@@ -27,7 +26,6 @@ import com.bjs.bjsapi.database.model.UserPrivilege;
 import com.bjs.bjsapi.database.model.helper.StudentBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
 public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
@@ -55,7 +53,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
 		setupClassScenario();
-		SecurityContextHolder.clearContext();
+		SecurityHelper.reset();
 	}
 
 	@Test
@@ -68,7 +66,6 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 
 	@Test
 	public void test_findAll_authorized_privilegedData() throws Exception {
-
 		String response = mvc.perform(get("/api/v1/students/")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON_UTF8))
@@ -508,12 +505,8 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.andExpect(status().isNoContent());
 
 		mvc.perform(delete("/api/v1/students/{id}", unprivilegedStudent1.getId())
-			.with(asUser()))
-			.andExpect(status().isForbidden());
-	}
-
-	private TextNode textNode(String content) {
-		return objectMapper.getNodeFactory().textNode(content);
+			.with(asAdmin()))
+			.andExpect(status().isNoContent());
 	}
 
 	private void setupClassScenario() {

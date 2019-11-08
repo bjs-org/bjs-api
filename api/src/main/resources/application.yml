@@ -2,6 +2,10 @@ server:
   port: 8080
   address: 0.0.0.0
 
+  servlet:
+    context-path: /api/v1
+
+
 spring:
   data:
     rest:
@@ -29,6 +33,10 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+
+  mvc:
+    servlet:
+      path: /api/v1
 logging:
   file: logs/bjs-api.log
 

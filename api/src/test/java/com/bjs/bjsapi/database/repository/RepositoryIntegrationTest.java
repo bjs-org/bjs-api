@@ -1,9 +1,11 @@
 package com.bjs.bjsapi.database.repository;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.bjs.bjsapi.database.model.User;
+import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.helper.ValidationFiles;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,12 +71,25 @@ public abstract class RepositoryIntegrationTest {
 		clearDB();
 	}
 
+	@Test
+	public void test_initializeCorrectly() {
+		assertThat(mvc).isNotNull();
+		assertThat(classRepository).isNotNull();
+		assertThat(studentRepository).isNotNull();
+		assertThat(sportResultRepository).isNotNull();
+		assertThat(userRepository).isNotNull();
+		assertThat(userPrivilegeRepository).isNotNull();
+
+		assertThat(user).isNotNull();
+		assertThat(admin).isNotNull();
+	}
+
 	private void setupTestUsers() {
-		admin = new User("testAdmin");
+		admin = new UserBuilder().setUsername("testAdmin").createUser();
 		admin.setAdministrator(true);
 		admin.setPassword("admin");
 
-		user = new User("testUser");
+		user = new UserBuilder().setUsername("testUser").createUser();
 		user.setPassword("user");
 
 		userRepository.save(user);
