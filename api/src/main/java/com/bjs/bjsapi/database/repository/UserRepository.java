@@ -27,4 +27,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	<S extends User> S save(S entity);
 
+	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	void delete(User entity);
+
 }

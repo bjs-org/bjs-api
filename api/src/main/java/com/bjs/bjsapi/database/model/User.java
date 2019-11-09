@@ -23,7 +23,7 @@ public class User {
 
 	private Boolean enabled = true;
 
-	private Boolean isAdministrator = false;
+	private Boolean administrator = false;
 
 	public String getUsername() {
 		return username;
@@ -50,11 +50,11 @@ public class User {
 	}
 
 	public Boolean getAdministrator() {
-		return isAdministrator;
+		return administrator;
 	}
 
 	public void setAdministrator(Boolean administrator) {
-		isAdministrator = administrator;
+		this.administrator = administrator;
 	}
 
 	public Long getId() {
@@ -64,11 +64,11 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String password, Boolean enabled, Boolean isAdministrator) {
+	public User(String username, String password, Boolean enabled, Boolean administrator) {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
-		this.isAdministrator = isAdministrator;
+		this.administrator = administrator;
 	}
 
 	public User(String username) {

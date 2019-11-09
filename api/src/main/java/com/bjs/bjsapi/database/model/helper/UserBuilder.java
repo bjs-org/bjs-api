@@ -7,7 +7,7 @@ public class UserBuilder {
 	private String username;
 	private String password;
 	private Boolean enabled = true;
-	private Boolean isAdministrator = false;
+	private Boolean administrator = false;
 
 	public UserBuilder setUsername(String username) {
 		this.username = username;
@@ -24,13 +24,13 @@ public class UserBuilder {
 		return this;
 	}
 
-	public UserBuilder setIsAdministrator(Boolean isAdministrator) {
-		this.isAdministrator = isAdministrator;
+	public UserBuilder setAdministrator(Boolean administrator) {
+		this.administrator = administrator;
 		return this;
 	}
 
 	public User createUser() {
-		return new User(username, password, enabled, isAdministrator);
+		return new User(username, password, enabled, administrator);
 	}
 
 }
