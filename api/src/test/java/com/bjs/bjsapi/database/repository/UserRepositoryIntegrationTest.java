@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.ResultHandler;
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
@@ -36,12 +37,28 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	private final Logger log = LoggerFactory.getLogger(UserRepositoryIntegrationTest.class);
 	private final ResultHandler printHandler = result -> log.info(result.getResponse().getContentAsString());
 
-	private List<FieldDescriptor> userDescriptors = Arrays.asList(
+	private User newUser;
+
+	private List<FieldDescriptor> userResponse = Arrays.asList(
 		fieldWithPath("username").description("The user's username"),
 		fieldWithPath("password").description("The encrypted password"),
 		fieldWithPath("administrator").description("If the user is a administrator"),
 		fieldWithPath("enabled").description("If the user is enabled and can login"),
 		subsectionWithPath("_links").description("All links regarding this user")
+	);
+	private List<FieldDescriptor> userRequestOptional = Arrays.asList(
+		fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
+		fieldWithPath("username").description("The user's username").optional().type(JsonFieldType.STRING),
+		fieldWithPath("password").description("The user's password in plain text").optional().type(JsonFieldType.STRING),
+		fieldWithPath("enabled").description("If this account should be enabled").optional().type(JsonFieldType.BOOLEAN),
+		fieldWithPath("administrator").description("Defines whether is user should get administrator rights").optional().type(JsonFieldType.BOOLEAN)
+	);
+	private List<FieldDescriptor> userRequest = Arrays.asList(
+		fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
+		fieldWithPath("username").description("The user's username"),
+		fieldWithPath("password").description("The user's password in plain text"),
+		fieldWithPath("administrator").description("If the user is a administrator").optional().type(JsonFieldType.BOOLEAN),
+		fieldWithPath("enabled").description("If the user is enabled and can login").optional().type(JsonFieldType.BOOLEAN)
 	);
 
 	@Override
@@ -81,7 +98,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 				responseFields(
 					subsectionWithPath("_embedded.users").description("All users"),
 					subsectionWithPath("_links").description("All links regarding users")
-				).andWithPrefix("_embedded.users[].", userDescriptors)))
+				).andWithPrefix("_embedded.users[].", userResponse)))
 			.andDo(printHandler);
 
 	}
@@ -105,7 +122,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andDo(document("users-get-byId",
 				pathParameters(
 					parameterWithName("id").description("The user's id")
-				), responseFields(userDescriptors)))
+				), responseFields(userResponse)))
 			.andDo(printHandler);
 	}
 
@@ -129,7 +146,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 				requestParameters(
 					parameterWithName("username").description("The user's username")
 				),
-				responseFields(userDescriptors))
+				responseFields(userResponse))
 			);
 	}
 
@@ -149,12 +166,79 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.accept(MediaType.APPLICATION_JSON_UTF8)
 			.with(asAdmin()))
 			.andExpect(status().isCreated())
-			.andDo(document("users-post", requestFields(
-				fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
-				fieldWithPath("username").description("The user's username"),
-				fieldWithPath("password").description("The user's password in plain text"),
-				fieldWithPath("enabled").description("If this account should be enabled").optional().type(JsonFieldType.BOOLEAN),
-				fieldWithPath("administrator").description("Defines whether is user should get administrator rights").optional().type(JsonFieldType.BOOLEAN)
+			.andDo(document("users-post",
+				requestFields(userRequest),
+				responseFields(userResponse)
+			));
+	}
+
+	@Test
+	public void test_edit_unauthorized() throws Exception {
+		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
+			.content("{\n" +
+				"  \"enabled\": false\n" +
+				"}")
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void test_edit_admin() throws Exception {
+		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
+			.content("{\n" +
+				"  \"enabled\": false\n" +
+				"}")
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asAdmin()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.enabled", is(false)))
+			.andDo(document("users-patch", pathParameters(
+				parameterWithName("id").description("The user's id")
+				),
+				requestFields(userRequestOptional),
+				responseFields(userResponse))
+			);
+	}
+
+	@Test
+	public void test_replace_unauthorized() throws Exception {
+		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
+			.content(givenNewUser())
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void test_replace_admin() throws Exception {
+		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.content(givenNewUser())
+			.with(asAdmin()))
+			.andExpect(status().isOk())
+			.andDo(printHandler)
+			.andDo(document("users-put", pathParameters(
+				parameterWithName("id").description("The user's id")
+				),
+				requestFields(userRequest),
+				responseFields(userResponse)
+			));
+	}
+
+	@Test
+	public void test_delete_unauthorized() throws Exception {
+		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void test_delete_admin() throws Exception {
+		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
+			.with(asAdmin()))
+			.andExpect(status().isNoContent())
+			.andDo(document("users-delete", pathParameters(
+				parameterWithName("id").description("The user's id")
 			)));
 	}
 
@@ -175,11 +259,15 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	private String givenNewUser() throws IOException {
-		User user = new UserBuilder()
+		newUser = new UserBuilder()
 			.setUsername("aNewUser")
 			.setPassword("123456")
 			.createUser();
 
-		return jacksonTester.write(user).getJson();
+		ObjectNode node = (ObjectNode) objectMapper.readTree(jacksonTester.write(newUser).getJson());
+		node.remove("id");
+
+		return node.toString();
 	}
+
 }
