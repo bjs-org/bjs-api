@@ -8,6 +8,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultHandler;
 
 import com.bjs.bjsapi.database.model.User;
@@ -27,6 +30,8 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private User firstUser;
 	private User secondUser;
+
+	private JacksonTester<User> jacksonTester;
 
 	private final Logger log = LoggerFactory.getLogger(UserRepositoryIntegrationTest.class);
 	private final ResultHandler printHandler = result -> log.info(result.getResponse().getContentAsString());
@@ -43,6 +48,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+		JacksonTester.initFields(this, objectMapper);
 		setupUserScenario();
 		SecurityHelper.reset();
 	}
@@ -127,6 +133,31 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			);
 	}
 
+	@Test
+	public void test_create_unauthorized() throws Exception {
+		mvc.perform(post("/api/v1/users")
+			.content(givenNewUser())
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void test_create_admin() throws Exception {
+		mvc.perform(post("/api/v1/users")
+			.content(givenNewUser())
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asAdmin()))
+			.andExpect(status().isCreated())
+			.andDo(document("users-post", requestFields(
+				fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
+				fieldWithPath("username").description("The user's username"),
+				fieldWithPath("password").description("The user's password in plain text"),
+				fieldWithPath("enabled").description("If this account should be enabled").optional().type(JsonFieldType.BOOLEAN),
+				fieldWithPath("administrator").description("Defines whether is user should get administrator rights").optional().type(JsonFieldType.BOOLEAN)
+			)));
+	}
+
 	private void setupUserScenario() {
 		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
 
@@ -141,5 +172,14 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.createUser());
 
 		SecurityHelper.reset();
+	}
+
+	private String givenNewUser() throws IOException {
+		User user = new UserBuilder()
+			.setUsername("aNewUser")
+			.setPassword("123456")
+			.createUser();
+
+		return jacksonTester.write(user).getJson();
 	}
 }

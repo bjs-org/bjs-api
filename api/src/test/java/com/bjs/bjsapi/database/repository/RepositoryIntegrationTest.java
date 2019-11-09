@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.helper.UserBuilder;
+import com.bjs.bjsapi.helper.SecurityHelper;
 import com.bjs.bjsapi.helper.ValidationFiles;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -85,6 +86,8 @@ public abstract class RepositoryIntegrationTest {
 	}
 
 	private void setupTestUsers() {
+		SecurityHelper.runAs("admin", "admin", "ROLE_ADMIN", "ROLE_USER");
+
 		admin = new UserBuilder().setUsername("testAdmin").createUser();
 		admin.setAdministrator(true);
 		admin.setPassword("admin");
@@ -94,6 +97,8 @@ public abstract class RepositoryIntegrationTest {
 
 		userRepository.save(user);
 		userRepository.save(admin);
+
+		SecurityHelper.reset();
 	}
 
 	private void clearDB() {
