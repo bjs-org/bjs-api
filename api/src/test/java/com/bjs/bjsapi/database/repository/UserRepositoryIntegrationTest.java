@@ -103,6 +103,30 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andDo(printHandler);
 	}
 
+	@Test
+	public void test_findByUsername_unauthorized() throws Exception {
+		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	public void test_findByUsername_admin() throws Exception {
+		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
+			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.with(asAdmin()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.username", is(firstUser.getUsername())))
+			.andExpect(jsonPath("$._links.self.href", containsString("/api/v1/users/")))
+			.andDo(document("users-get-byUsername",
+				requestParameters(
+					parameterWithName("username").description("The user's username")
+				),
+				responseFields(userDescriptors))
+			);
+	}
+
 	private void setupUserScenario() {
 		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
 

@@ -57,3 +57,5 @@ Also only admins can create and delete objects.
 include::classes.adoc[]
 
 include::students.adoc[]
+
+include::users.adoc[]
