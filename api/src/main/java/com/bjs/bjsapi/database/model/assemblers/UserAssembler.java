@@ -1,4 +1,4 @@
-package com.bjs.bjsapi.controllers;
+package com.bjs.bjsapi.database.model.assemblers;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

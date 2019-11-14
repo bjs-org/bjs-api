@@ -8,7 +8,7 @@ operation::users-post[snippets='request-fields,http-request,response-fields,http
 
 operation::users-get-all[snippets='http-request,response-fields,http-response']
 
-=== Get user by ID
+=== Get a single user by ID
 
 operation::users-get-byId[snippets='path-parameters,http-request,response-fields,http-response']
 
