@@ -7,14 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Collections;
 import java.util.Optional;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.bjs.bjsapi.database.model.SportResult;
@@ -26,7 +26,7 @@ import com.bjs.bjsapi.database.repository.UserRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = StudentScoreController.class)
 public class StudentScoreControllerIntegrationTest {
 
@@ -50,7 +50,7 @@ public class StudentScoreControllerIntegrationTest {
 
 	@Test
 	@WithMockUser("admin")
-	public void test_calculateScore_found() throws Exception {
+	void test_calculateScore_found() throws Exception {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();
@@ -71,7 +71,7 @@ public class StudentScoreControllerIntegrationTest {
 
 	@Test
 	@WithMockUser("admin")
-	public void test_calculateScore_notFound() throws Exception {
+	void test_calculateScore_notFound() throws Exception {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();

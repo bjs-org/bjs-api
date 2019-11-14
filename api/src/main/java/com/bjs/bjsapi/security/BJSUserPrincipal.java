@@ -59,4 +59,9 @@ public class BJSUserPrincipal implements UserDetails {
 		return user;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("BJSUserPrincipal{user=%s}", user);
+	}
+
 }

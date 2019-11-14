@@ -7,7 +7,7 @@ public class UserBuilder {
 	private String username;
 	private String password;
 	private Boolean enabled = true;
-	private Boolean administrator = false;
+	private boolean administrator = false;
 
 	public UserBuilder setUsername(String username) {
 		this.username = username;
@@ -24,7 +24,7 @@ public class UserBuilder {
 		return this;
 	}
 
-	public UserBuilder setAdministrator(Boolean administrator) {
+	public UserBuilder setAdministrator(boolean administrator) {
 		this.administrator = administrator;
 		return this;
 	}

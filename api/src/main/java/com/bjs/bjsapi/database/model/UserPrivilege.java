@@ -52,4 +52,9 @@ public class UserPrivilege {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("UserPrivilege{id=%d, user=%s, accessibleClass=%s}", id, user, accessibleClass);
+	}
+
 }

@@ -28,7 +28,7 @@ public class ClassRepositoryRestController {
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity delete(@PathVariable Long id) {
+	public ResponseEntity<?> delete(@PathVariable Long id) {
 		Optional<List<Student>> students = classRepository.findById(id)
 			.map(studentRepository::findAllBySchoolClass);
 

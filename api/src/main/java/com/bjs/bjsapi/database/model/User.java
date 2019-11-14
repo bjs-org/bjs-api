@@ -23,7 +23,7 @@ public class User {
 
 	private Boolean enabled = true;
 
-	private Boolean administrator = false;
+	private boolean administrator = false;
 
 	public String getUsername() {
 		return username;
@@ -49,11 +49,11 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public Boolean getAdministrator() {
+	public boolean getAdministrator() {
 		return administrator;
 	}
 
-	public void setAdministrator(Boolean administrator) {
+	public void setAdministrator(boolean administrator) {
 		this.administrator = administrator;
 	}
 
@@ -73,6 +73,11 @@ public class User {
 
 	public User(String username) {
 		this.username = username;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("User{id=%d, username='%s', password='%s', enabled=%s, administrator=%s}", id, username, password, enabled, administrator);
 	}
 
 }
