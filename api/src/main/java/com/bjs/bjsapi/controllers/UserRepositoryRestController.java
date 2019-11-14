@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bjs.bjsapi.database.model.User;
+import com.bjs.bjsapi.database.model.assemblers.UserAssembler;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
 @BasePathAwareController
