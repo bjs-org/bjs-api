@@ -1,25 +1,26 @@
 package com.bjs.bjsapi.controllers;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import com.bjs.bjsapi.database.model.SportResult;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 import com.bjs.bjsapi.database.repository.SportResultRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-
-@RunWith(SpringRunner.class)
-public class StudentScoreControllerTest {
+@ExtendWith(SpringExtension.class)
+class StudentScoreControllerTest {
 
 	@MockBean
 	private CalculationInformationService calculationInformationService;
@@ -32,13 +33,13 @@ public class StudentScoreControllerTest {
 
 	private StudentScoreController studentScoreController;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		studentScoreController = new StudentScoreController(studentRepository, sportResultRepository, calculationInformationService);
 	}
 
 	@Test
-	public void test_calculation_run_50() {
+	void test_calculation_run_50() {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();
@@ -56,7 +57,7 @@ public class StudentScoreControllerTest {
 	}
 
 	@Test
-	public void test_calculation_run_75() {
+	void test_calculation_run_75() {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();
@@ -74,7 +75,7 @@ public class StudentScoreControllerTest {
 	}
 
 	@Test
-	public void test_calculation_run_100() {
+	void test_calculation_run_100() {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();
@@ -92,7 +93,7 @@ public class StudentScoreControllerTest {
 	}
 
 	@Test
-	public void test_calculation_high_jump() {
+	void test_calculation_high_jump() {
 		Student student = new Student();
 		student.setFemale(true);
 		SportResult sportResult = new SportResult();
@@ -110,7 +111,7 @@ public class StudentScoreControllerTest {
 	}
 
 	@Test
-	public void test_calculation_general() {
+	void test_calculation_general() {
 		Student student = new Student();
 		student.setFemale(false);
 

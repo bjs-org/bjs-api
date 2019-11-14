@@ -8,8 +8,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -18,7 +18,8 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.bjs.bjsapi.database.model.Class;
-import com.bjs.bjsapi.database.model.UserPrivilege;
+import com.bjs.bjsapi.database.model.helper.ClassBuilder;
+import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
 
 public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
@@ -35,7 +36,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		fieldWithPath("_embedded.classes[]").description("All (visible) classes")
 	).andWithPrefix("_embedded.classes[].", schoolClass);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		super.setUp();
 		setupClassScenario();
@@ -53,9 +54,9 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	public void test_findAll_authorized_onlyPrivilegedData() throws Exception {
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-get-all", schoolClasses))
 			.andReturn().getResponse();
 
@@ -66,9 +67,9 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	public void test_findAll_admin_allData() throws Exception {
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
 			.with(asAdmin())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andReturn().getResponse();
 
 		checkWithValidationFile("web/classes-findAll-admin-allData", mask(response.getContentAsString(), unprivilegedClass.getId().toString(), privilegedClass.getId().toString()));
@@ -79,12 +80,12 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
 
 		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andDo(document("classes-get-byId",
 				pathParameters(
@@ -98,12 +99,12 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asAdmin())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 
 		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
 			.with(asAdmin())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 	}
 
@@ -112,12 +113,12 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andDo(document("classes-get-byName",
 				requestParameters(
@@ -131,12 +132,12 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
 			.with(asAdmin())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
 			.with(asAdmin())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 	}
 
@@ -145,9 +146,9 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", privilegedClass.getClassTeacherName())
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-get-byTeacher",
 				requestParameters(
 					parameterWithName("classTeacherName").description("The name of the teacher of the class")
@@ -161,10 +162,10 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	public void test_findByClassTeacher_admin_allData() throws Exception {
 
 		String response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", unprivilegedClass.getClassTeacherName())
-			.accept(MediaType.APPLICATION_JSON_UTF8)
+			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andReturn().getResponse().getContentAsString();
 
 		checkWithValidationFile("web/classes-findByClassTeacher-admin-allData", mask(response, unprivilegedClass.getId(), privilegedClass.getId()));
@@ -172,24 +173,24 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	public void test_save_unauthorized() throws Exception {
-		Class aClass = new Class("7A");
+		Class aClass = new ClassBuilder().setClassName("7A").createClass();
 		aClass.setClassTeacherName("A Class Teacher");
 
 		mvc.perform(post("/api/v1/classes")
 			.content(asJsonString(aClass))
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void test_save_admin() throws Exception {
-		Class aClass = new Class("7A");
+		Class aClass = new ClassBuilder().setClassName("7A").createClass();
 		aClass.setClassTeacherName("A Class Teacher");
 
 		mvc.perform(post("/api/v1/classes")
 			.with(asAdmin())
 			.content(asJsonString(aClass))
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-post",
 				requestFields(
 					fieldWithPath("id").optional().type(JsonFieldType.NUMBER).description("The class' id"),
@@ -243,7 +244,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		mvc.perform(patch("/api/v1/classes/{id}", privilegedClass.getId())
 			.content(json)
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-patch",
 				requestFields(
 					fieldWithPath("className").description("The class' name").optional(),
@@ -268,7 +269,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		mvc.perform(put("/api/v1/classes/{id}", privilegedClass.getId())
 			.content(json)
 			.with(asUser())
-			.accept(MediaType.APPLICATION_JSON_UTF8))
+			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-put",
 				requestFields(
 					fieldWithPath("className").description("The class' name"),
@@ -285,15 +286,15 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	private void setupClassScenario() {
 		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
 
-		privilegedClass = new Class("privilegedClass");
+		privilegedClass = new ClassBuilder().setClassName("privilegedClass").createClass();
 		privilegedClass.setClassTeacherName("ClassTeacher");
 		classRepository.save(privilegedClass);
 
-		unprivilegedClass = new Class("unprivilegedClass");
+		unprivilegedClass = new ClassBuilder().setClassName("unprivilegedClass").createClass();
 		unprivilegedClass.setClassTeacherName("ClassTeacher");
 		classRepository.save(unprivilegedClass);
 
-		userPrivilegeRepository.save(new UserPrivilege(user, privilegedClass));
+		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
 	}
 
 }

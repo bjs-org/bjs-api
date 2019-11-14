@@ -12,9 +12,6 @@
         "student" : {
           "href" : "[MASK]"
         },
-        "score" : {
-          "href" : "[MASK]"
-        },
         "class" : {
           "href" : "[MASK]"
         }
@@ -31,9 +28,6 @@
         "student" : {
           "href" : "[MASK]"
         },
-        "score" : {
-          "href" : "[MASK]"
-        },
         "class" : {
           "href" : "[MASK]"
         }
@@ -48,9 +42,6 @@
           "href" : "[MASK]"
         },
         "student" : {
-          "href" : "[MASK]"
-        },
-        "score" : {
           "href" : "[MASK]"
         },
         "class" : {

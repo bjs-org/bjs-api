@@ -5,8 +5,8 @@ import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +24,7 @@ public class UserRepositoryEventHandlerTest {
 
 	private UserRepositoryEventHandler userRepositoryEventHandler;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		userRepositoryEventHandler = new UserRepositoryEventHandler(userRepository, passwordEncoder);

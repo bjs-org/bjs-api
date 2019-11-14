@@ -9,26 +9,26 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.bjs.bjsapi.config.CalculationInformationConfig;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 
-@RunWith(SpringRunner.class)
-public class CalculationInformationServiceTest {
+@ExtendWith(SpringExtension.class)
+class CalculationInformationServiceTest {
 
 	@MockBean
 	private CalculationInformationConfig calculationInformationConfig;
 
 	private CalculationInformationService informationService;
 
-	@Before
-	public void setUp() throws IOException {
+	@BeforeEach
+	void setUp() throws IOException {
 		doReturn(getResourceFromClassPath("calculation_information_test.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
 		informationService = new CalculationInformationService(calculationInformationConfig);
 	}
@@ -38,7 +38,7 @@ public class CalculationInformationServiceTest {
 	}
 
 	@Test
-	public void test_throwsIllegalArgumentException_wrongFormat() throws IOException {
+	void test_throwsIllegalArgumentException_wrongFormat() throws IOException {
 		reset(calculationInformationConfig);
 		doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
 
@@ -50,7 +50,7 @@ public class CalculationInformationServiceTest {
 	}
 
 	@Test
-	public void test_throwsIllegalArgumentException_couldNotParseFile() throws MalformedURLException {
+	void test_throwsIllegalArgumentException_couldNotParseFile() throws MalformedURLException {
 		reset(calculationInformationConfig);
 		doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(calculationInformationConfig).getCalculationInformationFilePath();
 
@@ -62,25 +62,25 @@ public class CalculationInformationServiceTest {
 	}
 
 	@Test
-	public void test_getValue_female_a_RUN_50() {
+	void test_getValue_female_a_RUN_50() {
 		assertThat(informationService.getValue(true, true, DisciplineType.RUN_50)).isEqualTo(3.64800);
 		assertThat(informationService.getAValue(true, DisciplineType.RUN_50)).isEqualTo(3.64800);
 	}
 
 	@Test
-	public void test_getValue_female_c_RUN_50() {
+	void test_getValue_female_c_RUN_50() {
 		assertThat(informationService.getValue(true, false, DisciplineType.RUN_50)).isEqualTo(0.00660);
 		assertThat(informationService.getCValue(true, DisciplineType.RUN_50)).isEqualTo(0.00660);
 	}
 
 	@Test
-	public void test_getValue_male_a_RUN_50() {
+	void test_getValue_male_a_RUN_50() {
 		assertThat(informationService.getValue(false, true, DisciplineType.RUN_50)).isEqualTo(3.79000);
 		assertThat(informationService.getAValue(false, DisciplineType.RUN_50)).isEqualTo(3.79000);
 	}
 
 	@Test
-	public void test_getValue_male_c_RUN_50() {
+	void test_getValue_male_c_RUN_50() {
 		assertThat(informationService.getValue(false, false, DisciplineType.RUN_50)).isEqualTo(0.00690);
 		assertThat(informationService.getCValue(false, DisciplineType.RUN_50)).isEqualTo(0.00690);
 	}

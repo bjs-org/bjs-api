@@ -63,4 +63,9 @@ public class SportResult {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("SportResult{id=%d, student=%s, result=%s, discipline=%s}", id, student, result, discipline);
+	}
+
 }
