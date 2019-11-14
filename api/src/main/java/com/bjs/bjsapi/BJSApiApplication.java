@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bjs.bjsapi.config.CalculationInformationConfig;
 import com.bjs.bjsapi.database.model.User;
+import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
 @SpringBootApplication
@@ -33,7 +34,7 @@ public class BJSApiApplication {
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
 
 		if (!userRepository.findByUsername("admin").isPresent()) {
-			User admin = new User("admin");
+			User admin = new UserBuilder().setUsername("admin").createUser();
 			admin.setAdministrator(true);
 			admin.setPassword(passwordEncoder.encode("admin"));
 			userRepository.save(admin);

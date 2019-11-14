@@ -2,9 +2,9 @@ package com.bjs.bjsapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
 
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -37,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider(userDetailsService));
 	}
 
@@ -47,12 +48,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.mvcMatchers("/api/v1/**").authenticated()
-			.mvcMatchers(HttpMethod.POST, "/api/v1/classes").hasRole("ADMIN")
-			.mvcMatchers(HttpMethod.DELETE, "/api/v1/classes/**").hasRole("ADMIN")
-			.mvcMatchers(HttpMethod.PATCH, "/api/v1/classes/**").hasRole("ADMIN")
 			.and()
 			.csrf().disable()
 			.sessionManagement().disable()
-			.rememberMe().disable();
+			.rememberMe().disable()
+			.sessionManagement().disable();
 	}
+
 }
+

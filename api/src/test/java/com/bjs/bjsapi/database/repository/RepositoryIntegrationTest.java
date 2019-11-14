@@ -3,16 +3,14 @@ package com.bjs.bjsapi.database.repository;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
@@ -23,7 +21,7 @@ import com.bjs.bjsapi.helper.ValidationFiles;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(SpringRunner.class)
+
 @ActiveProfiles("in-memory-db")
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,12 +60,12 @@ public abstract class RepositoryIntegrationTest {
 		}
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		setupTestUsers();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		clearDB();
 	}
@@ -108,19 +106,19 @@ public abstract class RepositoryIntegrationTest {
 		userRepository.deleteAll();
 	}
 
-	protected RequestPostProcessor asAdmin() {
+	RequestPostProcessor asAdmin() {
 		return user(new BJSUserPrincipal(admin));
 	}
 
-	protected RequestPostProcessor asUser() {
+	RequestPostProcessor asUser() {
 		return user(new BJSUserPrincipal(user));
 	}
 
-	protected String mask(String response, Object... objects) {
+	String mask(String response, Object... objects) {
 		return ValidationFiles.mask(mask(response), objects);
 	}
 
-	protected String mask(String response) {
+	String mask(String response) {
 		return ValidationFiles.mask(response, "http://[\\w.-]+(:\\d+)?(/[\\w.-]+)+(\\?([\\w-]+=[\\w/-]+(&)?)+)?");
 	}
 

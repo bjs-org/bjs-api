@@ -43,8 +43,18 @@ public class Class {
 		this.className = className;
 	}
 
+	public Class(String className, String classTeacherName) {
+		this.className = className;
+		this.classTeacherName = classTeacherName;
+	}
+
 	public Long getId() {
 		return id;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Class{id=%d, className='%s', classTeacherName='%s'}", id, className, classTeacherName);
 	}
 
 }

@@ -96,6 +96,9 @@ public class Student {
 		this.female = female;
 	}
 
-
+	@Override
+	public String toString() {
+		return String.format("Student{id=%d, firstName='%s', lastName='%s', birthDay=%s, female=%s, schoolClass=%s}", id, firstName, lastName, birthDay, female, schoolClass);
+	}
 
 }
