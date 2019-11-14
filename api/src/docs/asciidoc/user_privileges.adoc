@@ -1,0 +1,5 @@
+== User Privileges
+
+=== Get all user-privileges
+
+operation::user-privileges-get-all[snippets='http-request,response-fields,http-response']
