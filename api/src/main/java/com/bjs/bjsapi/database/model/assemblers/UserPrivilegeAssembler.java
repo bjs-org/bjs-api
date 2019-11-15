@@ -1,4 +1,4 @@
-package com.bjs.bjsapi.controllers;
+package com.bjs.bjsapi.database.model.assemblers;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -34,7 +34,10 @@ public class UserPrivilegeAssembler implements SimpleRepresentationModelAssemble
 
 	@Override
 	public void addLinks(CollectionModel<EntityModel<UserPrivilege>> resources) {
-		resources.add(entityLinks.linkToCollectionResource(UserPrivilege.class).withSelfRel());
+		resources.add(
+			entityLinks.linkToCollectionResource(UserPrivilege.class).withSelfRel(),
+			entityLinks.linkFor(UserPrivilege.class).slash("search").withRel("search")
+		);
 	}
 
 }

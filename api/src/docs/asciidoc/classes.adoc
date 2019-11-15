@@ -21,7 +21,7 @@ An admin users gets all classes, of course.
 
 operation::classes-get-all[snippets='http-request,response-fields,http-response']
 
-=== Get class by ID
+=== Get a single class by ID
 
 Here, as well, the users only get to see the class they have permission for, otherwise the request will respond as `403 Forbidden`
 

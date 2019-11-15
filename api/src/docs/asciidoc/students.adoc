@@ -8,7 +8,7 @@ operation::students-post[snippets='request-fields,http-request,response-fields,h
 
 operation::students-get-all[snippets='http-request,response-fields,http-response']
 
-=== Get student by ID
+=== Get a single student by ID
 
 operation::students-get-byId[snippets='path-parameters,http-request,response-fields,http-response']
 

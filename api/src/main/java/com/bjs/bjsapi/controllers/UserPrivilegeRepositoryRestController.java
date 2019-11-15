@@ -6,14 +6,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bjs.bjsapi.database.model.UserPrivilege;
+import com.bjs.bjsapi.database.model.assemblers.UserPrivilegeAssembler;
 import com.bjs.bjsapi.database.repository.UserPrivilegeRepository;
 
 @BasePathAwareController
 @ExposesResourceFor(UserPrivilege.class)
 @PreAuthorize("hasRole('ROLE_ADMIN')")
+@RequestMapping("user_privileges")
 public class UserPrivilegeRepositoryRestController {
 
 	private final UserPrivilegeRepository userPrivilegeRepository;
@@ -24,13 +27,13 @@ public class UserPrivilegeRepositoryRestController {
 		this.resourceAssembler = resourceAssembler;
 	}
 
-	@GetMapping("user_privileges")
+	@GetMapping("")
 	public @ResponseBody
 	ResponseEntity<?> findAll() {
 		return ResponseEntity.ok(resourceAssembler.toCollectionModel(userPrivilegeRepository.findAll()));
 	}
 
-	@GetMapping("user_privileges/{id}")
+	@GetMapping("{id}")
 	public @ResponseBody
 	ResponseEntity<?> findById(@PathVariable Long id) {
 		return userPrivilegeRepository.findById(id)

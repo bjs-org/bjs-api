@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -76,6 +77,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			.andExpect(jsonPath("$._embedded.user_privileges.[0]._links.user.href").exists())
 			.andExpect(jsonPath("$._embedded.user_privileges.[0]._links.accessibleClass.href").exists())
 			.andExpect(jsonPath("$._links.self.href").value(endsWith("/api/v1/user_privileges")))
+			.andExpect(jsonPath("$._links.search.href").value(endsWith("/api/v1/user_privileges/search")))
 			.andDo(document("user-privileges-get-all",
 				responseFields(
 					subsectionWithPath("_links").description("Links to all other resources of user-privileges"),
@@ -101,7 +103,20 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			.andExpect(jsonPath("_links.self.href").value(containsString("/api/v1/user_privileges/")))
 			.andExpect(jsonPath("_links.accessibleClass.href").exists())
 			.andExpect(jsonPath("_links.user.href").exists())
-			.andDo(document("user-privileges-get-byId"));
+			.andDo(document("user-privileges-get-byId",
+				pathParameters(
+					parameterWithName("id").description("The ID of the user privilege")
+				),
+				responseFields(userPrivilegeDescriptors)
+			));
+	}
+
+	@Test
+	void test_findByAccessibleClass_unauthorized() throws Exception {
+		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass={accessibleClass}", String.format("/api/v1/classes/%s", schoolClass.getId()))
+			.with(asUser())
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isNotFound());
 	}
 
 	private void setupUserPrivilegeScenario() {
