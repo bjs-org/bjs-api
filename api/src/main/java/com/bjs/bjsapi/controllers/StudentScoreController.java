@@ -28,35 +28,49 @@ public class StudentScoreController {
 		this.calculationInformationService = calculationInformationService;
 	}
 
+
+
 	@GetMapping("/score")
 	public Integer calculateScore(@PathVariable("id") Long id) {
+		int scoreResult = 0;
 		Optional<Student> optionalStudent = studentRepository.findById(id);
 		if (optionalStudent.isPresent()) {
-			int scoreResult = 0;
 			Student student = optionalStudent.get();
 			List<SportResult> sportResults = sportResultRepository.findByStudent(student);
 			for (SportResult sportResult : sportResults) {
 				if (sportResult.getDiscipline().isRUN()) {
-					double d = sportResult.getDiscipline().getDistance();
-					double m = sportResult.getResult();
-					double z = 0.0;
+					double distance = sportResult.getDiscipline().getDistance();
+					double measurement = sportResult.getResult();
+					double extra = getExtra(sportResult.getDiscipline().getDistance());
 					double a = calculationInformationService.getAValue(student.getFemale(), sportResult.getDiscipline());
 					double c = calculationInformationService.getCValue(student.getFemale(), sportResult.getDiscipline());
-					double scoreRun = d / (m + z) - a;
+					double scoreRun = (distance / (measurement + extra) - a) / c;
 					scoreResult = scoreResult + (int) Math.floor(scoreRun);
 				} else {
-					double m = Math.sqrt(sportResult.getResult());
+					double measurement = Math.sqrt(sportResult.getResult());
 					double a = calculationInformationService.getAValue(student.getFemale(), sportResult.getDiscipline());
 					double c = calculationInformationService.getCValue(student.getFemale(), sportResult.getDiscipline());
-					double scoreOther = (m - a) / c;
+					double scoreOther = (measurement - a) / c;
 					scoreResult = scoreResult + (int) Math.floor(scoreOther);
 				}
 			}
+
+			return scoreResult;
 		}
 
 		return null;
 	}
 
+	private double getExtra(int distance) {
+		double extra = 0.0;
+		if(distance <= 300) {
+			extra = 0.24;
+		}
+		else if(distance > 300 && distance <= 400) {
+			extra = 0.14;
+		}
+
+		return extra;
+	}
+
 }
-
-
