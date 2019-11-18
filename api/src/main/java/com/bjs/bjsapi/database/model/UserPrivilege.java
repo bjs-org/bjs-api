@@ -6,10 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+
+import org.springframework.data.relational.core.mapping.Table;
 
 @Entity
-@Table(name = "user_privileges")
+@Table("user_privileges")
 public class UserPrivilege {
 
 	@Id

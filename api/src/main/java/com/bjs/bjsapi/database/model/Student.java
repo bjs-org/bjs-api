@@ -9,14 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
-@Table(name = "students")
+@Table("students")
 public class Student {
 
 	@Id

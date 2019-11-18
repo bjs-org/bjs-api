@@ -4,8 +4,6 @@ import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 
 import java.util.Optional;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,7 +23,7 @@ public class BJSUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> user = runAs(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_ADMIN")), () -> userRepository.findByUsername(username));
+		Optional<User> user = runAsAdmin(() -> userRepository.findByUsername(username));
 
 		if (!user.isPresent()) {
 			throw new UsernameNotFoundException(username);

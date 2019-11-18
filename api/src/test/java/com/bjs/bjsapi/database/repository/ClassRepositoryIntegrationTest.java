@@ -1,6 +1,7 @@
 package com.bjs.bjsapi.database.repository;
 
 import static com.bjs.bjsapi.helper.ValidationFiles.*;
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -15,12 +16,10 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.helper.ClassBuilder;
 import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
-import com.bjs.bjsapi.helper.SecurityHelper;
 
 public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
@@ -40,8 +39,6 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	public void setUp() throws Exception {
 		super.setUp();
 		setupClassScenario();
-
-		SecurityContextHolder.clearContext();
 	}
 
 	@Test
@@ -284,17 +281,17 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	private void setupClassScenario() {
-		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
+		runAsAdmin(() -> {
+			privilegedClass = new ClassBuilder().setClassName("privilegedClass").createClass();
+			privilegedClass.setClassTeacherName("ClassTeacher");
+			classRepository.save(privilegedClass);
 
-		privilegedClass = new ClassBuilder().setClassName("privilegedClass").createClass();
-		privilegedClass.setClassTeacherName("ClassTeacher");
-		classRepository.save(privilegedClass);
+			unprivilegedClass = new ClassBuilder().setClassName("unprivilegedClass").createClass();
+			unprivilegedClass.setClassTeacherName("ClassTeacher");
+			classRepository.save(unprivilegedClass);
 
-		unprivilegedClass = new ClassBuilder().setClassName("unprivilegedClass").createClass();
-		unprivilegedClass.setClassTeacherName("ClassTeacher");
-		classRepository.save(unprivilegedClass);
-
-		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+			userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+		});
 	}
 
 }
