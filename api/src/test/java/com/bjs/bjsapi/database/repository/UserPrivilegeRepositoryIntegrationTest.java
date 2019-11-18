@@ -113,10 +113,10 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 
 	@Test
 	void test_findByAccessibleClass_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass={accessibleClass}", String.format("/api/v1/classes/%s", schoolClass.getId()))
+		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass={accessibleClass}", "/" + schoolClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isNotFound());
+			.andExpect(status().isForbidden());
 	}
 
 	private void setupUserPrivilegeScenario() {
