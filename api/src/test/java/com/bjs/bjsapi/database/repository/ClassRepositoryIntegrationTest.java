@@ -1,7 +1,7 @@
 package com.bjs.bjsapi.database.repository;
 
-import static com.bjs.bjsapi.helper.ValidationFiles.*;
 import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
@@ -48,51 +47,55 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	void test_findAll_authorized_onlyPrivilegedData() throws Exception {
-		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
+	void test_findAll_userAuthorized() throws Exception {
+		mvc.perform(get("/api/v1/classes")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andDo(document("classes-get-all", schoolClasses))
-			.andReturn().getResponse();
-
-		checkWithValidationFile("web/classes-findAll-authorized-onlyPrivileged", mask(response.getContentAsString(), privilegedClass.getId().toString()));
+			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(1)))
+			.andExpect(jsonPath("$._embedded.classes.[0].className").value("privilegedClass"))
+			.andDo(document("classes-get-all", schoolClasses));
 	}
 
 	@Test
-	void test_findAll_admin_allData() throws Exception {
-		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
+	void test_findAll_admin() throws Exception {
+		mvc.perform(get("/api/v1/classes")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andReturn().getResponse();
-
-		checkWithValidationFile("web/classes-findAll-admin-allData", mask(response.getContentAsString(), unprivilegedClass.getId().toString(), privilegedClass.getId().toString()));
+			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(2)))
+			.andExpect(jsonPath("$._embedded.classes.[*].className", containsInAnyOrder("privilegedClass", "unprivilegedClass")));
 	}
 
 	@Test
-	void test_findById_authorized_onlyPrivilegedData() throws Exception {
-
+	void test_findById_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
 
+	}
+
+	@Test
+	void test_findById_userAuthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.classTeacherName").value("ClassTeacher"))
+			.andExpect(jsonPath("$.className").value("privilegedClass"))
 			.andDo(document("classes-get-byId",
 				pathParameters(
 					parameterWithName("id").description("The class' id you want to get")
 				),
-				responseFields(schoolClass)));
+				responseFields(schoolClass)
+			));
 	}
 
 	@Test
-	void test_findById_admin_allData() throws Exception {
+	void test_findById_admin() throws Exception {
 
 		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asAdmin())
@@ -106,13 +109,15 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	void test_findByName_authorized_onlyPrivilegedData() throws Exception {
-
+	void test_findByName_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
+	}
 
+	@Test
+	void test_findByName_userAuthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -121,60 +126,62 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 				requestParameters(
 					parameterWithName("className").description("The class' name you want to get")
 				),
-				responseFields(schoolClass)));
+				responseFields(schoolClass)
+			));
 	}
 
 	@Test
 	void test_findByName_admin_allData() throws Exception {
-
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.className").value("privilegedClass"));
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.className").value("unprivilegedClass"));
 	}
 
 	@Test
-	void test_findByClassTeacher_authorized_onlyPrivilegedData() throws Exception {
+	void test_findByClassTeacher_userAuthorized() throws Exception {
 
-		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", privilegedClass.getClassTeacherName())
+		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", privilegedClass.getClassTeacherName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(1)))
+			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItem("privilegedClass")))
 			.andDo(document("classes-get-byTeacher",
 				requestParameters(
 					parameterWithName("classTeacherName").description("The name of the teacher of the class")
-				), schoolClasses))
-			.andReturn().getResponse();
+				), schoolClasses));
 
-		checkWithValidationFile("web/classes-findByClassTeacher-authorized-onlyPrivileged", mask(response.getContentAsString(), privilegedClass.getId().toString(), unprivilegedClass.getId().toString()));
 	}
 
 	@Test
-	void test_findByClassTeacher_admin_allData() throws Exception {
+	void test_findByClassTeacher_admin() throws Exception {
 
-		String response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", unprivilegedClass.getClassTeacherName())
+		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", unprivilegedClass.getClassTeacherName())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(2)))
+			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItems("privilegedClass", "unprivilegedClass")))
 			.andReturn().getResponse().getContentAsString();
-
-		checkWithValidationFile("web/classes-findByClassTeacher-admin-allData", mask(response, unprivilegedClass.getId(), privilegedClass.getId()));
 	}
 
 	@Test
 	void test_save_unauthorized() throws Exception {
-		Class aClass = new ClassBuilder().setClassName("7A").createClass();
-		aClass.setClassTeacherName("A Class Teacher");
+		Class schoolClass = new ClassBuilder().setClassName("7A").createClass();
+		schoolClass.setClassTeacherName("A Class Teacher");
+
+		//TODO add authentication
 
 		mvc.perform(post("/api/v1/classes")
-			.content(asJsonString(aClass))
+			.content(asJsonString(schoolClass))
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isUnauthorized());
 	}

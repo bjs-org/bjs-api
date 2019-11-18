@@ -137,7 +137,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$._embedded.[*]", hasSize(1)))
+			.andExpect(jsonPath("$._embedded.user_privileges.[*]", hasSize(1)))
 			.andDo(document("user-privilege-get-by-class",
 				requestParameters(
 					parameterWithName("accessibleClass").description("URI to the class")
@@ -162,7 +162,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$._embedded.[*]", hasSize(1)))
+			.andExpect(jsonPath("$._embedded.user_privileges.[*]", hasSize(1)))
 			.andDo(document("user-privilege-get-by-user",
 				requestParameters(
 					parameterWithName("user").description("URI to the user")
