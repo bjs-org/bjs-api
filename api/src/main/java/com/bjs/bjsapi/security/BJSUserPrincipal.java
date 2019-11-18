@@ -10,7 +10,7 @@ import com.bjs.bjsapi.database.model.User;
 
 public class BJSUserPrincipal implements UserDetails {
 
-	private User user;
+	private final User user;
 
 	public BJSUserPrincipal(User user) {
 		this.user = user;

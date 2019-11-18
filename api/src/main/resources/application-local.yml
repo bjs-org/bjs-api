@@ -30,5 +30,6 @@ spring:
   main:
     allow-bean-definition-overriding: true
 logging:
-  file: logs/bjs-api.log
+  file:
+    name: logs/bjs-api.log
 

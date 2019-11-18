@@ -34,7 +34,8 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 	private UserPrivilege userPrivilege;
 	private Class schoolClass;
 	private User testUser;
-	private List<FieldDescriptor> userPrivilegeDescriptors = Arrays.asList(
+
+	private final List<FieldDescriptor> userPrivilegeDescriptors = Arrays.asList(
 		subsectionWithPath("_links").description("All links regarding this privilege object"),
 		fieldWithPath("_links.accessibleClass").description("Link to class this privilege refers"),
 		fieldWithPath("_links.user").description("Link to the user which this privilege has an effect")
@@ -42,7 +43,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 
 	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		super.setUp();
 		setupUserPrivilegeScenario();
 		SecurityHelper.reset();

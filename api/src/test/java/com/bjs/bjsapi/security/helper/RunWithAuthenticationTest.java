@@ -20,16 +20,12 @@ class RunWithAuthenticationTest {
 
 	}
 
-	;
-
 	@FunctionalInterface
 	private interface ValidationObjectSupplier<T> {
 
 		T validate();
 
 	}
-
-	;
 
 	@Test
 	void test_runWithAuthentication_supplier() {
@@ -56,9 +52,7 @@ class RunWithAuthenticationTest {
 
 		SecurityContextHolder.getContext().setAuthentication(original);
 
-		ValidationObjectRunnable object = () -> {
-			assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(inserted);
-		};
+		ValidationObjectRunnable object = () -> assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(inserted);
 
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(original);
 		runWith(inserted, object::validate);

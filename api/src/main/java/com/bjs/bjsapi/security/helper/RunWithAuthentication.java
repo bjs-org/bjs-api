@@ -9,10 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class RunWithAuthentication {
 
-	private static Supplier<Authentication> adminAuthenticationSupplier = () -> toAuthentication("admin", "admin", "ROLE_ADMIN", "ROLE_USER");
+	private static final Supplier<Authentication> ADMIN_AUTHENTICATION_SUPPLIER = () -> toAuthentication("admin", "admin", "ROLE_ADMIN", "ROLE_USER");
 
 	public static <T> T runAsAdmin(Supplier<T> supplier) {
-		return runWith(adminAuthenticationSupplier.get(), supplier);
+		return runWith(ADMIN_AUTHENTICATION_SUPPLIER.get(), supplier);
 	}
 
 	public static <T> T runWith(Authentication authentication, Supplier<T> supplier) {
@@ -26,7 +26,7 @@ public class RunWithAuthentication {
 	}
 
 	public static void runAsAdmin(Runnable runnable) {
-		runWith(adminAuthenticationSupplier.get(), runnable);
+		runWith(ADMIN_AUTHENTICATION_SUPPLIER.get(), runnable);
 	}
 
 	public static void runWith(Authentication authentication, Runnable runnable) {

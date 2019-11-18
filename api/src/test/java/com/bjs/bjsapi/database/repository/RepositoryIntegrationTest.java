@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-public abstract class RepositoryIntegrationTest {
+abstract class RepositoryIntegrationTest {
 
 	@Autowired
 	protected MockMvc mvc;
@@ -49,10 +49,10 @@ public abstract class RepositoryIntegrationTest {
 	@Autowired
 	protected ObjectMapper objectMapper;
 
-	protected User user;
-	protected User admin;
+	User user;
+	private User admin;
 
-	public static String asJsonString(final Object obj) {
+	static String asJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);
 		} catch (Exception e) {
@@ -61,17 +61,17 @@ public abstract class RepositoryIntegrationTest {
 	}
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		setupTestUsers();
 	}
 
 	@AfterEach
-	public void tearDown() throws Exception {
+	void tearDown() {
 		clearDB();
 	}
 
 	@Test
-	public void test_initializeCorrectly() {
+	void test_initializeCorrectly() {
 		assertThat(mvc).isNotNull();
 		assertThat(classRepository).isNotNull();
 		assertThat(studentRepository).isNotNull();

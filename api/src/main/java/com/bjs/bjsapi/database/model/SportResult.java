@@ -9,14 +9,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 
 @Entity
-@Table("sport_results")
+@Table(name = "sport_results")
 public class SportResult {
 
 	@Id

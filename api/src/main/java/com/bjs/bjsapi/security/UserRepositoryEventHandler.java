@@ -28,12 +28,12 @@ public class UserRepositoryEventHandler {
 	}
 
 	@HandleBeforeCreate
-	protected void onBeforeCreate(User user) {
+	void onBeforeCreate(User user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 	}
 
 	@HandleBeforeSave
-	protected void onBeforeSave(User user) {
+	void onBeforeSave(User user) {
 
 		if (entityManager != null) {
 			entityManager.detach(user);
