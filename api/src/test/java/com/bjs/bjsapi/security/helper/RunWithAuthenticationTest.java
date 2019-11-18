@@ -1,10 +1,14 @@
 package com.bjs.bjsapi.security.helper;
 
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.security.Principal;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 class RunWithAuthenticationTest {
@@ -16,16 +20,12 @@ class RunWithAuthenticationTest {
 
 	}
 
-	;
-
 	@FunctionalInterface
 	private interface ValidationObjectSupplier<T> {
 
 		T validate();
 
 	}
-
-	;
 
 	@Test
 	void test_runWithAuthentication_supplier() {
@@ -41,7 +41,7 @@ class RunWithAuthenticationTest {
 		};
 
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(original);
-		assertThat(RunWithAuthentication.runAs(inserted, object::validate)).isEqualTo(correctString);
+		assertThat(runWith(inserted, object::validate)).isEqualTo(correctString);
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(original);
 	}
 
@@ -52,13 +52,25 @@ class RunWithAuthenticationTest {
 
 		SecurityContextHolder.getContext().setAuthentication(original);
 
-		ValidationObjectRunnable object = () -> {
-			assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(inserted);
-		};
+		ValidationObjectRunnable object = () -> assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(inserted);
 
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(original);
-		RunWithAuthentication.runAs(inserted, object::validate);
+		runWith(inserted, object::validate);
 		assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(original);
+	}
+
+	@Test
+	void test_toAuthentication() {
+		String role_user = "ROLE_USER";
+		String role_admin = "ROLE_ADMIN";
+		String password = "password";
+		String user = "user";
+
+		Authentication authentication = toAuthentication(user, password, role_admin, role_user);
+
+		assertThat(authentication).extracting(Principal::getName).isEqualTo(user);
+		assertThat(authentication).extracting(Authentication::getCredentials).isEqualTo(password);
+		assertThat(authentication.getAuthorities()).extracting(GrantedAuthority::getAuthority).contains(role_admin, role_user);
 	}
 
 }

@@ -39,21 +39,21 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private User newUser;
 
-	private List<FieldDescriptor> userResponse = Arrays.asList(
+	private final List<FieldDescriptor> userResponse = Arrays.asList(
 		fieldWithPath("username").description("The user's username"),
 		fieldWithPath("password").description("The encrypted password"),
 		fieldWithPath("administrator").description("If the user is a administrator"),
 		fieldWithPath("enabled").description("If the user is enabled and can login"),
 		subsectionWithPath("_links").description("All links regarding this user")
 	);
-	private List<FieldDescriptor> userRequestOptional = Arrays.asList(
+	private final List<FieldDescriptor> userRequestOptional = Arrays.asList(
 		fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
 		fieldWithPath("username").description("The user's username").optional().type(JsonFieldType.STRING),
 		fieldWithPath("password").description("The user's password in plain text").optional().type(JsonFieldType.STRING),
 		fieldWithPath("enabled").description("If this account should be enabled").optional().type(JsonFieldType.BOOLEAN),
 		fieldWithPath("administrator").description("Defines whether is user should get administrator rights").optional().type(JsonFieldType.BOOLEAN)
 	);
-	private List<FieldDescriptor> userRequest = Arrays.asList(
+	private final List<FieldDescriptor> userRequest = Arrays.asList(
 		fieldWithPath("id").description("The user's id").optional().type(JsonFieldType.NUMBER),
 		fieldWithPath("username").description("The user's username"),
 		fieldWithPath("password").description("The user's password in plain text"),
@@ -63,7 +63,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Override
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
 		setupUserScenario();
@@ -71,7 +71,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findAll_unauthenticated() throws Exception {
+	void test_findAll_unauthenticated() throws Exception {
 		mvc.perform(get("/api/v1/users")
 			.with(anonymous())
 			.accept(MediaType.APPLICATION_JSON))
@@ -79,7 +79,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findAll_unauthorized() throws Exception {
+	void test_findAll_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/users")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -87,7 +87,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findAll_admin() throws Exception {
+	void test_findAll_admin() throws Exception {
 		mvc.perform(get("/api/v1/users")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -104,7 +104,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findById_unauthorized() throws Exception {
+	void test_findById_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/users/{id}", firstUser.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
@@ -112,7 +112,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findById_admin() throws Exception {
+	void test_findById_admin() throws Exception {
 		mvc.perform(get("/api/v1/users/{id}", firstUser.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
@@ -127,7 +127,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByUsername_unauthorized() throws Exception {
+	void test_findByUsername_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
@@ -135,7 +135,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByUsername_admin() throws Exception {
+	void test_findByUsername_admin() throws Exception {
 		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
@@ -152,7 +152,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_create_unauthorized() throws Exception {
+	void test_create_unauthorized() throws Exception {
 		mvc.perform(post("/api/v1/users")
 			.content(givenNewUser())
 			.accept(MediaType.APPLICATION_JSON)
@@ -161,7 +161,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_create_admin() throws Exception {
+	void test_create_admin() throws Exception {
 		mvc.perform(post("/api/v1/users")
 			.content(givenNewUser())
 			.accept(MediaType.APPLICATION_JSON)
@@ -174,7 +174,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_edit_unauthorized() throws Exception {
+	void test_edit_unauthorized() throws Exception {
 		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
 			.content("{\n" +
 				"  \"enabled\": false\n" +
@@ -185,7 +185,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_edit_admin() throws Exception {
+	void test_edit_admin() throws Exception {
 		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
 			.content("{\n" +
 				"  \"enabled\": false\n" +
@@ -203,7 +203,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_replace_unauthorized() throws Exception {
+	void test_replace_unauthorized() throws Exception {
 		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
 			.content(givenNewUser())
 			.with(asUser()))
@@ -211,7 +211,7 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_replace_admin() throws Exception {
+	void test_replace_admin() throws Exception {
 		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.content(givenNewUser())
@@ -227,14 +227,14 @@ public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_delete_unauthorized() throws Exception {
+	void test_delete_unauthorized() throws Exception {
 		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
-	public void test_delete_admin() throws Exception {
+	void test_delete_admin() throws Exception {
 		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent())

@@ -6,8 +6,6 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +32,7 @@ public class BJSApiApplication {
 
 	@PostConstruct
 	public void init() {
-		runAs(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")), () -> {
+		runAsAdmin(() -> {
 			if (!userRepository.findByUsername("admin").isPresent()) {
 				User admin = new UserBuilder().setUsername("admin").createUser();
 				admin.setAdministrator(true);

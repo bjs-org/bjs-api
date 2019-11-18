@@ -14,7 +14,7 @@ public class ValidationFiles {
 
 	private static final Path TEST_OUTPUT_DATA_DIR = Paths.get("data/test/output");
 	private static final Path TEST_VALIDATION_DATA_DIR = Paths.get("data/test/validation");
-	public static final String MASK = "[MASK]";
+	private static final String MASK = "[MASK]";
 
 	public static void checkWithValidationFile(String filename, String content) throws IOException {
 
@@ -38,7 +38,7 @@ public class ValidationFiles {
 		createValidationFileIfNotExists(validationFile, "");
 	}
 
-	public static void createValidationFileIfNotExists(Path validationFile, String content) throws IOException {
+	private static void createValidationFileIfNotExists(Path validationFile, String content) throws IOException {
 		String filename = validationFile.getFileName().toString();
 		Files.createDirectories(validationFile.getParent());
 		if (!Files.exists(validationFile)) {
@@ -46,7 +46,7 @@ public class ValidationFiles {
 		}
 	}
 
-	public static void writeToFile(Path path, String string) throws IOException {
+	private static void writeToFile(Path path, String string) throws IOException {
 		path.getParent().toFile().mkdirs();
 		Files.write(path, string.getBytes(UTF_8), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 	}
