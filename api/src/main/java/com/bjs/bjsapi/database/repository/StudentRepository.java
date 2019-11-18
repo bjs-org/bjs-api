@@ -15,26 +15,26 @@ import com.bjs.bjsapi.database.model.Student;
 @RepositoryRestResource(path = "students", collectionResourceRel = "students")
 public interface StudentRepository extends CrudRepository<Student, Long> {
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Student> findAllBySchoolClass(Class schoolClass);
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Student> findByFirstNameAndLastName(String firstName, String lastName);
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Student> findByFirstName(String firstName);
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Student> findByLastName(String lastName);
 
-	@PostAuthorize("hasRole('ROLE_ADMIN') or hasPermission(returnObject.orElse(null),'read')")
+	@PostAuthorize("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,returnObject.orElse(null),'read')")
 	Optional<Student> findById(Long id);
 
-	@PostFilter("hasRole('ROLE_ADMIN') or hasPermission(filterObject,'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Student> findAll();
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasPermission(#entity,'write')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or @studentPermissionEvaluator.hasPermission(authentication,#entity,'write')")
 	<S extends Student> S save(S entity);
 
 }
