@@ -38,19 +38,19 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	private Student unprivilegedStudent3;
 	private Class privilegedClass;
 	private Class unprivilegedClass;
-	private FieldDescriptor[] studentDescriptors = new FieldDescriptor[] {
+	private final FieldDescriptor[] studentDescriptors = new FieldDescriptor[] {
 		fieldWithPath("firstName").type(JsonFieldType.STRING).description("The student's first name"),
 		fieldWithPath("lastName").type(JsonFieldType.STRING).description("The students's last name"),
 		fieldWithPath("birthDay").type(JsonFieldType.STRING).description("The student's birth day"),
 		fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("Whether or not the student is female"),
 		subsectionWithPath("_links").description("Links regarding this student")
 	};
-	private ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
+	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
 
 	private JacksonTester<Student> jacksonTester;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
 		setupClassScenario();
@@ -215,7 +215,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	public void test_findAllBySchoolClass_authorized_privilegedData() throws Exception {
+	void test_findAllBySchoolClass_authorized_privilegedData() throws Exception {
 		String response = mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + privilegedClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -339,12 +339,12 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.andExpect(status().isForbidden());
 	}
 
-	private String getContent(ObjectNode schoolClass) {
+	String getContent(ObjectNode schoolClass) {
 		return schoolClass.toString();
 	}
 
 	@Test
-	void test_edit_authenticated() throws Exception {
+	void test_edit_authorized() throws Exception {
 		String newSchoolClass = String.format("/api/v1/classes/%s", privilegedClass.getId());
 		String newFemale = "false";
 		String newLastName = "new last name";
@@ -572,7 +572,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.setFirstName("Simon")
 			.setLastName("Schwarz")
 			.setFemale(false)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 01, 25)))
+			.setBirthDay(Date.valueOf(LocalDate.of(2002, 1, 25)))
 			.createStudent();
 
 		ObjectNode schoolClass = ((ObjectNode) objectMapper.readTree(jacksonTester.write(student).getJson()));

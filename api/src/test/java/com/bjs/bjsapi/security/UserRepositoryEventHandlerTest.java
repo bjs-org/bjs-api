@@ -16,22 +16,22 @@ import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
-public class UserRepositoryEventHandlerTest {
+class UserRepositoryEventHandlerTest {
 
 	@Mock
 	private UserRepository userRepository;
-	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	private UserRepositoryEventHandler userRepositoryEventHandler;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() {
 		MockitoAnnotations.initMocks(this);
 		userRepositoryEventHandler = new UserRepositoryEventHandler(userRepository, passwordEncoder);
 	}
 
 	@Test
-	public void test_beforeCreate() {
+	void test_beforeCreate() {
 		String password = "password";
 
 		User user = new UserBuilder().setUsername("testUser").createUser();
@@ -42,7 +42,7 @@ public class UserRepositoryEventHandlerTest {
 	}
 
 	@Test
-	public void test_beforeSave_passwordChange() {
+	void test_beforeSave_passwordChange() {
 		String newPassword = "password";
 		String username = "user";
 
@@ -60,7 +60,7 @@ public class UserRepositoryEventHandlerTest {
 	}
 
 	@Test
-	public void test_beforeSave_notPasswordChange() {
+	void test_beforeSave_notPasswordChange() {
 		String password = "password";
 		String username = "user";
 

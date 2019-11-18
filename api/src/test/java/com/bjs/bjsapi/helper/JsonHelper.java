@@ -4,7 +4,7 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.slf4j.Logger;
 
-public class JsonHelper {
+class JsonHelper {
 
 	public static BaseMatcher<Object> printMatcher(final Logger log) {
 		return new BaseMatcher<Object>() {

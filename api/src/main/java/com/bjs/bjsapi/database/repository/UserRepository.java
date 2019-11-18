@@ -9,25 +9,21 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.bjs.bjsapi.database.model.User;
 
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RepositoryRestResource(path = "users", collectionResourceRel = "users")
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	List<User> findAll();
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Optional<User> findById(Long id);
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	Optional<User> findByUsername(String username);
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	<S extends User> S save(S entity);
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	void delete(User entity);
 
 }

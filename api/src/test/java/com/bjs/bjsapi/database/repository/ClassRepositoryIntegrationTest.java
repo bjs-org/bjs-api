@@ -1,6 +1,7 @@
 package com.bjs.bjsapi.database.repository;
 
 import static com.bjs.bjsapi.helper.ValidationFiles.*;
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -15,43 +16,39 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.ResponseFieldsSnippet;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.helper.ClassBuilder;
 import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
-import com.bjs.bjsapi.helper.SecurityHelper;
 
 public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private Class privilegedClass;
 	private Class unprivilegedClass;
-	private FieldDescriptor[] schoolClass = new FieldDescriptor[] {
+	private final FieldDescriptor[] schoolClass = new FieldDescriptor[] {
 		fieldWithPath("className").type(JsonFieldType.STRING).description("The class' name"),
 		fieldWithPath("classTeacherName").type(JsonFieldType.STRING).description("The class teacher's name"),
 		subsectionWithPath("_links").description("Links regarding this class")
 	};
-	private ResponseFieldsSnippet schoolClasses = responseFields(
+	private final ResponseFieldsSnippet schoolClasses = responseFields(
 		subsectionWithPath("_links").description("All links regarding classes"),
 		fieldWithPath("_embedded.classes[]").description("All (visible) classes")
 	).andWithPrefix("_embedded.classes[].", schoolClass);
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		super.setUp();
 		setupClassScenario();
-
-		SecurityContextHolder.clearContext();
 	}
 
 	@Test
-	public void test_findAll_unauthorized() throws Exception {
+	void test_findAll_unauthorized() throws Exception {
 		mvc.perform(get("/api/v1/classes"))
 			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void test_findAll_authorized_onlyPrivilegedData() throws Exception {
+	void test_findAll_authorized_onlyPrivilegedData() throws Exception {
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -64,7 +61,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findAll_admin_allData() throws Exception {
+	void test_findAll_admin_allData() throws Exception {
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -76,7 +73,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findById_authorized_onlyPrivilegedData() throws Exception {
+	void test_findById_authorized_onlyPrivilegedData() throws Exception {
 
 		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
 			.with(asUser())
@@ -95,7 +92,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findById_admin_allData() throws Exception {
+	void test_findById_admin_allData() throws Exception {
 
 		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asAdmin())
@@ -109,7 +106,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByName_authorized_onlyPrivilegedData() throws Exception {
+	void test_findByName_authorized_onlyPrivilegedData() throws Exception {
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
 			.with(asUser())
@@ -128,7 +125,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByName_admin_allData() throws Exception {
+	void test_findByName_admin_allData() throws Exception {
 
 		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
 			.with(asAdmin())
@@ -142,7 +139,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByClassTeacher_authorized_onlyPrivilegedData() throws Exception {
+	void test_findByClassTeacher_authorized_onlyPrivilegedData() throws Exception {
 
 		MockHttpServletResponse response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", privilegedClass.getClassTeacherName())
 			.with(asUser())
@@ -159,7 +156,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_findByClassTeacher_admin_allData() throws Exception {
+	void test_findByClassTeacher_admin_allData() throws Exception {
 
 		String response = mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", unprivilegedClass.getClassTeacherName())
 			.accept(MediaType.APPLICATION_JSON)
@@ -172,7 +169,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_save_unauthorized() throws Exception {
+	void test_save_unauthorized() throws Exception {
 		Class aClass = new ClassBuilder().setClassName("7A").createClass();
 		aClass.setClassTeacherName("A Class Teacher");
 
@@ -183,7 +180,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_save_admin() throws Exception {
+	void test_save_admin() throws Exception {
 		Class aClass = new ClassBuilder().setClassName("7A").createClass();
 		aClass.setClassTeacherName("A Class Teacher");
 
@@ -202,14 +199,14 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_deleteClass_unauthorized() throws Exception {
+	void test_deleteClass_unauthorized() throws Exception {
 		mvc.perform(delete("/api/v1/classes/{id}", unprivilegedClass.getId())
 			.with(anonymous()))
 			.andExpect(status().isUnauthorized());
 	}
 
 	@Test
-	public void test_deleteClass_authorized_privilegedOnly() throws Exception {
+	void test_deleteClass_authorized_privilegedOnly() throws Exception {
 		mvc.perform(delete("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
@@ -220,7 +217,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_deleteClass_admin_allowed() throws Exception {
+	void test_deleteClass_admin_allowed() throws Exception {
 		mvc.perform(delete("/api/v1/classes/{id}", privilegedClass.getId())
 			.with(asAdmin()))
 			.andDo(document("classes-delete",
@@ -235,7 +232,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_editClass_authorized() throws Exception {
+	void test_editClass_authorized() throws Exception {
 		String json = "{\n" +
 			"  \"className\": \"changed name\",\n" +
 			"  \"classTeacherName\": \"new Class Teacher\"\n" +
@@ -261,7 +258,7 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	@Test
-	public void test_putClass() throws Exception {
+	void test_putClass() throws Exception {
 		String json = "{\n" +
 			"  \"className\": \"changed name\"\n" +
 			"}";
@@ -284,17 +281,17 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	}
 
 	private void setupClassScenario() {
-		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
+		runAsAdmin(() -> {
+			privilegedClass = new ClassBuilder().setClassName("privilegedClass").createClass();
+			privilegedClass.setClassTeacherName("ClassTeacher");
+			classRepository.save(privilegedClass);
 
-		privilegedClass = new ClassBuilder().setClassName("privilegedClass").createClass();
-		privilegedClass.setClassTeacherName("ClassTeacher");
-		classRepository.save(privilegedClass);
+			unprivilegedClass = new ClassBuilder().setClassName("unprivilegedClass").createClass();
+			unprivilegedClass.setClassTeacherName("ClassTeacher");
+			classRepository.save(unprivilegedClass);
 
-		unprivilegedClass = new ClassBuilder().setClassName("unprivilegedClass").createClass();
-		unprivilegedClass.setClassTeacherName("ClassTeacher");
-		classRepository.save(unprivilegedClass);
-
-		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+			userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+		});
 	}
 
 }
