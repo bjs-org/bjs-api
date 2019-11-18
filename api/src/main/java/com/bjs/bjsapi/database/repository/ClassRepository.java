@@ -28,7 +28,7 @@ public interface ClassRepository extends CrudRepository<Class, Long> {
 	List<Class> findByClassTeacherName(String classTeacherName);
 
 	@Override
-	@PreAuthorize("hasRole('ROLE_ADMIN') or @classPermissionEvaluator.hasPermission(authentication,#entity,'read')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or @classPermissionEvaluator.hasPermission(authentication,#entity,'write')")
 	<S extends Class> S save(S entity);
 
 	@Override
