@@ -1,9 +1,13 @@
 package com.bjs.bjsapi;
 
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,19 +32,16 @@ public class BJSApiApplication {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	public @PostConstruct
-	void init() {
-		final Authentication oldAuthentication = SecurityContextHolder.getContext().getAuthentication();
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")));
-
-		if (!userRepository.findByUsername("admin").isPresent()) {
-			User admin = new UserBuilder().setUsername("admin").createUser();
-			admin.setAdministrator(true);
-			admin.setPassword(passwordEncoder.encode("admin"));
-			userRepository.save(admin);
-		}
-
-		SecurityContextHolder.getContext().setAuthentication(oldAuthentication);
+	@PostConstruct
+	public void init() {
+		runAs(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_USER", "ROLE_ADMIN")), () -> {
+			if (!userRepository.findByUsername("admin").isPresent()) {
+				User admin = new UserBuilder().setUsername("admin").createUser();
+				admin.setAdministrator(true);
+				admin.setPassword(passwordEncoder.encode("admin"));
+				userRepository.save(admin);
+			}
+		});
 	}
 
 	public static void main(String[] args) {

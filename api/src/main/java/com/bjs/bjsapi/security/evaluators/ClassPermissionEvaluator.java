@@ -1,18 +1,20 @@
 package com.bjs.bjsapi.security.evaluators;
 
-import java.io.Serializable;
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
+
 import java.util.List;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Component;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.UserPrivilege;
 import com.bjs.bjsapi.database.repository.UserPrivilegeRepository;
-import com.bjs.bjsapi.security.TargetedPermissionEvaluator;
 
 @Component
-public class ClassPermissionEvaluator implements TargetedPermissionEvaluator {
+public class ClassPermissionEvaluator {
 
 	private final UserPrivilegeRepository userPrivilegeRepository;
 
@@ -20,26 +22,14 @@ public class ClassPermissionEvaluator implements TargetedPermissionEvaluator {
 		this.userPrivilegeRepository = userPrivilegeRepository;
 	}
 
-	@Override
-	public String getTargetType() {
-		return Class.class.getSimpleName();
-	}
-
-	@Override
-	public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
-		if (authentication == null || permission == null || !(targetDomainObject instanceof Class)) {
+	public boolean hasPermission(Authentication authentication, Class schoolClass, String permission) {
+		if (authentication == null || permission == null || schoolClass == null) {
 			return false;
 		} else {
-			Class domainObject = (Class) targetDomainObject;
-			List<UserPrivilege> userPrivileges = userPrivilegeRepository.findByAccessibleClass(domainObject);
+			List<UserPrivilege> userPrivileges = runAs(new UsernamePasswordAuthenticationToken("admin", "admin", AuthorityUtils.createAuthorityList("ROLE_ADMIN")), () -> userPrivilegeRepository.findByAccessibleClass(schoolClass));
 
 			return userPrivileges.stream().map(userPrivilege -> userPrivilege.getUser().getUsername()).anyMatch(username -> username.equals(authentication.getName()));
 		}
-	}
-
-	@Override
-	public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
-		return false;
 	}
 
 }
