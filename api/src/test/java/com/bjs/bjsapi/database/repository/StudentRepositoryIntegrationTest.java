@@ -1,6 +1,7 @@
 package com.bjs.bjsapi.database.repository;
 
 import static com.bjs.bjsapi.helper.ValidationFiles.*;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -11,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,16 +42,22 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	private Class privilegedClass;
 	private Class unprivilegedClass;
 
-	private final FieldDescriptor[] studentDescriptors = new FieldDescriptor[] {
+	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
+	private final List<FieldDescriptor> studentResponse = Arrays.asList(
 		fieldWithPath("firstName").type(JsonFieldType.STRING).description("The student's first name"),
 		fieldWithPath("lastName").type(JsonFieldType.STRING).description("The students's last name"),
 		fieldWithPath("birthDay").type(JsonFieldType.STRING).description("The student's birth day"),
-		fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("Whether or not the student is female"),
+		fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("If the student is female"),
 		subsectionWithPath("_links").description("Links regarding this student")
-	};
-	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
+	);
+	private final List<FieldDescriptor> studentsResponse = Arrays.asList(
+		subsectionWithPath("_embedded.students").description("All (visible) students"),
+		subsectionWithPath("_links").description("Links to other sections regarding students")
+	);
 
 	private JacksonTester<Student> jacksonTester;
+	private ParameterDescriptor lastNameDescriptor = parameterWithName("lastName").description("The student's last name");
+	private ParameterDescriptor firstNameDescriptor = parameterWithName("firstName").description("The student's first name");
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -67,108 +76,109 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_findAll_authorized_privilegedData() throws Exception {
-		String response = mvc.perform(get("/api/v1/students/")
+	void test_findAll_userAuthorized() throws Exception {
+		mvc.perform(get("/api/v1/students/")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("first", "third", "fifth")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("second", "fourth", "sixth"))))
 			.andDo(document("students-get-all",
-				responseFields(
-					subsectionWithPath("_embedded.students").description("All (visible) students"),
-					subsectionWithPath("_links").description("Links to other sections regarding students")
-				).andWithPrefix("_embedded.students[].", studentDescriptors)))
-			.andReturn().getResponse().getContentAsString();
-
-		checkWithValidationFile("web/students-findAll-authorized-onlyPrivileged", mask(response));
+				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+			));
 	}
 
 	@Test
-	void test_findAll_admin_allData() throws Exception {
-
-		String response = mvc.perform(get("/api/v1/students/")
+	void test_findAll_admin() throws Exception {
+		mvc.perform(get("/api/v1/students/")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andReturn().getResponse().getContentAsString();
-
-		checkWithValidationFile("web/students-findAll-admin-allData", mask(response));
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(6)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("first", "third", "fifth", "second", "fourth", "sixth")));
 	}
 
 	@Test
-	void test_findById_unauthorized_unprivilegedData() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent1.getId()).with(asUser()))
+	void test_findById_unauthorized() throws Exception {
+		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent1.getId())
+			.with(asUser()))
 			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent2.getId()).with(asUser()))
+		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent2.getId())
+			.with(asUser()))
 			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent3.getId()).with(asUser()))
+		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent3.getId())
+			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_findById_authorized_privilegedData() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent1.getId()).with(asUser()))
+		mvc.perform(get("/api/v1/students/{id}", privilegedStudent1.getId())
+			.with(asUser()))
 			.andExpect(status().isOk())
+			.andExpect(jsonPath("firstName").value(privilegedStudent1.getFirstName()))
+			.andExpect(jsonPath("lastName").value(privilegedStudent1.getLastName()))
+			.andExpect(jsonPath("female").value(privilegedStudent1.getFemale()))
 			.andDo(document("students-get-byId",
 				pathParameters(idDescriptor),
-				responseFields(studentDescriptors)));
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent2.getId()).with(asUser()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent3.getId()).with(asUser()))
-			.andExpect(status().isOk());
+				responseFields(studentResponse)
+			));
+
+		mvc.perform(get("/api/v1/students/{id}", privilegedStudent2.getId())
+			.with(asUser()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("firstName").value(privilegedStudent2.getFirstName()))
+			.andExpect(jsonPath("lastName").value(privilegedStudent2.getLastName()))
+			.andExpect(jsonPath("female").value(privilegedStudent2.getFemale()));
+
+		mvc.perform(get("/api/v1/students/{id}", privilegedStudent3.getId())
+			.with(asUser()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("firstName").value(privilegedStudent3.getFirstName()))
+			.andExpect(jsonPath("lastName").value(privilegedStudent3.getLastName()))
+			.andExpect(jsonPath("female").value(privilegedStudent3.getFemale()));
 	}
 
 	@Test
-	void test_findById_adminAllData() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent1.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent2.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent3.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent1.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent2.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent3.getId()).with(asAdmin()))
-			.andExpect(status().isOk());
+	void test_findById_admin() throws Exception {
+		for (Student student : Arrays.asList(privilegedStudent1, privilegedStudent2, privilegedStudent3, unprivilegedStudent1, unprivilegedStudent2, unprivilegedStudent3)) {
+			mvc.perform(get("/api/v1/students/{id}", student.getId())
+				.with(asAdmin()))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("firstName").value(student.getFirstName()))
+				.andExpect(jsonPath("lastName").value(student.getLastName()))
+				.andExpect(jsonPath("female").value(student.getFemale()));
+		}
 	}
 
 	@Test
-	void test_findByLastName_authorized_privilegedData() throws Exception {
-		String response = mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
+	void test_findByLastName_userAuthorized() throws Exception {
+		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("first", "third", "fifth")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("second", "fourth", "sixth"))))
 			.andDo(document("students-get-byLastName",
-				requestParameters(
-					parameterWithName("lastName").description("The student's last name")
-				),
-				responseFields(
-					subsectionWithPath("_embedded.students").description("All (visible) students with given last name"),
-					subsectionWithPath("_links").description("Links regarding this search")
-				).andWithPrefix("_embedded.students[].", studentDescriptors)))
-			.andReturn().getResponse().getContentAsString();
-
-		checkWithValidationFile("web/students-findByLastName-authorized-privilegedData", mask(response));
+				requestParameters(lastNameDescriptor),
+				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+			));
 	}
 
 	@Test
-	void test_findByLastName_admin_allData() throws Exception {
-		String response = mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
+	void test_findByLastName_admin() throws Exception {
+		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andReturn().getResponse().getContentAsString();
-
-		checkWithValidationFile("web/students-findByLastName-admin-allData", mask(response));
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(6)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("first", "third", "fifth", "second", "fourth", "sixth")));
 	}
 
 	@Test
-	void test_findByFirstName_admin_allData() throws Exception {
+	void test_findByFirstName_admin() throws Exception {
 		String first = mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=first")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -188,7 +198,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_findByFirstName_authorized_privilegedData() throws Exception {
+	void test_findByFirstName_userAuthorized() throws Exception {
 		String first = mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=first")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -196,12 +206,12 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andDo(document("students-get-byFirstName",
 				requestParameters(
-					parameterWithName("firstName").description("The student's first name")
+					firstNameDescriptor
 				),
 				responseFields(
 					subsectionWithPath("_embedded.students").description("All (visible) students with given first name"),
 					subsectionWithPath("_links").description("All links regarding this search")
-				).andWithPrefix("_embedded.students[].", studentDescriptors)))
+				).andWithPrefix("_embedded.students[].", studentResponse)))
 			.andReturn().getResponse().getContentAsString();
 
 		String second = mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=second")
@@ -216,7 +226,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_findAllBySchoolClass_authorized_privilegedData() throws Exception {
+	void test_findAllBySchoolClass_userAuthorized() throws Exception {
 		String response = mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + privilegedClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -229,14 +239,14 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 				responseFields(
 					subsectionWithPath("_embedded.students").description("All (visible) students belonging to the given school class"),
 					subsectionWithPath("_links").description("All links regarding this search")
-				).andWithPrefix("_embedded.students[].", studentDescriptors)))
+				).andWithPrefix("_embedded.students[].", studentResponse)))
 			.andReturn().getResponse().getContentAsString();
 
 		checkWithValidationFile("web/students-findBySchoolClass-authorized-privilegedData", mask(response));
 	}
 
 	@Test
-	void test_findAllBySchoolClass_admin_allData() throws Exception {
+	void test_findAllBySchoolClass_admin() throws Exception {
 		String response = mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + unprivilegedClass.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
@@ -248,21 +258,15 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_findByFirstNameAndLastName_authorized_privilegedData() throws Exception {
+	void test_findByFirstNameAndLastName_userAuthorized() throws Exception {
 		String first = mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=first&lastName=Student")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andDo(document("students-get-byFirstNameAndLastName",
-				requestParameters(
-					parameterWithName("firstName").description("The student's first name"),
-					parameterWithName("lastName").description("The student's last name")
-				),
-				responseFields(
-					subsectionWithPath("_embedded.students").description("All (visible) students with the given first name and last name"),
-					subsectionWithPath("_links").description("All links regarding this search")
-				).andWithPrefix("_embedded.students[].", studentDescriptors)))
+				requestParameters(firstNameDescriptor, lastNameDescriptor),
+				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)))
 			.andReturn().getResponse().getContentAsString();
 
 		String second = mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=second&lastName=Student")
@@ -277,7 +281,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_findByFirstNameAndLastName_admin_allData() throws Exception {
+	void test_findByFirstNameAndLastName_admin() throws Exception {
 		String first = mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=first&lastName=Student")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
@@ -308,7 +312,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_create_authorized() throws Exception {
+	void test_create_userAuthorized() throws Exception {
 		String jsonStudent = givenNewStudent(privilegedClass.getId());
 
 		mvc.perform(post("/api/v1/students")
@@ -323,7 +327,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 					fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("Whether or not the student is female"),
 					fieldWithPath("schoolClass").description("URL to school class the student belongs to")
 				),
-				responseFields(studentDescriptors)))
+				responseFields(studentResponse)))
 			.andExpect(status().isCreated());
 	}
 
@@ -340,12 +344,8 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.andExpect(status().isForbidden());
 	}
 
-	String getContent(ObjectNode schoolClass) {
-		return schoolClass.toString();
-	}
-
 	@Test
-	void test_edit_authorized() throws Exception {
+	void test_edit_userAuthorized() throws Exception {
 		String newSchoolClass = String.format("/api/v1/classes/%s", privilegedClass.getId());
 		String newFemale = "false";
 		String newLastName = "new last name";
@@ -371,23 +371,13 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 					fieldWithPath("female").description("Whether or not the student is female").optional(),
 					fieldWithPath("schoolClass").description("The student's class as URL").optional(),
 					fieldWithPath("birthDay").description("The student's birth day in \"YYYY-mm-dd\"-format").optional()
-				), responseFields(studentDescriptors)));
+				), responseFields(studentResponse)));
 
 		mvc.perform(patch("/api/v1/students/{id}", unprivilegedStudent1.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
-	}
-
-	private String givenJsonStudent(String newSchoolClass, String newFemale, String newLastName, String newFirstName, String birthDay) {
-		return "{\n" +
-			"  \"firstName\": \"" + newFirstName + "\",\n" +
-			"  \"lastName\": \"" + newLastName + "\",\n" +
-			"  \"female\": " + newFemale + ",\n" +
-			"  \"birthDay\": \"" + birthDay + "\",\n" +
-			"  \"schoolClass\": \"" + newSchoolClass + "\"\n" +
-			"}";
 	}
 
 	@Test
@@ -417,7 +407,6 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.andExpect(jsonPath("firstName").value(newFirstName))
 			.andExpect(jsonPath("lastName").value(newLastName))
 			.andExpect(jsonPath("female").value(newFemale));
-
 	}
 
 	@Test
@@ -446,7 +435,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 					fieldWithPath("female").description("Whether or not the student is female"),
 					fieldWithPath("schoolClass").description("The student's class as URL"),
 					fieldWithPath("birthDay").description("The student's birth day in \"YYYY-mm-dd\"-format")
-				), responseFields(studentDescriptors)));
+				), responseFields(studentResponse)));
 	}
 
 	@Test
@@ -487,17 +476,18 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	}
 
 	@Test
-	void test_delete_authenticated() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", privilegedStudent1.getId())
-			.with(asUser()))
-			.andExpect(status().isNoContent())
-			.andDo(document("students-delete", pathParameters(
-				parameterWithName("id").description("The student's id")
-			)));
-
+	void test_delete_unauthorized() throws Exception {
 		mvc.perform(delete("/api/v1/students/{id}", unprivilegedStudent1.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	void test_delete_authorized() throws Exception {
+		mvc.perform(delete("/api/v1/students/{id}", privilegedStudent1.getId())
+			.with(asUser()))
+			.andExpect(status().isNoContent())
+			.andDo(document("students-delete", pathParameters(idDescriptor)));
 	}
 
 	@Test
@@ -566,6 +556,10 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 			.createStudent());
 
 		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+	}
+
+	private String givenJsonStudent(String newSchoolClass, String newFemale, String newLastName, String newFirstName, String birthDay) {
+		return String.format("{\n  \"firstName\": \"%s\",\n  \"lastName\": \"%s\",\n  \"female\": %s,\n  \"birthDay\": \"%s\",\n  \"schoolClass\": \"%s\"\n}", newFirstName, newLastName, newFemale, birthDay, newSchoolClass);
 	}
 
 	private String givenNewStudent(Long schoolClassID) throws IOException {
