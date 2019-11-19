@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/aykborstelmann/bjs-api.svg?token=gpSoPKEiJuXyQNjoCYj7&branch=master)](https://travis-ci.com/aykborstelmann/bjs-api)
+[![Build Status](https://github.com/aykborstelmann/bjs-api/workflows/Build%20and%20Deploy/badge.svg?branch=master)](https://github.com/aykborstelmann/bjs-api/actions?query=workflow%3A%22Build+and+Deploy%22)
 
 # BJS-API
 This repo has the goal to create a clean REST API for the [BJS](https://www.bundesjugendspiele.de/) with all needed things (user management, database, ...)
