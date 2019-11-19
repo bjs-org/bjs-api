@@ -18,7 +18,7 @@ public class ClassBuilder {
 	}
 
 	public Class createClass() {
-		return new Class(className);
+		return new Class(className, classTeacherName);
 	}
 
 }

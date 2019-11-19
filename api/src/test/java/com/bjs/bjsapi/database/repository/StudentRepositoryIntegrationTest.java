@@ -38,6 +38,7 @@ public class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest 
 	private Student unprivilegedStudent3;
 	private Class privilegedClass;
 	private Class unprivilegedClass;
+
 	private final FieldDescriptor[] studentDescriptors = new FieldDescriptor[] {
 		fieldWithPath("firstName").type(JsonFieldType.STRING).description("The student's first name"),
 		fieldWithPath("lastName").type(JsonFieldType.STRING).description("The students's last name"),
