@@ -348,13 +348,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_unauthorized() throws Exception {
-		String newSchoolClass = String.format("/api/v1/classes/%s", privilegedClass.getId());
-		String newFemale = "false";
-		String newLastName = "new last name";
-		String newFirstName = "new first name";
-		String birthDay = "2002-01-10";
-
-		String json = givenJsonStudent(newSchoolClass, newFemale, newLastName, newFirstName, birthDay);
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), "false", "new last name", "new first name", "2002-01-10");
 
 		mvc.perform(patch("/api/v1/students/{id}", unprivilegedStudent1.getId())
 			.content(json)
