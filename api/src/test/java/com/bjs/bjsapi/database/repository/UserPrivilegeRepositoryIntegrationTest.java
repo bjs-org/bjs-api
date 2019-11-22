@@ -220,6 +220,23 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			));
 	}
 
+	@Test
+	void test_delete_unauthorized() throws Exception {
+		mvc.perform(delete("/api/v1/user_privileges/{id}", userPrivilege.getId())
+			.with(asUser()))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	void test_delete_admin() throws Exception {
+		mvc.perform(delete("/api/v1/user_privileges/{id}", userPrivilege.getId())
+			.with(asAdmin()))
+			.andExpect(status().isNoContent())
+			.andDo(document("user-privileges-delete",
+				pathParameters(idDescriptor)
+			));
+	}
+
 	private String givenChangedClassUserPrivilege() {
 		//language=JSON
 		String userPrivilegeJsonTemplate = "{\n" +
