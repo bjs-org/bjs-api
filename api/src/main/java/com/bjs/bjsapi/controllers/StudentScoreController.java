@@ -1,8 +1,6 @@
 package com.bjs.bjsapi.controllers;
 
-import java.util.List;
-import java.util.Optional;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,45 +26,61 @@ public class StudentScoreController {
 		this.calculationInformationService = calculationInformationService;
 	}
 
-
-
 	@GetMapping("/score")
-	public Integer calculateScore(@PathVariable("id") Long id) {
-		int scoreResult = 0;
-		Optional<Student> optionalStudent = studentRepository.findById(id);
-		if (optionalStudent.isPresent()) {
-			Student student = optionalStudent.get();
-			List<SportResult> sportResults = sportResultRepository.findByStudent(student);
-			for (SportResult sportResult : sportResults) {
-				if (sportResult.getDiscipline().isRUN()) {
-					double distance = sportResult.getDiscipline().getDistance();
-					double measurement = sportResult.getResult();
-					double extra = getExtra(sportResult.getDiscipline().getDistance());
-					double a = calculationInformationService.getAValue(student.getFemale(), sportResult.getDiscipline());
-					double c = calculationInformationService.getCValue(student.getFemale(), sportResult.getDiscipline());
-					double scoreRun = (distance / (measurement + extra) - a) / c;
-					scoreResult = scoreResult + (int) Math.floor(scoreRun);
-				} else {
-					double measurement = Math.sqrt(sportResult.getResult());
-					double a = calculationInformationService.getAValue(student.getFemale(), sportResult.getDiscipline());
-					double c = calculationInformationService.getCValue(student.getFemale(), sportResult.getDiscipline());
-					double scoreOther = (measurement - a) / c;
-					scoreResult = scoreResult + (int) Math.floor(scoreOther);
-				}
-			}
-
-			return scoreResult;
-		}
-
-		return null;
+	public ResponseEntity<?> returnScore(@PathVariable("id") Long id) {
+		return studentRepository.findById(id)
+			.map(this::calculateScore)
+			.map(ResponseEntity::ok)
+			.orElse(ResponseEntity.notFound().build());
 	}
 
-	private double getExtra(int distance) {
-		double extra = 0.0;
-		if(distance <= 300) {
-			extra = 0.24;
+	Integer calculateScore(Student student) {
+		return sportResultRepository.findByStudent(student)
+			.stream()
+			.mapToInt(sportResult -> calculatePoints(sportResult, student.getFemale()))
+			.sum();
+	}
+
+	private int calculatePoints(SportResult sportResult, Boolean female) {
+		if (sportResult.getDiscipline().isRUN()) {
+			return calculateRunningPoints(sportResult, female);
+		} else {
+			return calculateNotRunningPoints(sportResult, female);
 		}
-		else if(distance > 300 && distance <= 400) {
+	}
+
+	private int calculateNotRunningPoints(SportResult sportResult, Boolean female) {
+		// P = ( √M - a ) / c
+
+		final double measurement = sportResult.getResult();
+
+		final double a = calculationInformationService.getAValue(female, sportResult.getDiscipline());
+		final double c = calculationInformationService.getCValue(female, sportResult.getDiscipline());
+
+		final double points = (Math.sqrt(measurement) - a) / c;
+		return (int) Math.floor(points);
+	}
+
+	private int calculateRunningPoints(SportResult sportResult, Boolean female) {
+		// P = ( D : (M + Z) ) - a) / c
+
+		final double distance = sportResult.getDiscipline().getDistance();
+		final double measurement = sportResult.getResult();
+
+		final double extra = calculateExtra(sportResult.getDiscipline().getDistance());
+
+		final double a = calculationInformationService.getAValue(female, sportResult.getDiscipline());
+		final double c = calculationInformationService.getCValue(female, sportResult.getDiscipline());
+
+		final double points = ((distance / (measurement + extra)) - a) / c;
+		return (int) Math.floor(points);
+	}
+
+	private double calculateExtra(int distance) {
+		double extra = 0.0;
+		if (distance <= 300) {
+			extra = 0.24;
+		} else if (distance <= 400) {
 			extra = 0.14;
 		}
 
