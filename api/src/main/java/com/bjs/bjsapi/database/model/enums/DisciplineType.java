@@ -5,12 +5,12 @@ package com.bjs.bjsapi.database.model.enums;
  */
 public enum DisciplineType {
 
-	RUN_50(true,50),
-	RUN_75(true,75),
-	RUN_100(true,100),
-	RUN_800(true,800),
-	RUN_2000(true,2000),
-	RUN_3000(true,3000),
+	RUN_50(true, 50),
+	RUN_75(true, 75),
+	RUN_100(true, 100),
+	RUN_800(true, 800),
+	RUN_2000(true, 2000),
+	RUN_3000(true, 3000),
 
 	HIGH_JUMP(false),
 	LONG_JUMP(false),
@@ -35,8 +35,7 @@ public enum DisciplineType {
 		this.isRun = isRun;
 	}
 
-	public boolean isRUN(){
+	public boolean isRUN() {
 		return isRun;
 	}
-
 }

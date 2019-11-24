@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class StudentScoreControllerTest {
 	private StudentScoreController studentScoreController;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		studentScoreController = new StudentScoreController(studentRepository, sportResultRepository, calculationInformationService);
 	}
 
@@ -48,12 +47,11 @@ public class StudentScoreControllerTest {
 		sportResult.setDiscipline(DisciplineType.RUN_50);
 		sportResult.setResult(7.00F);
 
-		doReturn(Optional.of(student)).when(studentRepository).findById(1L);
 		doReturn(Collections.singletonList(sportResult)).when(sportResultRepository).findByStudent(student);
 		doReturn(3.79000).when(calculationInformationService).getAValue(true, DisciplineType.RUN_50);
 		doReturn(0.00690).when(calculationInformationService).getCValue(true, DisciplineType.RUN_50);
 
-		Integer integer = studentScoreController.calculateScore(1L);
+		Integer integer = studentScoreController.calculateScore(student);
 
 		assertThat(integer).isEqualTo(451);
 	}
@@ -67,34 +65,32 @@ public class StudentScoreControllerTest {
 		sportResult.setDiscipline(DisciplineType.RUN_75);
 		sportResult.setResult(9.00F);
 
-		doReturn(Optional.of(student)).when(studentRepository).findById(1L);
 		doReturn(Collections.singletonList(sportResult)).when(sportResultRepository).findByStudent(student);
 		doReturn(4.10000).when(calculationInformationService).getAValue(true, DisciplineType.RUN_75);
 		doReturn(0.00664).when(calculationInformationService).getCValue(true, DisciplineType.RUN_75);
 
-		Integer integer = studentScoreController.calculateScore(1L);
+		Integer integer = studentScoreController.calculateScore(student);
 
 		assertThat(integer).isEqualTo(604);
 	}
 
-    @Test
-    public void test_calculation_run_100() {
-        Student student = new Student();
-        student.setFemale(true);
-        SportResult sportResult = new SportResult();
+	@Test
+	public void test_calculation_run_100() {
+		Student student = new Student();
+		student.setFemale(true);
+		SportResult sportResult = new SportResult();
 
-        sportResult.setDiscipline(DisciplineType.RUN_100);
-        sportResult.setResult(12.00F);
+		sportResult.setDiscipline(DisciplineType.RUN_100);
+		sportResult.setResult(12.00F);
 
-        doReturn(Optional.of(student)).when(studentRepository).findById(1L);
-        doReturn(Collections.singletonList(sportResult)).when(sportResultRepository).findByStudent(student);
-        doReturn(4.341).when(calculationInformationService).getAValue(true, DisciplineType.RUN_100);
-        doReturn(0.00676).when(calculationInformationService).getCValue(true, DisciplineType.RUN_100);
+		doReturn(Collections.singletonList(sportResult)).when(sportResultRepository).findByStudent(student);
+		doReturn(4.341).when(calculationInformationService).getAValue(true, DisciplineType.RUN_100);
+		doReturn(0.00676).when(calculationInformationService).getCValue(true, DisciplineType.RUN_100);
 
-        Integer integer = studentScoreController.calculateScore(1L);
+		Integer integer = studentScoreController.calculateScore(student);
 
-        assertThat(integer).isEqualTo(566);
-    }
+		assertThat(integer).isEqualTo(566);
+	}
 
 	@Test
 	public void test_calculation_high_jump() {
@@ -105,39 +101,36 @@ public class StudentScoreControllerTest {
 		sportResult.setDiscipline(DisciplineType.HIGH_JUMP);
 		sportResult.setResult(1.50F);
 
-		doReturn(Optional.of(student)).when(studentRepository).findById(1L);
 		doReturn(Collections.singletonList(sportResult)).when(sportResultRepository).findByStudent(student);
 		doReturn(0.841).when(calculationInformationService).getAValue(true, DisciplineType.HIGH_JUMP);
 		doReturn(0.00080).when(calculationInformationService).getCValue(true, DisciplineType.HIGH_JUMP);
 
-		Integer integer = studentScoreController.calculateScore(1L);
+		Integer integer = studentScoreController.calculateScore(student);
 
 		assertThat(integer).isEqualTo(479);
 	}
 
-
 	@Test
-    public void test_calculation_general() {
-	    Student student = new Student();
-	    student.setFemale(false);
+	public void test_calculation_general() {
+		Student student = new Student();
+		student.setFemale(false);
 
 		SportResult resultRUN_100 = new SportResult();
-	    resultRUN_100.setDiscipline(DisciplineType.RUN_100);
-	    resultRUN_100.setResult(12.00F);
+		resultRUN_100.setDiscipline(DisciplineType.RUN_100);
+		resultRUN_100.setResult(12.00F);
 
-        SportResult resultRUN_800 = new SportResult();
-        resultRUN_800.setDiscipline(DisciplineType.RUN_800);
-        resultRUN_800.setResult(210.00F);
+		SportResult resultRUN_800 = new SportResult();
+		resultRUN_800.setDiscipline(DisciplineType.RUN_800);
+		resultRUN_800.setResult(210.00F);
 
-        SportResult resultJUMP = new SportResult();
-        resultJUMP.setDiscipline(DisciplineType.LONG_JUMP);
-        resultJUMP.setResult(4.20F);
+		SportResult resultJUMP = new SportResult();
+		resultJUMP.setDiscipline(DisciplineType.LONG_JUMP);
+		resultJUMP.setResult(4.20F);
 
-        SportResult resultTHROW_200 = new SportResult();
-        resultTHROW_200.setDiscipline(DisciplineType.BALL_THROWING_200);
-        resultTHROW_200.setResult(35.00F);
+		SportResult resultTHROW_200 = new SportResult();
+		resultTHROW_200.setDiscipline(DisciplineType.BALL_THROWING_200);
+		resultTHROW_200.setResult(35.00F);
 
-        doReturn(Optional.of(student)).when(studentRepository).findById(1L);
 		doReturn(Arrays.asList(resultJUMP, resultRUN_100, resultRUN_800, resultTHROW_200)).when(sportResultRepository).findByStudent(student);
 
 		doReturn(4.00620).when(calculationInformationService).getAValue(false, DisciplineType.RUN_100);
@@ -150,9 +143,9 @@ public class StudentScoreControllerTest {
 		doReturn(0.00208).when(calculationInformationService).getCValue(false, DisciplineType.LONG_JUMP);
 		doReturn(0.01039).when(calculationInformationService).getCValue(false, DisciplineType.BALL_THROWING_200);
 
-        Integer integer = studentScoreController.calculateScore(1L);
+		Integer integer = studentScoreController.calculateScore(student);
 
 		assertThat(integer).isEqualTo(1802);
-    }
+	}
 
 }
