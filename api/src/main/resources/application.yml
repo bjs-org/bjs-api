@@ -9,8 +9,8 @@ spring:
   
   datasource:
     url: jdbc:postgresql://bjs.system.model.db:5432/db
-    username: docker
-    password: docker
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   
   jpa:

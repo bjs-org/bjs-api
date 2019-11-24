@@ -3,17 +3,17 @@ package com.bjs.bjsapi.helper;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.bjs.bjsapi.config.CalculationInformationConfig;
@@ -28,21 +28,17 @@ public class CalculationInformationServiceTest {
 	private CalculationInformationService informationService;
 
 	@Before
-	public void setUp() {
-		Path path = getResourceFromClassPath("calculation_information_test.json");
-
-		doReturn(path).when(calculationInformationConfig).getCalculationInformationFilePath();
+	public void setUp() throws IOException {
+		doReturn(getResourceFromClassPath("calculation_information_test.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
 		informationService = new CalculationInformationService(calculationInformationConfig);
 	}
 
-	private Path getResourceFromClassPath(String name) {
-		ClassLoader classLoader = getClass().getClassLoader();
-		URL url = Objects.requireNonNull(classLoader.getResource(name));
-		return new File(url.getFile()).toPath();
+	private URL getResourceFromClassPath(String name) throws IOException {
+		return new ClassPathResource(name).getURL();
 	}
 
 	@Test
-	public void test_throwsIllegalArgumentException_wrongFormat() {
+	public void test_throwsIllegalArgumentException_wrongFormat() throws IOException {
 		reset(calculationInformationConfig);
 		doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
 
@@ -54,9 +50,9 @@ public class CalculationInformationServiceTest {
 	}
 
 	@Test
-	public void test_throwsIllegalArgumentException_couldNotParseFile() {
+	public void test_throwsIllegalArgumentException_couldNotParseFile() throws MalformedURLException {
 		reset(calculationInformationConfig);
-		doReturn(Paths.get("fileWhichNotExists.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
+		doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(calculationInformationConfig).getCalculationInformationFilePath();
 
 		Throwable thrown = catchThrowable(() -> informationService.getValue(true, true, DisciplineType.RUN_50));
 

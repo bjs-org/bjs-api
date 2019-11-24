@@ -1,7 +1,7 @@
 package com.bjs.bjsapi.helper;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +32,10 @@ public class CalculationInformationService {
 	}
 
 	double getValue(boolean female, boolean a, DisciplineType discipline) {
-		Path jsonFile = calculationInformationConfig.getCalculationInformationFilePath();
+		URL file = calculationInformationConfig.getCalculationInformationFilePath();
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			JsonNode root = objectMapper.readTree(jsonFile.toFile());
+			JsonNode root = objectMapper.readTree(file);
 
 			JsonNode firstLayer = giveFirstLayer(root, female);
 			JsonNode secondLayer = giveSecondLayer(firstLayer, a);
@@ -43,7 +43,7 @@ public class CalculationInformationService {
 
 			return thirdLayer.asDouble();
 		} catch (IOException e) {
-			throw new IllegalArgumentException(String.format("Could not parse file \"%s\"", jsonFile), e);
+			throw new IllegalArgumentException(String.format("Could not parse file \"%s\"", file), e);
 		}
 	}
 
