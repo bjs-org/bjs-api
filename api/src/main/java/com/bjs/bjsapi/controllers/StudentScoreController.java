@@ -1,5 +1,7 @@
 package com.bjs.bjsapi.controllers;
 
+import java.util.Collections;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +39,10 @@ public class StudentScoreController {
 	Integer calculateScore(Student student) {
 		return sportResultRepository.findByStudent(student)
 			.stream()
-			.mapToInt(sportResult -> calculatePoints(sportResult, student.getFemale()))
+			.map(sportResult -> calculatePoints(sportResult, student.getFemale()))
+			.sorted(Collections.reverseOrder())
+			.mapToInt(value -> value)
+			.limit(3)
 			.sum();
 	}
 
