@@ -1,16 +1,19 @@
 package com.bjs.bjsapi.controllers;
 
+import com.bjs.bjsapi.database.model.SportResult;
+import com.bjs.bjsapi.database.model.Student;
+import com.bjs.bjsapi.database.repository.SportResultRepository;
+import com.bjs.bjsapi.database.repository.StudentRepository;
+import com.bjs.bjsapi.helper.CalculationInformationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bjs.bjsapi.database.model.SportResult;
-import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.repository.SportResultRepository;
-import com.bjs.bjsapi.database.repository.StudentRepository;
-import com.bjs.bjsapi.helper.CalculationInformationService;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/students/{id}")
@@ -35,10 +38,23 @@ public class StudentScoreController {
 	}
 
 	Integer calculateScore(Student student) {
-		return sportResultRepository.findByStudent(student)
-			.stream()
-			.mapToInt(sportResult -> calculatePoints(sportResult, student.getFemale()))
-			.sum();
+        int sum = 0;
+        List<Integer> scores = new ArrayList<>();
+        for (SportResult sportResult : sportResultRepository.findByStudent(student)) {
+            scores.add(calculatePoints(sportResult, student.getFemale()));
+        }
+        scores.sort(Collections.reverseOrder());
+        List<Integer> topScores;
+        if (scores.size() >= 3) {
+            topScores = scores.subList(0, 3);
+        } else {
+            topScores = scores;
+        }
+        for (Integer topScore : topScores) {
+            sum += topScore;
+        }
+
+        return sum;
 	}
 
 	private int calculatePoints(SportResult sportResult, Boolean female) {

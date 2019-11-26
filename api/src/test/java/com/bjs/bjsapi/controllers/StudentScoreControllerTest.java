@@ -1,23 +1,22 @@
 package com.bjs.bjsapi.controllers;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.bjs.bjsapi.database.model.SportResult;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 import com.bjs.bjsapi.database.repository.SportResultRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @RunWith(SpringRunner.class)
 public class StudentScoreControllerTest {
@@ -145,7 +144,6 @@ public class StudentScoreControllerTest {
 
 		Integer integer = studentScoreController.calculateScore(student);
 
-		assertThat(integer).isEqualTo(1802);
+		assertThat(integer).isEqualTo(1526);
 	}
-
 }
