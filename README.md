@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/bjs-org/bjs-api/workflows/CI/badge.svg?branch=master)](https://github.com/bjs-org/bjs-api/actions?query=branch%3Amaster+workflow%3ACI)
-![GitHub](https://img.shields.io/github/license/bjs-org/bjs-api)
+[![Apache 2.0](https://img.shields.io/github/license/bjs-org/bjs-api.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 # BJS-API
 This repo has the goal to create a clean REST API for the [BJS](https://www.bundesjugendspiele.de/) with all needed things (user management, database, ...)
