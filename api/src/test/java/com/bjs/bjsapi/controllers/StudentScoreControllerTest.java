@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -145,5 +146,57 @@ class StudentScoreControllerTest {
 		Integer integer = studentScoreController.calculateScore(student);
 
 		assertThat(integer).isEqualTo(1526);
+	}
+
+	@Test
+	public void test_classification() {
+		Student student = new Student();
+		Date studentsBirthday = new Date(2000, 01, 01);
+		student.setFemale(false);
+		student.setBirthDay(studentsBirthday);
+
+		SportResult resultRUN_100 = new SportResult();
+		resultRUN_100.setDiscipline(DisciplineType.RUN_100);
+		resultRUN_100.setResult(12.00F);
+
+		SportResult resultRUN_800 = new SportResult();
+		resultRUN_800.setDiscipline(DisciplineType.RUN_800);
+		resultRUN_800.setResult(210.00F);
+
+		SportResult resultJUMP = new SportResult();
+		resultJUMP.setDiscipline(DisciplineType.LONG_JUMP);
+		resultJUMP.setResult(4.20F);
+
+		SportResult resultTHROW_200 = new SportResult();
+		resultTHROW_200.setDiscipline(DisciplineType.BALL_THROWING_200);
+		resultTHROW_200.setResult(35.00F);
+
+		doReturn(Arrays.asList(resultJUMP, resultRUN_100, resultRUN_800, resultTHROW_200)).when(sportResultRepository).findByStudent(student);
+
+		doReturn(4.00620).when(calculationInformationService).getAValue(false, DisciplineType.RUN_100);
+		doReturn(2.02320).when(calculationInformationService).getAValue(false, DisciplineType.RUN_800);
+		doReturn(1.09350).when(calculationInformationService).getAValue(false, DisciplineType.LONG_JUMP);
+		doReturn(1.41490).when(calculationInformationService).getAValue(false, DisciplineType.BALL_THROWING_200);
+
+		doReturn(0.00656).when(calculationInformationService).getCValue(false, DisciplineType.RUN_100);
+		doReturn(0.00647).when(calculationInformationService).getCValue(false, DisciplineType.RUN_800);
+		doReturn(0.00208).when(calculationInformationService).getCValue(false, DisciplineType.LONG_JUMP);
+		doReturn(0.01039).when(calculationInformationService).getCValue(false, DisciplineType.BALL_THROWING_200);
+
+		Integer integer = studentScoreController.calculateScore(student);
+		String string = studentScoreController.classification(student);
+		assertThat(string).isEqualTo("Siegerurkunde");
+		assertThat(integer).isEqualTo(1526);
+	}
+
+	@Test
+	public void testBirthday() {
+		Student student = new Student();
+		Date studentsBirthday = new Date(2000, 01, 01);
+		student.setFemale(false);
+		student.setBirthDay(studentsBirthday);
+
+		Integer integer = studentScoreController.studentAge(student);
+		assertThat(integer).isEqualTo(19);
 	}
 }

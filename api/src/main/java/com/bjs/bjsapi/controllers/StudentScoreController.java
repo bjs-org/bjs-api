@@ -1,18 +1,18 @@
 package com.bjs.bjsapi.controllers;
 
-import java.util.Collections;
-
+import com.bjs.bjsapi.database.model.SportResult;
+import com.bjs.bjsapi.database.model.Student;
+import com.bjs.bjsapi.database.repository.SportResultRepository;
+import com.bjs.bjsapi.database.repository.StudentRepository;
+import com.bjs.bjsapi.helper.CalculationInformationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bjs.bjsapi.database.model.SportResult;
-import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.repository.SportResultRepository;
-import com.bjs.bjsapi.database.repository.StudentRepository;
-import com.bjs.bjsapi.helper.CalculationInformationService;
+import java.util.Collections;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/v1/students/{id}")
@@ -21,6 +21,7 @@ public class StudentScoreController {
 	private final StudentRepository studentRepository;
 	private final SportResultRepository sportResultRepository;
 	private final CalculationInformationService calculationInformationService;
+    private int Year;
 
 	public StudentScoreController(StudentRepository studentRepository, SportResultRepository sportResultRepository, CalculationInformationService calculationInformationService) {
 		this.studentRepository = studentRepository;
@@ -92,4 +93,81 @@ public class StudentScoreController {
 		return extra;
 	}
 
+    public int studentAge(Student student) {
+        Date actual = new Date();
+        int studentAge = (int) student.getBirthDay().getYear();
+        int actualYear = (int) actual.getYear();
+        studentAge = actualYear - studentAge + 1900;
+        return studentAge;
+    }
+
+    public String classification(Student student) {
+        int score = calculateScore(student);
+        if (student.getFemale() == true) {
+            int victoryScore = 475;
+            int honorScore = 625;
+            for (int i = 8; i <= 18; i++) {
+                if (i == studentAge(student)) {
+                    if (score >= honorScore) {
+                        return "Ehrenurkunde";
+                    } else if (score >= victoryScore) {
+                        return "Siegerurkunde";
+                    } else {
+                        return "Teilnehmerurkunde";
+                    }
+                } else if (studentAge(student) >= 18) {
+                    if (score >= 1150) {
+                        return "Ehrenurkunde";
+                    } else if (score >= 950) {
+                        return "Siegerurkunde";
+                    } else {
+                        return "Teilnehmerurkunde";
+                    }
+                }
+                if (i == 12) {
+                    victoryScore = victoryScore + 50;
+                    honorScore = honorScore + 50;
+                } else if (i >= 13 && i < 18) {
+                    victoryScore = victoryScore + 25;
+                    honorScore = honorScore + 25;
+                } else {
+                    victoryScore = victoryScore + 75;
+                    honorScore = honorScore + 75;
+                }
+            }
+        }
+        if (student.getFemale() == false) {
+            int victoryScore = 450;
+            int honorScore = 575;
+            for (int i = 8; i <= 18; i++) {
+                if (i == studentAge(student)) {
+                    if (score >= honorScore) {
+                        return "Ehrenurkunde";
+                    } else if (score >= victoryScore) {
+                        return "Siegerurkunde";
+                    } else {
+                        return "Teilnehmerurkunde";
+                    }
+                } else if (studentAge(student) >= 18) {
+                    if (score >= 1550) {
+                        return "Ehrenurkunde";
+                    } else if (score >= 1275) {
+                        return "Siegerurkunde";
+                    } else {
+                        return "Teilnehmerurkunde";
+                    }
+                }
+                if (i <= 15 && i != 13) {
+                    victoryScore = victoryScore + 75;
+                    honorScore = honorScore + 100;
+                } else if (i == 13 || i >= 16) {
+                    victoryScore = victoryScore + 75;
+                    honorScore = honorScore + 75;
+                }
+            }
+
+        }
+        return null;
+    }
 }
+
