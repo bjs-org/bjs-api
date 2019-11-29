@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.helper.UserBuilder;
-import com.bjs.bjsapi.helper.ValidationFiles;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -100,6 +99,7 @@ abstract class RepositoryIntegrationTest {
 	private void clearDB() {
 		runAsAdmin(() -> {
 			userPrivilegeRepository.deleteAll();
+			sportResultRepository.deleteAll();
 			studentRepository.deleteAll();
 			classRepository.deleteAll();
 			userRepository.deleteAll();
@@ -112,14 +112,6 @@ abstract class RepositoryIntegrationTest {
 
 	RequestPostProcessor asUser() {
 		return user(new BJSUserPrincipal(user));
-	}
-
-	String mask(String response, Object... objects) {
-		return ValidationFiles.mask(mask(response), objects);
-	}
-
-	String mask(String response) {
-		return ValidationFiles.mask(response, "http://[\\w.-]+(:\\d+)?(/[\\w.-]+)+(\\?([\\w-]+=[\\w/-]+(&)?)+)?");
 	}
 
 }
