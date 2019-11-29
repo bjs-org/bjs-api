@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -23,9 +23,9 @@ public class SportResult {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@OneToOne
-	@JoinColumn(nullable = false)
+	@ManyToOne
 	@RestResource
+	@JoinColumn
 	private Student student;
 
 	@Column(nullable = false)
@@ -61,6 +61,15 @@ public class SportResult {
 
 	public Long getId() {
 		return id;
+	}
+
+	public SportResult() {
+	}
+
+	public SportResult(Student student, Float result, DisciplineType discipline) {
+		this.student = student;
+		this.result = result;
+		this.discipline = discipline;
 	}
 
 	@Override
