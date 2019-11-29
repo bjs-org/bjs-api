@@ -1,5 +1,14 @@
 == Users
 
+=== Authentication and Authorization
+
+At this endpoint only admins can access and modify users.
+The user will get a `403 Forbidden` if he requests, edits or deletes a user while not having admin rights.
+
+=== User as an object
+
+//TODO
+
 === Create User
 
 operation::users-post[snippets='request-fields,http-request,response-fields,http-response']

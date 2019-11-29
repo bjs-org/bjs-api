@@ -1,37 +1,67 @@
 == Students
 
+=== Authentication and Authorization
+
+To get privileges for reading, changing, deleting and creating students look at <<_user_privileges,user privileges>>.
+Who has rights to access the students is determined by which class he/she belongs to.
+Admins have the right for all students.
+
+=== Student as an object
+
+Students have to belong to a class.
+This is essential for many operations like who has access to manage students which student.
+
 === Create student
+
+It is only possible to create a student, belonging to a class the user has rights to.
+In order to create, send a POST request to /api/v1/students with the information describing the user.
 
 operation::students-post[snippets='request-fields,http-request,response-fields,http-response']
 
 === Get all students
 
+This endpoint returns only those students the user has rights to.
+
 operation::students-get-all[snippets='http-request,response-fields,http-response']
 
 === Get a single student by ID
+
+This endpoint returns an `403 Forbidden` if the user does not have the rights to access this student.
 
 operation::students-get-byId[snippets='path-parameters,http-request,response-fields,http-response']
 
 === Get students by first name
 
+This endpoint returns only those students the user has rights to.
+
 operation::students-get-byFirstName[snippets='request-parameters,http-request,response-fields,http-response']
 
 === Get students by last name
+
+This endpoint returns only those students the user has rights to.
 
 operation::students-get-byLastName[snippets='request-parameters,http-request,response-fields,http-response']
 
 === Get students by first and last name
 
+This endpoint returns only those students the user has rights to.
+
 operation::students-get-byFirstNameAndLastName[snippets='request-parameters,http-request,response-fields,http-response']
 
 === Edit student
+
+This endpoint returns an `403 Forbidden` if the user does not have the rights to access this student.
 
 operation::students-patch[snippets='path-parameters,request-fields,http-request,response-fields,http-response']
 
 === Replace student
 
+This endpoint returns an `403 Forbidden` if the user does not have the rights to access this student.
+
 operation::students-put[snippets='path-parameters,request-fields,http-request,response-fields,http-response']
 
 === Delete student
+
+This endpoint returns an `403 Forbidden` if the user does not have the rights to access this student.
 
 operation::students-delete[snippets='path-parameters,http-request,http-response']
