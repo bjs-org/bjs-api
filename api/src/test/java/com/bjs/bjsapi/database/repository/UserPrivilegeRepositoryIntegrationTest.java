@@ -221,6 +221,32 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 	}
 
 	@Test
+	void test_replace_unauthorized() throws Exception {
+		mvc.perform(put("/api/v1/user_privileges/{id}", userPrivilege.getId())
+			.with(asUser())
+			.content(givenNewUserPrivilege())
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isForbidden());
+	}
+
+	@Test
+	void test_replace_admin() throws Exception {
+		mvc.perform(put("/api/v1/user_privileges/{id}", userPrivilege.getId())
+			.with(asAdmin())
+			.content(givenNewUserPrivilege())
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$._links.accessibleClass.href").isString())
+			.andExpect(jsonPath("$._links.user.href").isString())
+			.andDo(document("user-privileges-put",
+				pathParameters(idDescriptor),
+				responseFields(userPrivilegeResponse),
+				requestFields(userPrivilegeRequest)
+			));
+	}
+
+
+	@Test
 	void test_delete_unauthorized() throws Exception {
 		mvc.perform(delete("/api/v1/user_privileges/{id}", userPrivilege.getId())
 			.with(asUser()))
