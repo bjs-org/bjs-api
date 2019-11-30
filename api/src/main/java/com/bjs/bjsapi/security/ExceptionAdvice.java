@@ -25,7 +25,7 @@ public class ExceptionAdvice {
 		Throwable cause = e.getCause();
 		if (cause != null) {
 			Throwable nestedCause = cause.getCause();
-			if (AccessDeniedException.class.isAssignableFrom(nestedCause.getClass())) {
+			if (AccessDeniedException.class.isAssignableFrom(nestedCause.getClass()) || AccessDeniedException.class.isAssignableFrom(nestedCause.getCause().getClass())) {
 				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 			}
 		}
