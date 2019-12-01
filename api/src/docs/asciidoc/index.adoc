@@ -58,6 +58,8 @@ include::classes.adoc[]
 
 include::students.adoc[]
 
+include::sport_results.adoc[]
+
 include::users.adoc[]
 
 include::user_privileges.adoc[]

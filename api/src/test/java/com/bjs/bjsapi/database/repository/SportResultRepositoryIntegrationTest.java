@@ -90,7 +90,7 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("result").value(6.6))
 			.andExpect(jsonPath("discipline").value("RUN_100"))
-			.andDo(document("sport-results-create",
+			.andDo(document("sport-results-post",
 				requestFields(sportResultRequest),
 				responseFields(sportResultResponse)
 			));
@@ -171,7 +171,7 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("result").value(6.6))
 			.andExpect(jsonPath("discipline").value(accessibleStudentsResult.getDiscipline().toString()))
-			.andDo(document("sport-result-get-byId",
+			.andDo(document("sport-results-get-byId",
 				pathParameters(idDescriptor),
 				responseFields(sportResultResponse)
 			));
@@ -234,7 +234,7 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(jsonPath("_embedded.sport_results", hasSize(1)))
 			.andExpect(jsonPath("_embedded.sport_results.[*].result", hasItem(6.6)))
 			.andExpect(jsonPath("_embedded.sport_results.[*].discipline", hasItem(accessibleStudentsResult.getDiscipline().toString())))
-			.andDo(document("sport-result-get-byDiscipline",
+			.andDo(document("sport-results-get-byDiscipline",
 				requestParameters(disciplineDescriptor),
 				responseFields(sportResultsResponse).andWithPrefix("_embedded.sport_results[].", sportResultResponse)
 			));
@@ -400,7 +400,10 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	void test_delete_authorized() throws Exception {
 		mvc.perform(delete("/api/v1/sport_results/{id}", accessibleStudentsResult.getId())
 			.with(asUser()))
-			.andExpect(status().isNoContent());
+			.andExpect(status().isNoContent())
+			.andDo(document("sport-results-delete",
+				pathParameters(idDescriptor)
+			));
 	}
 
 	@Test

@@ -1,7 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.2.1.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'org.asciidoctor.convert' version '1.5.9.2'
 	id 'idea'
 	id 'java'
 }
@@ -29,7 +29,7 @@ ext {
 }
 
 dependencies {
-	//asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.0.RELEASE'
+	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	//implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -60,8 +60,9 @@ test {
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
+	inputs.dir(snippetsDir)
 	dependsOn test
+	setSourceDir(file("src/docs/asciidoc"))
 }
 
 compileJava.dependsOn(processResources)
