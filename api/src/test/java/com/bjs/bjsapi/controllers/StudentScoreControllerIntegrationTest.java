@@ -22,7 +22,6 @@ import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 import com.bjs.bjsapi.database.repository.SportResultRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
-import com.bjs.bjsapi.database.repository.UserRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
 
@@ -32,9 +31,6 @@ class StudentScoreControllerIntegrationTest {
 
 	@MockBean
 	public BJSUserDetailsService bjsUserDetailsService;
-
-	@MockBean
-	public UserRepository userRepository;
 
 	@MockBean
 	public StudentRepository studentRepository;

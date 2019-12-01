@@ -8,7 +8,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -42,9 +41,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	private Class unprivilegedClass;
 
 	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
-	private ParameterDescriptor lastNameDescriptor = parameterWithName("lastName").description("The student's last name");
-	private ParameterDescriptor firstNameDescriptor = parameterWithName("firstName").description("The student's first name");
-	private ParameterDescriptor schoolClassDescriptor = parameterWithName("schoolClass").description("URI to the class");
+	private final ParameterDescriptor lastNameDescriptor = parameterWithName("lastName").description("The student's last name");
+	private final ParameterDescriptor firstNameDescriptor = parameterWithName("firstName").description("The student's first name");
+	private final ParameterDescriptor schoolClassDescriptor = parameterWithName("schoolClass").description("URI to the class");
 
 	private final List<FieldDescriptor> studentResponse = Arrays.asList(
 		fieldWithPath("firstName").type(JsonFieldType.STRING).description("The student's first name"),
@@ -549,7 +548,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		return String.format("{\n  \"firstName\": \"%s\",\n  \"lastName\": \"%s\",\n  \"female\": %s,\n  \"birthDay\": \"%s\",\n  \"schoolClass\": \"%s\"\n}", newFirstName, newLastName, newFemale, birthDay, newSchoolClass);
 	}
 
-	private String givenNewStudent(Long schoolClassID) throws IOException {
+	private String givenNewStudent(Long schoolClassID) {
 		return givenJsonStudent(String.format("/api/v1/classes/%s", schoolClassID), "false", "Schwarz", "Simon", "2002-01-27");
 	}
 

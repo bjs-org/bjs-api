@@ -11,15 +11,14 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.bjs.bjsapi.config.CalculationInformationConfig;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 
-@ExtendWith(SpringExtension.class)
+@SpringJUnitConfig
 class CalculationInformationServiceTest {
 
 	@MockBean

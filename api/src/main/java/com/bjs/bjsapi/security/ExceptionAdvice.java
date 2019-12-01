@@ -31,5 +31,4 @@ public class ExceptionAdvice {
 		}
 		throw e;
 	}
-
 }

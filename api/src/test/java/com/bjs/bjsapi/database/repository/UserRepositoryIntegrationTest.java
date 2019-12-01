@@ -27,7 +27,7 @@ import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
+class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private User firstUser;
 	private User secondUser;
