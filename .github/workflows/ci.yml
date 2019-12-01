@@ -22,6 +22,21 @@ jobs:
     - name: Build with Gradle
       run: cd api && ./gradlew build
 
+  api-docs:
+    needs: [build]
+    name: Build and Deploy API documentation
+    if: github.ref == 'refs/heads/master'
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build API documentation with Asccidoctor
+        run: cd api && ./gradlew asciidoc
+      - name: Deploy API documentation to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.PAT }}
+          FOLDER: api/build/asciidoc/html5
+
   deploy-balena:
     needs: [build]
     name: Deploy to Balena Cloud
