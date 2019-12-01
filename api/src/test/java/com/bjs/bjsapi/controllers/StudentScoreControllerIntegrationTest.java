@@ -28,7 +28,7 @@ import com.bjs.bjsapi.security.BJSUserDetailsService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = StudentScoreController.class)
-public class StudentScoreControllerIntegrationTest {
+class StudentScoreControllerIntegrationTest {
 
 	@MockBean
 	public BJSUserDetailsService bjsUserDetailsService;
