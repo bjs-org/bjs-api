@@ -13,8 +13,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.data.rest.core.annotation.RestResource;
-
 @Entity
 @Table(name = "students")
 public class Student {
@@ -37,7 +35,6 @@ public class Student {
 	private Boolean female;
 
 	@ManyToOne
-	@RestResource(path = "class", rel = "class")
 	@JoinColumn(nullable = false)
 	private Class schoolClass;
 

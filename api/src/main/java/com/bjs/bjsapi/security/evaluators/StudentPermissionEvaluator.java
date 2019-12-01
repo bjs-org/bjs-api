@@ -1,12 +1,12 @@
 package com.bjs.bjsapi.security.evaluators;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
 
-@Component
+@Service
 public class StudentPermissionEvaluator {
 
 	private final ClassPermissionEvaluator classPermissionEvaluator;

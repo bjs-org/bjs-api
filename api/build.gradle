@@ -40,8 +40,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
-	implementation 'com.fasterxml.jackson.core:jackson-core'
-	//compile 'org.springframework.security:spring-security-data'
+	//implementation 'org.springframework.security:spring-security-data'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testRuntimeOnly 'com.h2database:h2'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -64,3 +63,5 @@ asciidoctor {
 	inputs.dir snippetsDir
 	dependsOn test
 }
+
+compileJava.dependsOn(processResources)
