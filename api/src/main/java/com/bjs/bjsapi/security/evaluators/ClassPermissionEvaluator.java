@@ -5,14 +5,14 @@ import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.UserPrivilege;
 import com.bjs.bjsapi.database.repository.ClassRepository;
 import com.bjs.bjsapi.database.repository.UserPrivilegeRepository;
 
-@Component
+@Service
 public class ClassPermissionEvaluator {
 
 	private final UserPrivilegeRepository userPrivilegeRepository;

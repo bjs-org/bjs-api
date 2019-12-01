@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -38,35 +37,29 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	private SportResult accessibleStudentsResult;
 	private SportResult inaccessibleStudentsResult;
 
-	private List<FieldDescriptor> sportResultRequest = Arrays.asList(
+	private final List<FieldDescriptor> sportResultRequest = Arrays.asList(
 		fieldWithPath("result").description("Result which the student achieved (in standard units)"),
 		fieldWithPath("discipline").description("Discipline in which this measurement was recorded"),
 		fieldWithPath("student").description("The student (as URI) this result belongs to")
 	);
-	private List<FieldDescriptor> sportResultResponse = Arrays.asList(
+	private final List<FieldDescriptor> sportResultResponse = Arrays.asList(
 		fieldWithPath("result").description("Result which the student achieved (in standard units)"),
 		fieldWithPath("discipline").description("Discipline in which this measurement was recorded"),
 		subsectionWithPath("_links").description("All links regarding this result"),
 		fieldWithPath("_links.student").description("URI to student this result belongs to")
 	);
-	private List<FieldDescriptor> sportResultsResponse = Arrays.asList(
+	private final List<FieldDescriptor> sportResultsResponse = Arrays.asList(
 		subsectionWithPath("_embedded.sport_results").description("Array of all results the user has access to"),
 		subsectionWithPath("_links").description("All links regarding this repository")
 	);
 	private final ParameterDescriptor studentDescriptor = parameterWithName("student").description("URI to student this result belongs to");
-	private ParameterDescriptor disciplineDescriptor = parameterWithName("discipline").description("Discipline in which this measurement was recorded");
+	private final ParameterDescriptor disciplineDescriptor = parameterWithName("discipline").description("Discipline in which this measurement was recorded");
 
 	@Override
 	@BeforeEach
 	void setUp() throws Exception {
 		super.setUp();
 		setupSportResultScenario();
-	}
-
-	@Override
-	@AfterEach
-	void tearDown() {
-		super.tearDown();
 	}
 
 	@Test

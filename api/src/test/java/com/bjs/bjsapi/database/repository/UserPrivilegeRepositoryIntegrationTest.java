@@ -29,7 +29,7 @@ import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
 
-public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
+class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private final Logger log = LoggerFactory.getLogger(UserPrivilegeRepositoryIntegrationTest.class);
 	private final ResultHandler PRINT_HANDLER = result -> log.info(result.getResponse().getContentAsString());
@@ -52,7 +52,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 		fieldWithPath("accessibleClass").description("URI to class which user should get access to").optional().type(JsonFieldType.STRING),
 		fieldWithPath("user").description("URI to user which should be able to access the class").optional().type(JsonFieldType.STRING)
 	);
-	private ParameterDescriptor idDescriptor = parameterWithName("id").description("The ID of the user privilege");
+	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The ID of the user privilege");
 
 	@Override
 	@BeforeEach
@@ -91,6 +91,7 @@ public class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegratio
 			.andExpect(jsonPath("$._embedded.user_privileges.[0]._links.user.href").exists())
 			.andExpect(jsonPath("$._embedded.user_privileges.[0]._links.accessibleClass.href").exists())
 			.andExpect(jsonPath("$._links.self.href").value(endsWith("/api/v1/user_privileges")))
+			.andExpect(jsonPath("$._links.profile.href").value(endsWith("/api/v1/profile/user_privileges")))
 			.andExpect(jsonPath("$._links.search.href").value(endsWith("/api/v1/user_privileges/search")))
 			.andDo(document("user-privileges-get-all",
 				responseFields(

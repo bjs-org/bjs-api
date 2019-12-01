@@ -23,15 +23,15 @@ import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.helper.ClassBuilder;
 import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 
-public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
+class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private Class privilegedClass;
 	private Class unprivilegedClass;
-	private ParameterDescriptor idDescriptor = parameterWithName("id").description("The class' ID");
-	private ParameterDescriptor classNameDescriptor = parameterWithName("className").description("The class' name");
-	private ParameterDescriptor classTeacherNameDescriptor = parameterWithName("classTeacherName").description("The class teacher's name");
+	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The class' ID");
+	private final ParameterDescriptor classNameDescriptor = parameterWithName("className").description("The class' name");
+	private final ParameterDescriptor classTeacherNameDescriptor = parameterWithName("classTeacherName").description("The class teacher's name");
 
-	private List<FieldDescriptor> classesResponse = Arrays.asList(
+	private final List<FieldDescriptor> classesResponse = Arrays.asList(
 		subsectionWithPath("_links").description("All links regarding classes"),
 		fieldWithPath("_embedded.classes[]").description("All (visible) classes")
 	);
@@ -40,11 +40,11 @@ public class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		fieldWithPath("classTeacherName").description("The class teacher's name").type(JsonFieldType.STRING),
 		subsectionWithPath("_links").description("Links regarding this class")
 	);
-	private List<FieldDescriptor> classRequest = Arrays.asList(
+	private final List<FieldDescriptor> classRequest = Arrays.asList(
 		fieldWithPath("className").description("The class' name").type(JsonFieldType.STRING),
 		fieldWithPath("classTeacherName").description("The class' teacher").optional().type(JsonFieldType.STRING)
 	);
-	private List<FieldDescriptor> classRequestOptional = Arrays.asList(
+	private final List<FieldDescriptor> classRequestOptional = Arrays.asList(
 		fieldWithPath("className").description("The class' name").optional().type(JsonFieldType.STRING),
 		fieldWithPath("classTeacherName").description("The class teacher's name").optional().type(JsonFieldType.STRING)
 	);
