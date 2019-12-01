@@ -22,6 +22,25 @@ jobs:
     - name: Build with Gradle
       run: cd api && ./gradlew build
 
+  api-docs:
+    needs: [build]
+    name: Build and Deploy API documentation
+    if: github.ref == 'refs/heads/master'
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Build API documentation with Asccidoctor
+        run: cd api && ./gradlew asciidoc
+      - name: Deploy API documentation to GitHub Pages
+        uses: alex-page/blazing-fast-gh-pages-deploy@v1.1.0
+        with:
+          # The personal access token secret can be passed in using {{ secrets.GH_PAT }}
+          repo-token: ${{ secrets.PAT }}
+          # The directory for the built website
+          site-directory: api/build/asciidoc/html5
+          # The branch to deploy the built website to
+          deploy-branch: gh-pages
+
   deploy-balena:
     needs: [build]
     name: Deploy to Balena Cloud
