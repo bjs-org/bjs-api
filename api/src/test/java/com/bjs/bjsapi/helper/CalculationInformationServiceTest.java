@@ -15,21 +15,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import com.bjs.bjsapi.config.CalculationInformationConfig;
+import com.bjs.bjsapi.config.ApiConfiguration;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 
 @SpringJUnitConfig
 class CalculationInformationServiceTest {
 
 	@MockBean
-	private CalculationInformationConfig calculationInformationConfig;
+	private ApiConfiguration apiConfiguration;
 
 	private CalculationInformationService informationService;
 
 	@BeforeEach
 	void setUp() throws IOException {
-		doReturn(getResourceFromClassPath("calculation_information_test.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
-		informationService = new CalculationInformationService(calculationInformationConfig);
+		doReturn(getResourceFromClassPath("calculation_information_test.json")).when(apiConfiguration).getCalculationInformationFilePath();
+		informationService = new CalculationInformationService(apiConfiguration);
 	}
 
 	private URL getResourceFromClassPath(String name) throws IOException {
@@ -38,8 +38,8 @@ class CalculationInformationServiceTest {
 
 	@Test
 	void test_throwsIllegalArgumentException_wrongFormat() throws IOException {
-		reset(calculationInformationConfig);
-		doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(calculationInformationConfig).getCalculationInformationFilePath();
+		reset(apiConfiguration);
+		doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(apiConfiguration).getCalculationInformationFilePath();
 
 		Throwable thrown = catchThrowable(() -> informationService.getValue(true, true, DisciplineType.RUN_50));
 
@@ -50,8 +50,8 @@ class CalculationInformationServiceTest {
 
 	@Test
 	void test_throwsIllegalArgumentException_couldNotParseFile() throws MalformedURLException {
-		reset(calculationInformationConfig);
-		doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(calculationInformationConfig).getCalculationInformationFilePath();
+		reset(apiConfiguration);
+		doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(apiConfiguration).getCalculationInformationFilePath();
 
 		Throwable thrown = catchThrowable(() -> informationService.getValue(true, true, DisciplineType.RUN_50));
 

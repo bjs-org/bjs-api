@@ -1,17 +1,10 @@
 package com.bjs.bjsapi.database.model;
 
+import javax.persistence.*;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "students")
@@ -98,4 +91,9 @@ public class Student {
 		return String.format("Student{id=%d, firstName='%s', lastName='%s', birthDay=%s, female=%s, schoolClass=%s}", id, firstName, lastName, birthDay, female, schoolClass);
 	}
 
+	public int getStudentAge(Clock clock) {
+		final int birthYear = Instant.ofEpochMilli(getBirthDay().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+		final int currentYear = Instant.now(clock).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+		return Math.abs(birthYear - currentYear);
+	}
 }

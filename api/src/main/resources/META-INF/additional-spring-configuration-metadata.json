@@ -1,11 +1,18 @@
 {
   "properties": [
     {
-      "name": "api.calculation.calculationInformationFile",
+      "name": "api.calculationInformationFile",
       "type": "java.lang.String",
       "description": "Path to json file which contains the variables used to calculate the score.",
-      "sourceType": "com.bjs.bjsapi.config.CalculationInformationConfig",
+      "sourceType": "com.bjs.bjsapi.config.ApiConfiguration",
       "defaultValue": "calculation_information.json"
+    },
+    {
+      "name": "api.classificationInformationFile",
+      "type": "java.lang.String",
+      "description": "Path to json file which contains the variables used to classify the score.",
+      "sourceType": "com.bjs.bjsapi.config.ApiConfiguration",
+      "defaultValue": "classification_information.json"
     }
   ]
 }
