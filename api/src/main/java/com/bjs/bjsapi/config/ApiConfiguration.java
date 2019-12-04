@@ -10,12 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 @Configuration
-@ConfigurationProperties(prefix = "api.calculation")
-public class CalculationInformationConfig {
+@ConfigurationProperties(prefix = "api")
+public class ApiConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(CalculationInformationConfig.class);
+	private static final Logger log = LoggerFactory.getLogger(ApiConfiguration.class);
 
 	private String calculationInformationFile = "calculation_information.json";
+	private String classificationInformationFile = "classification_information.json";
 
 	public String getCalculationInformationFile() {
 		return calculationInformationFile;
@@ -32,6 +33,23 @@ public class CalculationInformationConfig {
 
 	public void setCalculationInformationFile(String calculationInformationFile) {
 		this.calculationInformationFile = calculationInformationFile;
+	}
+
+	public String getClassificationInformationFile() {
+		return classificationInformationFile;
+	}
+
+	public URL getClassificationInformationFilePath() {
+		try {
+			return new ClassPathResource(classificationInformationFile).getURL();
+		} catch (IOException e) {
+			log.error("Error occurred while finding path of classification-information-file.", e);
+			return null;
+		}
+	}
+
+	public void setClassificationInformationFile(String calculationInformationFile) {
+		this.classificationInformationFile = classificationInformationFile;
 	}
 
 }

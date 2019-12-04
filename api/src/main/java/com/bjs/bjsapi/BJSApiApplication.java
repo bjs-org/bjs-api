@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import com.bjs.bjsapi.config.CalculationInformationConfig;
+import com.bjs.bjsapi.config.ApiConfiguration;
 
 @SpringBootApplication
-@EnableConfigurationProperties(CalculationInformationConfig.class)
+@EnableConfigurationProperties(ApiConfiguration.class)
 public class BJSApiApplication {
 
 	public static void main(String[] args) {

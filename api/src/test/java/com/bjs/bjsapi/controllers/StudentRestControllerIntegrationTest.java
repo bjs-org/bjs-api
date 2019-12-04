@@ -4,45 +4,56 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.Clock;
 import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.bjs.bjsapi.config.ApiConfiguration;
 import com.bjs.bjsapi.database.model.SportResult;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 import com.bjs.bjsapi.database.repository.SportResultRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
+import com.bjs.bjsapi.helper.ClassificationInformationService;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = StudentScoreController.class)
-class StudentScoreControllerIntegrationTest {
+@SpringJUnitConfig
+@WebMvcTest(controllers = StudentRestController.class)
+class StudentRestControllerIntegrationTest {
 
 	@MockBean
-	public BJSUserDetailsService bjsUserDetailsService;
+	private ClassificationInformationService classificationInformationService;
 
 	@MockBean
-	public StudentRepository studentRepository;
+	private Clock clock;
 
 	@MockBean
-	public SportResultRepository sportResultRepository;
+	private BJSUserDetailsService bjsUserDetailsService;
 
 	@MockBean
-	public CalculationInformationService calculationInformationService;
+	private StudentRepository studentRepository;
+
+	@MockBean
+	private SportResultRepository sportResultRepository;
+
+	@MockBean
+	private CalculationInformationService calculationInformationService;
+
+	@MockBean
+	public ApiConfiguration apiConfiguration;
 
 	@Autowired
-	public MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Test
 	@WithMockUser("admin")

@@ -16,20 +16,20 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.bjs.bjsapi.config.ClassificationInformationConfig;
+import com.bjs.bjsapi.config.ApiConfiguration;
 
 @ExtendWith(SpringExtension.class)
 public class ClassificationInformationServiceTest {
 
     @MockBean
-    private ClassificationInformationConfig classificationInformationConfig;
+    private ApiConfiguration apiConfiguration;
 
     private ClassificationInformationService informationService;
 
     @BeforeEach
     public void setUp() throws IOException {
-        doReturn(getResourceFromClassPath("classification_information_test.json")).when(classificationInformationConfig).getClassificationInformationFilePath();
-        informationService = new ClassificationInformationService(classificationInformationConfig);
+        doReturn(getResourceFromClassPath("classification_information_test.json")).when(apiConfiguration).getClassificationInformationFilePath();
+        informationService = new ClassificationInformationService(apiConfiguration);
     }
 
     private URL getResourceFromClassPath(String name) throws IOException {
@@ -38,26 +38,26 @@ public class ClassificationInformationServiceTest {
 
     @Test
     public void test_throwsIllegalArgumentException_wrongFormat() throws IOException {
-        reset(classificationInformationConfig);
-        doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(classificationInformationConfig).getClassificationInformationFilePath();
+        reset(apiConfiguration);
+        doReturn(getResourceFromClassPath("calculation_information_wrong_format.json")).when(apiConfiguration).getClassificationInformationFilePath();
 
         Throwable thrown = catchThrowable(() -> informationService.getValue(true, true, 17));
 
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
-                .hasNoCause()
-                .withFailMessage("The JSON file has a wrong format. Could not find property \"female\"");
+            .hasNoCause()
+            .withFailMessage("The JSON file has a wrong format. Could not find property \"female\"");
     }
 
     @Test
     public void test_throwsIllegalArgumentException_couldNotParseFile() throws MalformedURLException {
-        reset(classificationInformationConfig);
-        doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(classificationInformationConfig).getClassificationInformationFilePath();
+        reset(apiConfiguration);
+        doReturn(Paths.get("fileWhichNotExists.json").toUri().toURL()).when(apiConfiguration).getClassificationInformationFilePath();
 
         Throwable thrown = catchThrowable(() -> informationService.getValue(true, true, 17));
 
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
-                .hasCauseInstanceOf(FileNotFoundException.class)
-                .withFailMessage("Could not parse file \"fileWhichNotExists.json\"");
+            .hasCauseInstanceOf(FileNotFoundException.class)
+            .withFailMessage("Could not parse file \"fileWhichNotExists.json\"");
     }
 
     @Test

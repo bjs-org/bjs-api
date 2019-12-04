@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.bjs.bjsapi.config.CalculationInformationConfig;
+import com.bjs.bjsapi.config.ApiConfiguration;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,10 +17,10 @@ public class CalculationInformationService {
 
 	private static final Logger log = LoggerFactory.getLogger(CalculationInformationService.class);
 
-	private final CalculationInformationConfig calculationInformationConfig;
+	private final ApiConfiguration apiConfiguration;
 
-	public CalculationInformationService(CalculationInformationConfig calculationInformationConfig) {
-		this.calculationInformationConfig = calculationInformationConfig;
+	public CalculationInformationService(ApiConfiguration apiConfiguration) {
+		this.apiConfiguration = apiConfiguration;
 	}
 
 	public double getAValue(boolean female, DisciplineType discipline) {
@@ -32,7 +32,7 @@ public class CalculationInformationService {
 	}
 
 	double getValue(boolean female, boolean a, DisciplineType discipline) {
-		URL file = calculationInformationConfig.getCalculationInformationFilePath();
+		URL file = apiConfiguration.getCalculationInformationFilePath();
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			JsonNode root = objectMapper.readTree(file);

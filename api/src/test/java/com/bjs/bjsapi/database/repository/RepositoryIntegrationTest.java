@@ -4,6 +4,8 @@ import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
+import java.time.Clock;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
@@ -20,12 +23,14 @@ import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @ActiveProfiles("in-memory-db")
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 abstract class RepositoryIntegrationTest {
+
+	@MockBean
+	private Clock clock;
 
 	@Autowired
 	protected MockMvc mvc;
