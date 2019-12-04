@@ -21,7 +21,6 @@ public class StudentScoreController {
 	private final StudentRepository studentRepository;
 	private final SportResultRepository sportResultRepository;
 	private final CalculationInformationService calculationInformationService;
-    private int Year;
 
 	public StudentScoreController(StudentRepository studentRepository, SportResultRepository sportResultRepository, CalculationInformationService calculationInformationService) {
 		this.studentRepository = studentRepository;
@@ -169,5 +168,7 @@ public class StudentScoreController {
         }
         return null;
     }
+
+
 }
 
