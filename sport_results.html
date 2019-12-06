@@ -502,7 +502,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/235"
+  "student":"/114"
 }</code></pre>
 </div>
 </div>
@@ -554,7 +554,7 @@ Content-Length: 64
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/240
+Location: http://localhost:8080/api/v1/sport_results/119
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -569,13 +569,13 @@ Content-Length: 343
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/240"
+      "href" : "http://localhost:8080/api/v1/sport_results/119"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/240"
+      "href" : "http://localhost:8080/api/v1/sport_results/119"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/240/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/119/student"
     }
   }
 }</code></pre>
@@ -668,13 +668,13 @@ Content-Length: 735
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/328"
+          "href" : "http://localhost:8080/api/v1/sport_results/207"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/328"
+          "href" : "http://localhost:8080/api/v1/sport_results/207"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/328/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/207/student"
         }
       }
     } ]
@@ -723,7 +723,7 @@ Content-Length: 735
 <h4 id="_get_a_single_result_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/210 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/89 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -783,20 +783,20 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 342
+Content-Length: 339
 
 {
   "result" : 6.6,
   "discipline" : "RUN_50",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/210"
+      "href" : "http://localhost:8080/api/v1/sport_results/89"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/210"
+      "href" : "http://localhost:8080/api/v1/sport_results/89"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/210/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/89/student"
     }
   }
 }</code></pre>
@@ -831,7 +831,7 @@ Content-Length: 342
 <h4 id="_get_result_by_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/365 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/244 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -910,20 +910,20 @@ Content-Length: 585
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/367"
+          "href" : "http://localhost:8080/api/v1/sport_results/246"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/367"
+          "href" : "http://localhost:8080/api/v1/sport_results/246"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/367/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/246/student"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/365"
+      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/244"
     }
   }
 }</code></pre>
@@ -1037,13 +1037,13 @@ Content-Length: 593
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/393"
+          "href" : "http://localhost:8080/api/v1/sport_results/272"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/393"
+          "href" : "http://localhost:8080/api/v1/sport_results/272"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/393/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/272/student"
         }
       }
     } ]
@@ -1125,7 +1125,7 @@ Content-Length: 593
 <h4 id="_edit_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/sport_results/357 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/sport_results/236 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -1133,7 +1133,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/355"
+  "student":"/234"
 }</code></pre>
 </div>
 </div>
@@ -1199,13 +1199,13 @@ Content-Length: 343
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/357"
+      "href" : "http://localhost:8080/api/v1/sport_results/236"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/357"
+      "href" : "http://localhost:8080/api/v1/sport_results/236"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/357/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/236/student"
     }
   }
 }</code></pre>
@@ -1280,7 +1280,7 @@ Content-Length: 343
 <h4 id="_replace_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/sport_results/384 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/sport_results/263 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -1288,7 +1288,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/382"
+  "student":"/261"
 }</code></pre>
 </div>
 </div>
@@ -1340,7 +1340,7 @@ Content-Length: 64
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/384
+Location: http://localhost:8080/api/v1/sport_results/263
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1355,13 +1355,13 @@ Content-Length: 343
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/384"
+      "href" : "http://localhost:8080/api/v1/sport_results/263"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/384"
+      "href" : "http://localhost:8080/api/v1/sport_results/263"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/384/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/263/student"
     }
   }
 }</code></pre>
@@ -1397,7 +1397,7 @@ Content-Length: 343
 <h4 id="_delete_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/sport_results/174 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/sport_results/53 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1425,7 +1425,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-01 19:23:14 UTC
+Last updated 2019-12-06 22:43:00 UTC
 </div>
 </div>
 </body>

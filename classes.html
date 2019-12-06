@@ -512,7 +512,7 @@ Content-Length: 64
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/92
+Location: http://localhost:8080/api/v1/classes/860
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -520,17 +520,17 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 244
+Content-Length: 246
 
 {
   "className" : "7A",
   "classTeacherName" : "A Class Teacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/92"
+      "href" : "http://localhost:8080/api/v1/classes/860"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/92"
+      "href" : "http://localhost:8080/api/v1/classes/860"
     }
   }
 }</code></pre>
@@ -613,7 +613,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 611
+Content-Length: 613
 
 {
   "_embedded" : {
@@ -622,10 +622,10 @@ Content-Length: 611
       "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/34"
+          "href" : "http://localhost:8080/api/v1/classes/802"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/34"
+          "href" : "http://localhost:8080/api/v1/classes/802"
         }
       }
     } ]
@@ -677,7 +677,7 @@ Content-Length: 611
 <h4 id="_get_a_single_class_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/49 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/817 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -732,17 +732,17 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 254
+Content-Length: 256
 
 {
   "className" : "privilegedClass",
   "classTeacherName" : "ClassTeacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/49"
+      "href" : "http://localhost:8080/api/v1/classes/817"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/49"
+      "href" : "http://localhost:8080/api/v1/classes/817"
     }
   }
 }</code></pre>
@@ -842,10 +842,10 @@ Content-Length: 256
   "classTeacherName" : "ClassTeacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/105"
+      "href" : "http://localhost:8080/api/v1/classes/873"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/105"
+      "href" : "http://localhost:8080/api/v1/classes/873"
     }
   }
 }</code></pre>
@@ -949,7 +949,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 499
+Content-Length: 501
 
 {
   "_embedded" : {
@@ -958,10 +958,10 @@ Content-Length: 499
       "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/84"
+          "href" : "http://localhost:8080/api/v1/classes/852"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/84"
+          "href" : "http://localhost:8080/api/v1/classes/852"
         }
       }
     } ]
@@ -1041,7 +1041,7 @@ This request edits only the given fields.</p>
 <h4 id="_edit_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/classes/9 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/classes/777 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 76
@@ -1102,17 +1102,17 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 254
+Content-Length: 258
 
 {
   "className" : "changed name",
   "classTeacherName" : "new Class Teacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/9"
+      "href" : "http://localhost:8080/api/v1/classes/777"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/9"
+      "href" : "http://localhost:8080/api/v1/classes/777"
     }
   }
 }</code></pre>
@@ -1185,7 +1185,7 @@ This request replaces the whole class in contrast to <code>PATCH</code> which on
 <h4 id="_replace_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/classes/115 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/classes/883 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 59
@@ -1205,7 +1205,7 @@ Content-Length: 59
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/115
+Location: http://localhost:8080/api/v1/classes/883
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1220,10 +1220,10 @@ Content-Length: 241
   "classTeacherName" : "",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/115"
+      "href" : "http://localhost:8080/api/v1/classes/883"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/115"
+      "href" : "http://localhost:8080/api/v1/classes/883"
     }
   }
 }</code></pre>
@@ -1262,7 +1262,7 @@ Content-Length: 241
 <h4 id="_delete_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/classes/29 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/classes/797 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1290,7 +1290,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-01 19:23:14 UTC
+Last updated 2019-12-06 22:43:00 UTC
 </div>
 </div>
 </body>
