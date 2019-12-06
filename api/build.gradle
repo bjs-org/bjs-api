@@ -30,7 +30,9 @@ ext {
 
 dependencies {
 	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-	//implementation 'org.springframework.boot:spring-boot-starter'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	runtimeOnly 'org.postgresql:postgresql'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -40,17 +42,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.data:spring-data-rest-hal-explorer'
-	//implementation 'org.springframework.security:spring-security-data'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testRuntimeOnly 'com.h2database:h2'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	testRuntimeOnly 'com.h2database:h2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	//testImplementation 'org.springframework.restdocs:spring-restdocs-core'
-	//testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
