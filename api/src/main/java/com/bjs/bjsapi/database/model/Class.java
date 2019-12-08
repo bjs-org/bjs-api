@@ -1,11 +1,6 @@
 package com.bjs.bjsapi.database.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "classes")
@@ -15,7 +10,10 @@ public class Class {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
+	private String grade;
+
+	@Column(nullable = false)
 	private String className;
 
 	private String classTeacherName;
@@ -36,6 +34,14 @@ public class Class {
 		this.classTeacherName = classTeacherName;
 	}
 
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
 	public Class() {
 	}
 
@@ -43,7 +49,8 @@ public class Class {
 		this.className = className;
 	}
 
-	public Class(String className, String classTeacherName) {
+	public Class(String grade, String className, String classTeacherName) {
+		this.grade = grade;
 		this.className = className;
 		this.classTeacherName = classTeacherName;
 	}
@@ -54,7 +61,6 @@ public class Class {
 
 	@Override
 	public String toString() {
-		return String.format("Class{id=%d, className='%s', classTeacherName='%s'}", id, className, classTeacherName);
+		return String.format("Class{id=%d, grade='%s', className='%s', classTeacherName='%s'}", id, grade, className, classTeacherName);
 	}
-
 }
