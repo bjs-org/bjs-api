@@ -4,6 +4,19 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,6 +56,9 @@ public class Student {
 	@JoinColumn(nullable = false)
 	@JsonBackReference
 	private Class schoolClass;
+
+	@OneToMany(mappedBy = "student")
+	private List<SportResult> sportResults;
 
 	public Boolean getFemale() {
 		return female;
@@ -88,6 +104,14 @@ public class Student {
 		return id;
 	}
 
+	public List<SportResult> getSportResults() {
+		return sportResults;
+	}
+
+	public void setSportResults(List<SportResult> sportResults) {
+		this.sportResults = sportResults;
+	}
+
 	public Student() {
 	}
 
@@ -113,9 +137,10 @@ public class Student {
 		return String.format("Student{id=%d, firstName='%s', lastName='%s', birthDay=%s, female=%s, schoolClass=%s}", id, firstName, lastName, birthDay, female, schoolClass);
 	}
 
-	public int getStudentAge(Clock clock) {
+	public int getAgeByYear(Clock clock) {
 		final int birthYear = Instant.ofEpochMilli(getBirthDay().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
 		final int currentYear = Instant.now(clock).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
 		return Math.abs(birthYear - currentYear);
 	}
+
 }

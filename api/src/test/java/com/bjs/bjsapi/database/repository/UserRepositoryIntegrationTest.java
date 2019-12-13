@@ -8,7 +8,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,21 +22,15 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultHandler;
 
 import com.bjs.bjsapi.database.model.User;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.bjs.bjsapi.security.helper.RunWithAuthentication;
 
 class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
-
-	private User firstUser;
-	private User secondUser;
 
 	private JacksonTester<User> jacksonTester;
 
 	private final Logger log = LoggerFactory.getLogger(UserRepositoryIntegrationTest.class);
 	private final ResultHandler PRINT_HANDLER = result -> log.info(result.getResponse().getContentAsString());
-
-	private User newUser;
 
 	private final List<FieldDescriptor> userResponse = Arrays.asList(
 		fieldWithPath("username").description("The user's username"),
@@ -66,7 +59,9 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	void setUp() throws Exception {
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
-		setupUserScenario();
+		RunWithAuthentication.runAsAdmin(() -> {
+			testData.setupUsers();
+		});
 		SecurityHelper.reset();
 	}
 
@@ -93,7 +88,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$._embedded.users").isArray())
-			.andExpect(jsonPath("$._embedded.users[*].username", hasItems(firstUser.getUsername(), secondUser.getUsername())))
+			.andExpect(jsonPath("$._embedded.users[*].username", hasItems(testData.user.getUsername(), testData.admin.getUsername())))
 			.andDo(document("users-get-all",
 				responseFields(
 					subsectionWithPath("_links").description("All links regarding users"),
@@ -105,7 +100,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(get("/api/v1/users/{id}", testData.user.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isForbidden());
@@ -113,11 +108,11 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_admin() throws Exception {
-		mvc.perform(get("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(get("/api/v1/users/{id}", testData.user.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.username", is(firstUser.getUsername())))
+			.andExpect(jsonPath("$.username", is(testData.user.getUsername())))
 			.andExpect(jsonPath("$._links.self.href", containsString("/api/v1/users/")))
 			.andDo(document("users-get-byId",
 				pathParameters(
@@ -128,7 +123,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByUsername_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
+		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", testData.user.getUsername())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isForbidden());
@@ -136,11 +131,11 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByUsername_admin() throws Exception {
-		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", firstUser.getUsername())
+		mvc.perform(get("/api/v1/users/search/findByUsername?username={username}", testData.user.getUsername())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.username", is(firstUser.getUsername())))
+			.andExpect(jsonPath("$.username", is(testData.user.getUsername())))
 			.andExpect(jsonPath("$._links.self.href", containsString("/api/v1/users/")))
 			.andDo(document("users-get-byUsername",
 				requestParameters(
@@ -154,7 +149,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	@Test
 	void test_create_unauthorized() throws Exception {
 		mvc.perform(post("/api/v1/users")
-			.content(givenNewUser())
+			.content(IntegrationTestData.givenNewUser())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isForbidden());
@@ -163,7 +158,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	@Test
 	void test_create_admin() throws Exception {
 		mvc.perform(post("/api/v1/users")
-			.content(givenNewUser())
+			.content(IntegrationTestData.givenNewUser())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isCreated())
@@ -175,7 +170,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_unauthorized() throws Exception {
-		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(patch("/api/v1/users/{id}", testData.user.getId())
 			.content("{\n" +
 				"  \"enabled\": false\n" +
 				"}")
@@ -186,7 +181,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_admin() throws Exception {
-		mvc.perform(patch("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(patch("/api/v1/users/{id}", testData.user.getId())
 			.content("{\n" +
 				"  \"enabled\": false\n" +
 				"}")
@@ -204,17 +199,17 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_replace_unauthorized() throws Exception {
-		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
-			.content(givenNewUser())
+		mvc.perform(put("/api/v1/users/{id}", testData.user.getId())
+			.content(IntegrationTestData.givenNewUser())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_replace_admin() throws Exception {
-		mvc.perform(put("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(put("/api/v1/users/{id}", testData.user.getId())
 			.accept(MediaType.APPLICATION_JSON)
-			.content(givenNewUser())
+			.content(IntegrationTestData.givenNewUser())
 			.with(asAdmin()))
 			.andExpect(status().isOk())
 			.andDo(PRINT_HANDLER)
@@ -228,47 +223,19 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_unauthorized() throws Exception {
-		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(delete("/api/v1/users/{id}", testData.user.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_delete_admin() throws Exception {
-		mvc.perform(delete("/api/v1/users/{id}", firstUser.getId())
+		mvc.perform(delete("/api/v1/users/{id}", testData.user.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent())
 			.andDo(document("users-delete", pathParameters(
 				parameterWithName("id").description("The user's id")
 			)));
-	}
-
-	private void setupUserScenario() {
-		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
-
-		firstUser = userRepository.save(new UserBuilder()
-			.setUsername("firstUser")
-			.setPassword("new Password")
-			.createUser());
-
-		secondUser = userRepository.save(new UserBuilder()
-			.setUsername("secondUser")
-			.setPassword("other Password")
-			.createUser());
-
-		SecurityHelper.reset();
-	}
-
-	private String givenNewUser() throws IOException {
-		newUser = new UserBuilder()
-			.setUsername("aNewUser")
-			.setPassword("123456")
-			.createUser();
-
-		ObjectNode node = (ObjectNode) objectMapper.readTree(jacksonTester.write(newUser).getJson());
-		node.remove("id");
-
-		return node.toString();
 	}
 
 }

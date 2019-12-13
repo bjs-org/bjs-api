@@ -1,10 +1,13 @@
 package com.bjs.bjsapi.database.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +25,17 @@ public class Class {
 	private String className;
 
 	private String classTeacherName;
+
+	@OneToMany(mappedBy = "schoolClass")
+	private List<Student> students;
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
+	}
 
 	public String getClassName() {
 		return className;

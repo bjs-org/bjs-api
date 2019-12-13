@@ -18,9 +18,7 @@ public class BJSUserPrincipal implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (user.getAdministrator()) {
-			return AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
-		}
+		if (user.getAdministrator()) return AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
 
 		return AuthorityUtils.createAuthorityList("ROLE_USER");
 	}

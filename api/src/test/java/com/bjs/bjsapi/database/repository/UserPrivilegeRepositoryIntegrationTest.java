@@ -19,23 +19,13 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.ParameterDescriptor;
-import org.springframework.test.web.servlet.ResultHandler;
 
-import com.bjs.bjsapi.database.model.Class;
-import com.bjs.bjsapi.database.model.User;
-import com.bjs.bjsapi.database.model.UserPrivilege;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
-import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 import com.bjs.bjsapi.helper.SecurityHelper;
+import com.bjs.bjsapi.security.helper.RunWithAuthentication;
 
 class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	private final Logger log = LoggerFactory.getLogger(UserPrivilegeRepositoryIntegrationTest.class);
-	private final ResultHandler PRINT_HANDLER = result -> log.info(result.getResponse().getContentAsString());
-	private UserPrivilege userPrivilege;
-	private Class schoolClass;
-	private User testUser;
 
 	private final List<FieldDescriptor> userPrivilegeResponse = Arrays.asList(
 		subsectionWithPath("_links").description("All links regarding this privilege object"),
@@ -58,7 +48,9 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		super.setUp();
-		setupUserPrivilegeScenario();
+		RunWithAuthentication.runAsAdmin(() -> {
+			testData.setupClasses();
+		});
 		SecurityHelper.reset();
 	}
 
@@ -103,7 +95,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(get("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -111,7 +103,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_admin() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(get("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -126,7 +118,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByAccessibleClass_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass={accessibleClass}", "/" + schoolClass.getId())
+		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass={accessibleClass}", "/" + testData.accessibleClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -134,7 +126,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByAccessibleClass_admin() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass=api/v1/classes/" + schoolClass.getId())
+		mvc.perform(get("/api/v1/user_privileges/search/findByAccessibleClass?accessibleClass=api/v1/classes/" + testData.accessibleClass.getId())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -151,7 +143,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByUser_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/search/findByUser?user=api/v1/users/" + testUser.getId())
+		mvc.perform(get("/api/v1/user_privileges/search/findByUser?user=api/v1/users/" + testData.user.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -159,7 +151,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByUser_admin() throws Exception {
-		mvc.perform(get("/api/v1/user_privileges/search/findByUser?user=api/v1/users/" + testUser.getId())
+		mvc.perform(get("/api/v1/user_privileges/search/findByUser?user=api/v1/users/" + testData.user.getId())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -200,7 +192,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_unauthorized() throws Exception {
-		mvc.perform(patch("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(patch("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.content(givenChangedClassUserPrivilege())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -209,7 +201,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_admin() throws Exception {
-		mvc.perform(patch("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(patch("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.content(givenChangedClassUserPrivilege())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -223,7 +215,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_replace_unauthorized() throws Exception {
-		mvc.perform(put("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(put("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asUser())
 			.content(givenNewUserPrivilege())
 			.accept(MediaType.APPLICATION_JSON))
@@ -232,7 +224,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_replace_admin() throws Exception {
-		mvc.perform(put("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(put("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asAdmin())
 			.content(givenNewUserPrivilege())
 			.accept(MediaType.APPLICATION_JSON))
@@ -249,14 +241,14 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_unauthorized() throws Exception {
-		mvc.perform(delete("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(delete("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_delete_admin() throws Exception {
-		mvc.perform(delete("/api/v1/user_privileges/{id}", userPrivilege.getId())
+		mvc.perform(delete("/api/v1/user_privileges/{id}", testData.accessClassPrivilege.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent())
 			.andDo(document("user-privileges-delete",
@@ -270,7 +262,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			"  \"accessibleClass\": \"/api/v1/classes/%s\"\n" +
 			"}";
 
-		return String.format(userPrivilegeJsonTemplate, schoolClass.getId());
+		return String.format(userPrivilegeJsonTemplate, testData.accessibleClass.getId());
 	}
 
 	private String givenNewUserPrivilege() {
@@ -280,30 +272,7 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			"  \"user\": \"/api/v1/users/%s\"\n" +
 			"}";
 
-		return String.format(userPrivilegeJsonTemplate, schoolClass.getId(), testUser.getId());
-	}
-
-	private void setupUserPrivilegeScenario() {
-		SecurityHelper.runAs("admin", "admin", "ROLE_ADMIN", "ROLE_USER");
-
-		testUser = userRepository.save(new UserBuilder()
-			.setUsername("helper")
-			.setPassword("I'm Helping")
-			.createUser());
-
-		schoolClass = classRepository.save(new ClassBuilder()
-			.setClassName("D")
-			.setGrade("7")
-			.setClassTeacherName("A Class Teacher")
-			.createClass());
-
-		userPrivilege = userPrivilegeRepository.save(new UserPrivilegeBuilder()
-			.setUser(testUser)
-			.setAccessibleClass(schoolClass)
-			.createUserPrivilege()
-		);
-
-		SecurityHelper.reset();
+		return String.format(userPrivilegeJsonTemplate, testData.accessibleClass.getId(), testData.user.getId());
 	}
 
 }

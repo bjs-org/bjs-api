@@ -37,7 +37,7 @@ import com.bjs.bjsapi.security.evaluators.StudentPermissionEvaluator;
 @RequestMapping("/students/best/")
 public class TopStudentsController {
 
-	private final StudentRestController studentRestController;
+	private final StudentCalculationService studentCalculationService;
 	private final StudentRepository studentRepository;
 	private final ClassRepository classRepository;
 	private final EntityLinks entityLinks;
@@ -45,8 +45,8 @@ public class TopStudentsController {
 
 	private Logger log = LoggerFactory.getLogger(TopStudentsController.class);
 
-	public TopStudentsController(StudentRestController studentRestController, StudentRepository studentRepository, ClassRepository classRepository, EntityLinks entityLinks, StudentPermissionEvaluator studentPermissionEvaluator) {
-		this.studentRestController = studentRestController;
+	public TopStudentsController(StudentCalculationService studentCalculationService, StudentRepository studentRepository, ClassRepository classRepository, EntityLinks entityLinks, StudentPermissionEvaluator studentPermissionEvaluator) {
+		this.studentCalculationService = studentCalculationService;
 		this.studentRepository = studentRepository;
 		this.classRepository = classRepository;
 		this.entityLinks = entityLinks;
@@ -108,7 +108,7 @@ public class TopStudentsController {
 			.map(studentRepository::findAllBySchoolClass)
 			.flatMap(Collection::stream)
 			.filter(student -> student.getFemale() == female)
-			.sorted(Collections.reverseOrder(Comparator.comparingInt(studentRestController::calculateScore)))
+			.sorted(Collections.reverseOrder(Comparator.comparingInt(studentCalculationService::calculateScore)))
 			.limit(3)
 			.collect(Collectors.toList())
 		);
