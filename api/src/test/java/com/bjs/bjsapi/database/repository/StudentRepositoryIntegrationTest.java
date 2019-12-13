@@ -1,6 +1,8 @@
 package com.bjs.bjsapi.database.repository;
 
+import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.hamcrest.Matchers.*;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -8,8 +10,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,49 +21,34 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.ParameterDescriptor;
 
-import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.StudentBuilder;
-import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
-import com.bjs.bjsapi.helper.SecurityHelper;
 
 class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
-
-	private Student accessibleStudent1;
-	private Student inaccessibleStudent1;
-	private Student accessibleStudent2;
-	private Student inaccessibleStudent2;
-	private Student accessibleStudent3;
-	private Student inaccessibleStudent3;
-
-	private Class accessibleClass;
-	private Class inaccessibleClass;
 
 	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
 	private final ParameterDescriptor lastNameDescriptor = parameterWithName("lastName").description("The student's last name");
 	private final ParameterDescriptor firstNameDescriptor = parameterWithName("firstName").description("The student's first name");
 	private final ParameterDescriptor schoolClassDescriptor = parameterWithName("schoolClass").description("URI to the class");
 
-	private final List<FieldDescriptor> studentResponse = Arrays.asList(
+	public static final List<FieldDescriptor> STUDENT_RESPONSE = Arrays.asList(
 		fieldWithPath("firstName").type(JsonFieldType.STRING).description("The student's first name"),
 		fieldWithPath("lastName").type(JsonFieldType.STRING).description("The students's last name"),
 		fieldWithPath("birthDay").type(JsonFieldType.STRING).description("The student's birth day"),
 		fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("If the student is female"),
 		subsectionWithPath("_links").description("Links regarding this student")
 	);
-	private final List<FieldDescriptor> studentsResponse = Arrays.asList(
+	public static final List<FieldDescriptor> STUDENTS_RESPONSE = Arrays.asList(
 		subsectionWithPath("_embedded.students").description("All (visible) students"),
 		subsectionWithPath("_links").description("Links to other sections regarding students")
 	);
-	private final List<FieldDescriptor> studentRequest = Arrays.asList(
+	public static final List<FieldDescriptor> STUDENT_REQUEST = Arrays.asList(
 		fieldWithPath("firstName").description("The student's first name"),
 		fieldWithPath("lastName").description("The student's last name"),
 		fieldWithPath("female").description("If the student is female"),
 		fieldWithPath("schoolClass").description("The student's class as URI"),
 		fieldWithPath("birthDay").description("The student's birth day in \"YYYY-mm-dd\"-format")
 	);
-	private final List<FieldDescriptor> studentRequestOptional = Arrays.asList(
+	public static final List<FieldDescriptor> STUDENT_REQUEST_OPTIONAL = Arrays.asList(
 		fieldWithPath("firstName").description("The student's first name").optional(),
 		fieldWithPath("lastName").description("The student's last name").optional(),
 		fieldWithPath("female").description("If the student is female").optional(),
@@ -75,8 +60,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	void setUp() throws Exception {
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
-		setupClassScenario();
-		SecurityHelper.reset();
+		runAsAdmin(() -> {
+			testData.setupStudents();
+		});
 	}
 
 	@Test
@@ -93,11 +79,11 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("first", "third", "fifth")))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("second", "fourth", "sixth"))))
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("Jalen"))))
 			.andDo(document("students-get-all",
-				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+				responseFields(STUDENTS_RESPONSE).andWithPrefix("_embedded.students[].", STUDENT_RESPONSE)
 			));
 	}
 
@@ -107,54 +93,42 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(6)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("first", "third", "fifth", "second", "fourth", "sixth")));
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(2)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("Liam", "Jalen")));
 	}
 
 	@Test
 	void test_findById_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent1.getId())
-			.with(asUser()))
-			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent2.getId())
-			.with(asUser()))
-			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent3.getId())
+		mvc.perform(get("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
-	void test_findById_authorized() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", accessibleStudent1.getId())
+	void test_findById_authorized_privilegedData() throws Exception {
+		mvc.perform(get("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.with(asUser()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(accessibleStudent1.getFirstName()))
-			.andExpect(jsonPath("lastName").value(accessibleStudent1.getLastName()))
-			.andExpect(jsonPath("female").value(accessibleStudent1.getFemale()))
+			.andExpect(jsonPath("firstName").value(testData.accessibleStudent.getFirstName()))
+			.andExpect(jsonPath("lastName").value(testData.accessibleStudent.getLastName()))
+			.andExpect(jsonPath("female").value(testData.accessibleStudent.getFemale()))
 			.andDo(document("students-get-byId",
 				pathParameters(idDescriptor),
-				responseFields(studentResponse)
+				responseFields(STUDENT_RESPONSE),
+				links(
+					linkWithRel("self").description("Link to exactly this page"),
+					linkWithRel("student").description("Link to the student"),
+					linkWithRel("sportResults").description("Link to sport results belonging to the student"),
+					linkWithRel("schoolClass").description("Link to school class the student belong to"),
+					linkWithRel("score").description("Link to score of the student"),
+					linkWithRel("classification").description("Link to classification of student")
+				)
 			));
-
-		mvc.perform(get("/api/v1/students/{id}", accessibleStudent2.getId())
-			.with(asUser()))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(accessibleStudent2.getFirstName()))
-			.andExpect(jsonPath("lastName").value(accessibleStudent2.getLastName()))
-			.andExpect(jsonPath("female").value(accessibleStudent2.getFemale()));
-
-		mvc.perform(get("/api/v1/students/{id}", accessibleStudent3.getId())
-			.with(asUser()))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(accessibleStudent3.getFirstName()))
-			.andExpect(jsonPath("lastName").value(accessibleStudent3.getLastName()))
-			.andExpect(jsonPath("female").value(accessibleStudent3.getFemale()));
 	}
 
 	@Test
 	void test_findById_admin() throws Exception {
-		for (Student student : Arrays.asList(accessibleStudent1, accessibleStudent2, accessibleStudent3, inaccessibleStudent1, inaccessibleStudent2, inaccessibleStudent3)) {
+		for (Student student : Arrays.asList(testData.accessibleStudent, testData.inaccessibleStudent)) {
 			mvc.perform(get("/api/v1/students/{id}", student.getId())
 				.with(asAdmin()))
 				.andExpect(status().isOk())
@@ -166,32 +140,32 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByLastName_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Heß")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("first", "third", "fifth")))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("second", "fourth", "sixth"))))
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("Jalen"))))
 			.andDo(document("students-get-byLastName",
 				requestParameters(lastNameDescriptor),
-				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+				responseFields(STUDENTS_RESPONSE).andWithPrefix("_embedded.students[].", STUDENT_RESPONSE)
 			));
 	}
 
 	@Test
 	void test_findByLastName_admin() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByLastName?lastName=Buscemi")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(6)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("first", "third", "fifth", "second", "fourth", "sixth")));
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", containsInAnyOrder("Jalen")));
 	}
 
 	@Test
 	void test_findByFirstName_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=second")
+		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=Jalen")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -200,67 +174,67 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByFirstName_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=first")
+		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=Liam")
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("first")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Heß")))
 			.andDo(document("students-get-byFirstName",
 				requestParameters(firstNameDescriptor),
-				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+				responseFields(STUDENTS_RESPONSE).andWithPrefix("_embedded.students[].", STUDENT_RESPONSE)
 			));
 	}
 
 	@Test
 	void test_findByFirstName_admin() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=first")
+		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=Liam")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("first")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")));
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Heß")));
 
-		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=second")
+		mvc.perform(get("/api/v1/students/search/findByFirstName?firstName=Jalen")
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("second")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")));
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Jalen")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Buscemi")));
 	}
 
 	@Test
 	void test_findAllBySchoolClass_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + accessibleClass.getId())
+		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + testData.accessibleClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("first", "third", "fifth")))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("second", "fourth", "sixth"))))
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("Jalen"))))
 			.andDo(document("students-get-bySchoolClass",
 				requestParameters(schoolClassDescriptor),
-				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+				responseFields(STUDENTS_RESPONSE).andWithPrefix("_embedded.students[].", STUDENT_RESPONSE)
 			));
 	}
 
 	@Test
 	void test_findAllBySchoolClass_admin() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + inaccessibleClass.getId())
+		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + testData.inaccessibleClass.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("_embedded.students.[*]", hasSize(3)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("second", "fourth", "sixth")))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("first", "third", "fifth"))));
+			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", contains("Jalen")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", not(hasItems("Liam"))));
 	}
 
 	@Test
 	void test_findByFirstNameAndLastName_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=second&lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=Jalen&lastName=Buscemi")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isOk())
@@ -269,43 +243,43 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByFirstNameAndLastName_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=first&lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&lastName=Heß")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asUser()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("first")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Heß")))
 			.andDo(document("students-get-byFirstNameAndLastName",
 				requestParameters(firstNameDescriptor, lastNameDescriptor),
-				responseFields(studentsResponse).andWithPrefix("_embedded.students[].", studentResponse)
+				responseFields(STUDENTS_RESPONSE).andWithPrefix("_embedded.students[].", STUDENT_RESPONSE)
 			));
 	}
 
 	@Test
 	void test_findByFirstNameAndLastName_admin() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=first&lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&lastName=Heß")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("first")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")))
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Liam")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Heß")))
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
-		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=second&lastName=Student")
+		mvc.perform(get("/api/v1/students/search/findByFirstNameAndLastName?firstName=Jalen&lastName=Buscemi")
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("_embedded.students.[*]", hasSize(1)))
-			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("second")))
-			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Student")));
+			.andExpect(jsonPath("_embedded.students.[*].firstName", hasItem("Jalen")))
+			.andExpect(jsonPath("_embedded.students.[*].lastName", hasItem("Buscemi")));
 	}
 
 	@Test
 	void test_create_unauthorized() throws Exception {
-		String jsonStudent = givenNewStudent(inaccessibleClass.getId());
+		String jsonStudent = IntegrationTestData.giveNewStudent(testData.inaccessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -316,7 +290,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_create_userAuthorized() throws Exception {
-		String jsonStudent = givenNewStudent(accessibleClass.getId());
+		String jsonStudent = IntegrationTestData.giveNewStudent(testData.accessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -330,13 +304,13 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 					fieldWithPath("female").type(JsonFieldType.BOOLEAN).description("Whether or not the student is female"),
 					fieldWithPath("schoolClass").description("URL to school class the student belongs to")
 				),
-				responseFields(studentResponse)))
+				responseFields(STUDENT_RESPONSE)))
 			.andExpect(status().isCreated());
 	}
 
 	@Test
 	void test_create_admin() throws Exception {
-		String jsonStudent = givenNewStudent(inaccessibleClass.getId());
+		String jsonStudent = IntegrationTestData.giveNewStudent(testData.inaccessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -347,9 +321,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_unauthorized() throws Exception {
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), "false", "new last name", "new first name", "2002-01-10");
+		String json = IntegrationTestData.giveNewStudent(testData.inaccessibleClass.getId());
 
-		mvc.perform(patch("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -358,24 +332,20 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_userAuthorized() throws Exception {
-		String newFemale = "false";
-		String newLastName = "new last name";
-		String newFirstName = "new first name";
+		String json = IntegrationTestData.giveNewStudent(testData.accessibleClass.getId());
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
-
-		mvc.perform(patch("/api/v1/students/{id}", accessibleStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(newFirstName))
-			.andExpect(jsonPath("lastName").value(newLastName))
-			.andExpect(jsonPath("female").value(newFemale))
+			.andExpect(jsonPath("firstName").value("Simon"))
+			.andExpect(jsonPath("lastName").value("Schwarz"))
+			.andExpect(jsonPath("female").value(false))
 			.andDo(document("students-patch",
 				pathParameters(idDescriptor),
-				requestFields(studentRequestOptional),
-				responseFields(studentResponse)
+				requestFields(STUDENT_REQUEST_OPTIONAL),
+				responseFields(STUDENT_RESPONSE)
 			));
 	}
 
@@ -385,9 +355,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = IntegrationTestData.giveNewStudent(newFirstName, newLastName, String.format("/api/v1/classes/%s", testData.accessibleClass.getId()), newFemale, "2002-01-10");
 
-		mvc.perform(patch("/api/v1/students/{id}", accessibleStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -396,7 +366,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(jsonPath("lastName").value(newLastName))
 			.andExpect(jsonPath("female").value(newFemale));
 
-		mvc.perform(patch("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -412,9 +382,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = IntegrationTestData.giveNewStudent(newFirstName, newLastName, String.format("/api/v1/classes/%s", testData.accessibleClass.getId()), newFemale, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", accessibleStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -423,8 +393,8 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(jsonPath("female").value(newFemale))
 			.andDo(document("students-put",
 				pathParameters(idDescriptor),
-				requestFields(studentRequest),
-				responseFields(studentResponse)
+				requestFields(STUDENT_REQUEST),
+				responseFields(STUDENT_RESPONSE)
 			));
 	}
 
@@ -434,9 +404,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = IntegrationTestData.giveNewStudent(newFirstName, newLastName, String.format("/api/v1/classes/%s", testData.accessibleClass.getId()), newFemale, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -449,9 +419,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = IntegrationTestData.giveNewStudent(newFirstName, newLastName, String.format("/api/v1/classes/%s", testData.accessibleClass.getId()), newFemale, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -463,14 +433,14 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_unauthorized() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_delete_authorized() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", accessibleStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.with(asUser()))
 			.andExpect(status().isNoContent())
 			.andDo(document("students-delete", pathParameters(idDescriptor)));
@@ -478,78 +448,34 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_admin() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", accessibleStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", testData.accessibleStudent.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 
-		mvc.perform(delete("/api/v1/students/{id}", inaccessibleStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 	}
 
-	private void setupClassScenario() {
-		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
-
-		accessibleClass = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").createClass());
-		inaccessibleClass = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").createClass());
-
-		accessibleStudent1 = studentRepository.save(new StudentBuilder()
-			.setFirstName("first")
-			.setLastName("Student")
-			.setSchoolClass(accessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(true)
-			.createStudent());
-
-		inaccessibleStudent1 = studentRepository.save(new StudentBuilder()
-			.setFirstName("second")
-			.setLastName("Student")
-			.setSchoolClass(inaccessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(true)
-			.createStudent());
-
-		accessibleStudent2 = studentRepository.save(new StudentBuilder()
-			.setFirstName("third")
-			.setLastName("Student")
-			.setSchoolClass(accessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(false)
-			.createStudent());
-
-		inaccessibleStudent2 = studentRepository.save(new StudentBuilder()
-			.setFirstName("fourth")
-			.setLastName("Student")
-			.setSchoolClass(inaccessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(false)
-			.createStudent());
-
-		accessibleStudent3 = studentRepository.save(new StudentBuilder()
-			.setFirstName("fifth")
-			.setLastName("Student")
-			.setSchoolClass(accessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(true)
-			.createStudent());
-
-		inaccessibleStudent3 = studentRepository.save(new StudentBuilder()
-			.setFirstName("sixth")
-			.setLastName("Student")
-			.setSchoolClass(inaccessibleClass)
-			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-			.setFemale(true)
-			.createStudent());
-
-		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(accessibleClass).createUserPrivilege());
+	@Test
+	void test_get_class() throws Exception {
+		mvc.perform(get("/api/v1/students/{id}/schoolClass", testData.accessibleStudent.getId())
+			.with(asUser()))
+			.andExpect(jsonPath("className").value("a"))
+			.andDo(document("student-class-get",
+				pathParameters(idDescriptor),
+				responseFields(ClassRepositoryIntegrationTest.CLASS_RESPONSE)
+			));
 	}
 
-	private String givenJsonStudent(String newSchoolClass, String newFemale, String newLastName, String newFirstName, String birthDay) {
-		return String.format("{\n  \"firstName\": \"%s\",\n  \"lastName\": \"%s\",\n  \"female\": %s,\n  \"birthDay\": \"%s\",\n  \"schoolClass\": \"%s\"\n}", newFirstName, newLastName, newFemale, birthDay, newSchoolClass);
-	}
-
-	private String givenNewStudent(Long schoolClassID) {
-		return givenJsonStudent(String.format("/api/v1/classes/%s", schoolClassID), "false", "Schwarz", "Simon", "2002-01-27");
+	@Test
+	void test_get_score() throws Exception {
+		mvc.perform(get("/api/v1/students/{id}/score", testData.accessibleStudent.getId())
+			.with(asUser()))
+			.andExpect(content().string("0"))
+			.andDo(document("student-score-get",
+				pathParameters(idDescriptor)
+			));
 	}
 
 }

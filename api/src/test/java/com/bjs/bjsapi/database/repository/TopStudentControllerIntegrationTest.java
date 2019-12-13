@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
 
-import com.bjs.bjsapi.controllers.StudentRestController;
+import com.bjs.bjsapi.controllers.StudentCalculationService;
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.helper.ClassBuilder;
@@ -31,7 +31,7 @@ import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 public class TopStudentControllerIntegrationTest extends RepositoryIntegrationTest {
 
 	@MockBean
-	private StudentRestController studentRestController;
+	private StudentCalculationService studentCalculationService;
 
 	private ParameterDescriptor gradeDescriptor = parameterWithName("grade").description("The grade, whose best students are searched");
 	private ParameterDescriptor femaleDescriptor = parameterWithName("female").description("Classify the gender of the top 3 report");
@@ -106,6 +106,8 @@ public class TopStudentControllerIntegrationTest extends RepositoryIntegrationTe
 
 	public void setupScenario() {
 		runAsAdmin(() -> {
+			testData.setupUsers();
+
 			Class class7a = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").setClassTeacherName("Teacher").createClass());
 			Class class7b = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").setClassTeacherName("Teacher").createClass());
 
@@ -129,9 +131,9 @@ public class TopStudentControllerIntegrationTest extends RepositoryIntegrationTe
 			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Betina").setLastName("Notfallarzt").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
 			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Marie").setLastName("Lastkraftfahrerin").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
 
-			when(studentRestController.calculateScore(any())).thenAnswer(invocation -> invocation.<Student>getArgument(0).getId().intValue() * 100);
+			when(studentCalculationService.calculateScore(any())).thenAnswer(invocation -> invocation.<Student>getArgument(0).getId().intValue() * 100);
 
-			userPrivilegeRepository.save(new UserPrivilegeBuilder().setAccessibleClass(class7a).setUser(user).createUserPrivilege());
+			userPrivilegeRepository.save(new UserPrivilegeBuilder().setAccessibleClass(class7a).setUser(testData.user).createUserPrivilege());
 		});
 	}
 

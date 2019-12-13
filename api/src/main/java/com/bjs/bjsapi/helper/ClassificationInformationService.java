@@ -26,7 +26,7 @@ public class ClassificationInformationService {
         if (age <= 19) {
             return getValue(female, true, age);
         } else {
-            return getValue(female, true, age);
+            return getValue(female, true, 19);
         }
     }
 
@@ -34,7 +34,7 @@ public class ClassificationInformationService {
         if (age <= 19) {
             return getValue(female, false, age);
         } else {
-            return getValue(female, false, age);
+            return getValue(female, false, 19);
         }
     }
 

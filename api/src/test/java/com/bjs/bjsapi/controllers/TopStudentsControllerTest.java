@@ -27,7 +27,7 @@ public class TopStudentsControllerTest {
 	private StudentRepository studentRepository;
 
 	@MockBean
-	private StudentRestController studentRestController;
+	private StudentCalculationService studentRestService;
 
 	@MockBean
 	private ClassRepository classRepository;
@@ -50,7 +50,7 @@ public class TopStudentsControllerTest {
 
 	@BeforeEach
 	void setUp() {
-		topStudentsController = new TopStudentsController(studentRestController, studentRepository, classRepository, entityLinks, permissionEvaluator);
+		topStudentsController = new TopStudentsController(studentRestService, studentRepository, classRepository, entityLinks, permissionEvaluator);
 		when(permissionEvaluator.hasPermission(any(), any(), any())).thenReturn(true);
 		setupScenario();
 	}
@@ -149,16 +149,16 @@ public class TopStudentsControllerTest {
 			.setSchoolClass(class7B)
 			.createStudent();
 
-		doReturn(1024).when(studentRestController).calculateScore(class7A_student1);
-		doReturn(921).when(studentRestController).calculateScore(class7A_student2);
-		doReturn(323).when(studentRestController).calculateScore(class7A_student3);
-		doReturn(473).when(studentRestController).calculateScore(class7A_student4);
-		doReturn(740).when(studentRestController).calculateScore(class7A_student5);
-		doReturn(1362).when(studentRestController).calculateScore(class7B_student1);
-		doReturn(1420).when(studentRestController).calculateScore(class7B_student2);
-		doReturn(232).when(studentRestController).calculateScore(class7B_student3);
-		doReturn(0).when(studentRestController).calculateScore(class7B_student4);
-		doReturn(232).when(studentRestController).calculateScore(class7B_student5);
+		doReturn(1024).when(studentRestService).calculateScore(class7A_student1);
+		doReturn(921).when(studentRestService).calculateScore(class7A_student2);
+		doReturn(323).when(studentRestService).calculateScore(class7A_student3);
+		doReturn(473).when(studentRestService).calculateScore(class7A_student4);
+		doReturn(740).when(studentRestService).calculateScore(class7A_student5);
+		doReturn(1362).when(studentRestService).calculateScore(class7B_student1);
+		doReturn(1420).when(studentRestService).calculateScore(class7B_student2);
+		doReturn(232).when(studentRestService).calculateScore(class7B_student3);
+		doReturn(0).when(studentRestService).calculateScore(class7B_student4);
+		doReturn(232).when(studentRestService).calculateScore(class7B_student5);
 
 		doReturn(Arrays.asList(class7A, class7B)).when(classRepository).findByGrade("7");
 		doReturn(Arrays.asList(class7A_student1, class7A_student2, class7A_student3, class7A_student4, class7A_student5)).when(studentRepository).findAllBySchoolClass(class7A);

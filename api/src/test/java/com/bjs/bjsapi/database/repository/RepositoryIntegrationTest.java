@@ -4,8 +4,6 @@ import static com.bjs.bjsapi.security.helper.RunWithAuthentication.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
-import java.time.Clock;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,24 +11,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import com.bjs.bjsapi.database.model.User;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
+import com.bjs.bjsapi.config.BeanDefinitions;
+import com.bjs.bjsapi.controllers.StudentCalculationService;
+import com.bjs.bjsapi.helper.CalculationInformationService;
+import com.bjs.bjsapi.helper.ClassificationInformationService;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ActiveProfiles("in-memory-db")
 @SpringBootTest
-@AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@AutoConfigureMockMvc
+@Import({ CalculationInformationService.class, StudentCalculationService.class, ClassificationInformationService.class, BeanDefinitions.class, IntegrationTestData.class })
 abstract class RepositoryIntegrationTest {
 
-	@MockBean
-	private Clock clock;
+	@Autowired
+	protected IntegrationTestData testData;
 
 	@Autowired
 	protected MockMvc mvc;
@@ -53,9 +54,6 @@ abstract class RepositoryIntegrationTest {
 	@Autowired
 	protected ObjectMapper objectMapper;
 
-	User user;
-	private User admin;
-
 	static String asJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);
@@ -66,7 +64,6 @@ abstract class RepositoryIntegrationTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		setupTestUsers();
 	}
 
 	@AfterEach
@@ -83,22 +80,8 @@ abstract class RepositoryIntegrationTest {
 		assertThat(userRepository).isNotNull();
 		assertThat(userPrivilegeRepository).isNotNull();
 
-		assertThat(user).isNotNull();
-		assertThat(admin).isNotNull();
-	}
-
-	private void setupTestUsers() {
-		runAsAdmin(() -> {
-			admin = new UserBuilder().setUsername("testAdmin").createUser();
-			admin.setAdministrator(true);
-			admin.setPassword("admin");
-
-			user = new UserBuilder().setUsername("testUser").createUser();
-			user.setPassword("user");
-
-			userRepository.save(user);
-			userRepository.save(admin);
-		});
+		assertThat(testData.admin).isNotNull();
+		assertThat(testData.user).isNotNull();
 	}
 
 	private void clearDB() {
@@ -112,11 +95,11 @@ abstract class RepositoryIntegrationTest {
 	}
 
 	RequestPostProcessor asAdmin() {
-		return user(new BJSUserPrincipal(admin));
+		return user(new BJSUserPrincipal(testData.admin));
 	}
 
 	RequestPostProcessor asUser() {
-		return user(new BJSUserPrincipal(user));
+		return user(new BJSUserPrincipal(testData.user));
 	}
 
 }
