@@ -292,7 +292,8 @@ class UserPrivilegeRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.createUser());
 
 		schoolClass = classRepository.save(new ClassBuilder()
-			.setClassName("7D")
+			.setClassName("D")
+			.setGrade("7")
 			.setClassTeacherName("A Class Teacher")
 			.createClass());
 

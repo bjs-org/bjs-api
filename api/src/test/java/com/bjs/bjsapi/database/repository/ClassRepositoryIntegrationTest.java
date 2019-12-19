@@ -25,8 +25,8 @@ import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 
 class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
-	private Class privilegedClass;
-	private Class unprivilegedClass;
+	private Class accessibleClass;
+	private Class inaccessibleClass;
 	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The class' ID");
 	private final ParameterDescriptor classNameDescriptor = parameterWithName("className").description("The class' name");
 	private final ParameterDescriptor classTeacherNameDescriptor = parameterWithName("classTeacherName").description("The class teacher's name");
@@ -37,15 +37,18 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	);
 	private final List<FieldDescriptor> classResponse = Arrays.asList(
 		fieldWithPath("className").description("The class' name").type(JsonFieldType.STRING),
+		fieldWithPath("grade").description("The grade this class belongs to").type(JsonFieldType.STRING),
 		fieldWithPath("classTeacherName").description("The class teacher's name").type(JsonFieldType.STRING),
 		subsectionWithPath("_links").description("Links regarding this class")
 	);
 	private final List<FieldDescriptor> classRequest = Arrays.asList(
 		fieldWithPath("className").description("The class' name").type(JsonFieldType.STRING),
+		fieldWithPath("grade").description("The grade this class belongs to").type(JsonFieldType.STRING),
 		fieldWithPath("classTeacherName").description("The class' teacher").optional().type(JsonFieldType.STRING)
 	);
 	private final List<FieldDescriptor> classRequestOptional = Arrays.asList(
 		fieldWithPath("className").description("The class' name").optional().type(JsonFieldType.STRING),
+		fieldWithPath("grade").description("The grade this class belongs to").optional().type(JsonFieldType.STRING),
 		fieldWithPath("classTeacherName").description("The class teacher's name").optional().type(JsonFieldType.STRING)
 	);
 
@@ -69,7 +72,7 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(1)))
-			.andExpect(jsonPath("$._embedded.classes.[0].className").value("privilegedClass"))
+			.andExpect(jsonPath("$._embedded.classes.[0].className").value("A"))
 			.andDo(document("classes-get-all",
 				responseFields(classesResponse).andWithPrefix("_embedded.classes[].", classResponse)
 			));
@@ -83,12 +86,12 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(2)))
-			.andExpect(jsonPath("$._embedded.classes.[*].className", containsInAnyOrder("privilegedClass", "unprivilegedClass")));
+			.andExpect(jsonPath("$._embedded.classes.[*].className", containsInAnyOrder("A", "B")));
 	}
 
 	@Test
 	void test_findById_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
+		mvc.perform(get("/api/v1/classes/{id}", inaccessibleClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -96,12 +99,12 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
+		mvc.perform(get("/api/v1/classes/{id}", accessibleClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.classTeacherName").value("ClassTeacher"))
-			.andExpect(jsonPath("$.className").value("privilegedClass"))
+			.andExpect(jsonPath("$.className").value("A"))
 			.andDo(document("classes-get-byId",
 				pathParameters(idDescriptor),
 				responseFields(classResponse)
@@ -110,12 +113,12 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_admin() throws Exception {
-		mvc.perform(get("/api/v1/classes/{id}", privilegedClass.getId())
+		mvc.perform(get("/api/v1/classes/{id}", accessibleClass.getId())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
 
-		mvc.perform(get("/api/v1/classes/{id}", unprivilegedClass.getId())
+		mvc.perform(get("/api/v1/classes/{id}", inaccessibleClass.getId())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk());
@@ -123,7 +126,7 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByName_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
+		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", inaccessibleClass.getClassName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -131,7 +134,7 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByName_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
+		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", accessibleClass.getClassName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -143,27 +146,27 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByName_admin_allData() throws Exception {
-		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", privilegedClass.getClassName())
+		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", accessibleClass.getClassName())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.className").value("privilegedClass"));
+			.andExpect(jsonPath("$.className").value("A"));
 
-		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", unprivilegedClass.getClassName())
+		mvc.perform(get("/api/v1/classes/search/findByClassName?className={className}", inaccessibleClass.getClassName())
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.className").value("unprivilegedClass"));
+			.andExpect(jsonPath("$.className").value("B"));
 	}
 
 	@Test
 	void test_findByClassTeacher_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", privilegedClass.getClassTeacherName())
+		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", accessibleClass.getClassTeacherName())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(1)))
-			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItem("privilegedClass")))
+			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItem("A")))
 			.andDo(document("classes-get-byTeacher",
 				requestParameters(classTeacherNameDescriptor),
 				responseFields(classesResponse).andWithPrefix("_embedded.classes[].", classResponse)
@@ -172,19 +175,39 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findByClassTeacher_admin() throws Exception {
-		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", unprivilegedClass.getClassTeacherName())
+		mvc.perform(get("/api/v1/classes/search/findByClassTeacherName?classTeacherName={classTeacherName}", inaccessibleClass.getClassTeacherName())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$._embedded.classes.[*]", hasSize(2)))
-			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItems("privilegedClass", "unprivilegedClass")));
+			.andExpect(jsonPath("$._embedded.classes.[*].className", hasItems("A", "B")));
+	}
+
+	@Test
+	void test_findByGrade_authorized() throws Exception {
+		mvc.perform(get("/api/v1/classes/search/findByGrade?grade={grade}", "7")
+			.with(asUser()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("_embedded.classes.[*]", hasSize(1)))
+			.andExpect(jsonPath("_embedded.classes.[*].className", hasItem("A")))
+			.andExpect(jsonPath("_embedded.classes.[*].grade", hasItem("7")));
+	}
+
+	@Test
+	void test_findByGrade_admin() throws Exception {
+		mvc.perform(get("/api/v1/classes/search/findByGrade?grade={grade}", "7")
+			.with(asAdmin()))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("_embedded.classes.[*]", hasSize(2)))
+			.andExpect(jsonPath("_embedded.classes.[*].className", hasItems("A", "B")))
+			.andExpect(jsonPath("_embedded.classes.[*].grade", hasItems("7", "7")));
 	}
 
 	@Test
 	void test_create_unauthenticated() throws Exception {
 		mvc.perform(post("/api/v1/classes")
 			.with(anonymous())
-			.content(asJsonString(givenNewClass("7A", "A Class Teacher")))
+			.content(givenNewClass("A", "7", "A Class Teacher"))
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isUnauthorized());
 	}
@@ -195,18 +218,18 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 		mvc.perform(post("/api/v1/classes")
 			.with(asUser())
-			.content(asJsonString(givenNewClass("7A", "A Class Teacher")))
+			.content(givenNewClass("A", "7", "A Class Teacher"))
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_create_admin() throws Exception {
-		final String className = "7A";
+		final String className = "A";
 		final String classTeacherName = "A Class Teacher";
 		mvc.perform(post("/api/v1/classes")
 			.with(asAdmin())
-			.content(givenNewClass(className, classTeacherName))
+			.content(givenNewClass(className, "7", classTeacherName))
 			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-post",
 				requestFields(classRequest),
@@ -219,7 +242,7 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_unauthenticated() throws Exception {
-		mvc.perform(delete("/api/v1/classes/{id}", unprivilegedClass.getId())
+		mvc.perform(delete("/api/v1/classes/{id}", inaccessibleClass.getId())
 			.with(anonymous()))
 			.andExpect(status().isUnauthorized());
 	}
@@ -228,24 +251,24 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	void test_delete_unauthorized() throws Exception {
 		// only admins can delete classes
 
-		mvc.perform(delete("/api/v1/classes/{id}", privilegedClass.getId())
+		mvc.perform(delete("/api/v1/classes/{id}", accessibleClass.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 
-		mvc.perform(delete("/api/v1/classes/{id}", unprivilegedClass.getId())
+		mvc.perform(delete("/api/v1/classes/{id}", inaccessibleClass.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_delete_admin() throws Exception {
-		mvc.perform(delete("/api/v1/classes/{id}", privilegedClass.getId())
+		mvc.perform(delete("/api/v1/classes/{id}", accessibleClass.getId())
 			.with(asAdmin()))
 			.andDo(document("classes-delete",
 				pathParameters(idDescriptor)))
 			.andExpect(status().isNoContent());
 
-		mvc.perform(delete("/api/v1/classes/{id}", unprivilegedClass.getId())
+		mvc.perform(delete("/api/v1/classes/{id}", inaccessibleClass.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 	}
@@ -257,8 +280,8 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "new Class Teacher";
 
-		mvc.perform(patch("/api/v1/classes/{id}", unprivilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(patch("/api/v1/classes/{id}", inaccessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -269,8 +292,8 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "new Class Teacher";
 
-		mvc.perform(patch("/api/v1/classes/{id}", privilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(patch("/api/v1/classes/{id}", accessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-patch",
@@ -287,8 +310,8 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "new Class Teacher";
 
-		mvc.perform(patch("/api/v1/classes/{id}", privilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(patch("/api/v1/classes/{id}", accessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -303,8 +326,8 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "";
 
-		mvc.perform(put("/api/v1/classes/{id}", unprivilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(put("/api/v1/classes/{id}", inaccessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isForbidden());
@@ -315,8 +338,8 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "";
 
-		mvc.perform(put("/api/v1/classes/{id}", privilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(put("/api/v1/classes/{id}", accessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andDo(document("classes-put",
@@ -332,30 +355,31 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		final String newClassName = "changed name";
 		final String newClassTeacherName = "";
 
-		mvc.perform(put("/api/v1/classes/{id}", privilegedClass.getId())
-			.content(givenNewClass(newClassName, newClassTeacherName))
+		mvc.perform(put("/api/v1/classes/{id}", accessibleClass.getId())
+			.content(givenNewClass(newClassName, "7", newClassTeacherName))
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("className").value(newClassName));
 	}
 
-	private String givenNewClass(String newClassName, String newClassTeacherName) {
+	private String givenNewClass(String className, String grade, String classTeacherName) {
 		//language=JSON
 		String template = "{\n" +
+			"  \"grade\": \"%s\",\n" +
 			"  \"className\": \"%s\",\n" +
 			"  \"classTeacherName\": \"%s\"\n" +
 			"}";
 
-		return String.format(template, newClassName, newClassTeacherName);
+		return String.format(template, grade, className, classTeacherName);
 	}
 
 	private void setupClassScenario() {
 		runAsAdmin(() -> {
-			privilegedClass = classRepository.save(new ClassBuilder().setClassName("privilegedClass").setClassTeacherName("ClassTeacher").createClass());
-			unprivilegedClass = classRepository.save(new ClassBuilder().setClassName("unprivilegedClass").setClassTeacherName("ClassTeacher").createClass());
+			accessibleClass = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").setClassTeacherName("ClassTeacher").createClass());
+			inaccessibleClass = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").setClassTeacherName("ClassTeacher").createClass());
 
-			userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+			userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(accessibleClass).createUserPrivilege());
 		});
 	}
 
