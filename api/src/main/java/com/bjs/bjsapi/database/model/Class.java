@@ -1,6 +1,11 @@
 package com.bjs.bjsapi.database.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "classes")
@@ -42,11 +47,11 @@ public class Class {
 		this.grade = grade;
 	}
 
-	public Class() {
+	public Long getId() {
+		return id;
 	}
 
-	public Class(String className) {
-		this.className = className;
+	public Class() {
 	}
 
 	public Class(String grade, String className, String classTeacherName) {
@@ -55,12 +60,16 @@ public class Class {
 		this.classTeacherName = classTeacherName;
 	}
 
-	public Long getId() {
-		return id;
+	public Class(String grade, String className, String classTeacherName, Long id) {
+		this.grade = grade;
+		this.className = className;
+		this.classTeacherName = classTeacherName;
+		this.id = id;
 	}
 
 	@Override
 	public String toString() {
 		return String.format("Class{id=%d, grade='%s', className='%s', classTeacherName='%s'}", id, grade, className, classTeacherName);
 	}
+
 }

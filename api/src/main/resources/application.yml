@@ -29,7 +29,11 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+  jackson:
+    default-property-inclusion: non_null
 
 logging:
   file:
     name: logs/bjs-api.log
+    
+    

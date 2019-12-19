@@ -30,15 +30,15 @@ import com.bjs.bjsapi.helper.SecurityHelper;
 
 class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
-	private Student privilegedStudent1;
-	private Student unprivilegedStudent1;
-	private Student privilegedStudent2;
-	private Student unprivilegedStudent2;
-	private Student privilegedStudent3;
-	private Student unprivilegedStudent3;
+	private Student accessibleStudent1;
+	private Student inaccessibleStudent1;
+	private Student accessibleStudent2;
+	private Student inaccessibleStudent2;
+	private Student accessibleStudent3;
+	private Student inaccessibleStudent3;
 
-	private Class privilegedClass;
-	private Class unprivilegedClass;
+	private Class accessibleClass;
+	private Class inaccessibleClass;
 
 	private final ParameterDescriptor idDescriptor = parameterWithName("id").description("The student's id");
 	private final ParameterDescriptor lastNameDescriptor = parameterWithName("lastName").description("The student's last name");
@@ -113,48 +113,48 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findById_unauthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent2.getId())
+		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent2.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
-		mvc.perform(get("/api/v1/students/{id}", unprivilegedStudent3.getId())
+		mvc.perform(get("/api/v1/students/{id}", inaccessibleStudent3.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
-	void test_findById_authorized_privilegedData() throws Exception {
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent1.getId())
+	void test_findById_authorized() throws Exception {
+		mvc.perform(get("/api/v1/students/{id}", accessibleStudent1.getId())
 			.with(asUser()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(privilegedStudent1.getFirstName()))
-			.andExpect(jsonPath("lastName").value(privilegedStudent1.getLastName()))
-			.andExpect(jsonPath("female").value(privilegedStudent1.getFemale()))
+			.andExpect(jsonPath("firstName").value(accessibleStudent1.getFirstName()))
+			.andExpect(jsonPath("lastName").value(accessibleStudent1.getLastName()))
+			.andExpect(jsonPath("female").value(accessibleStudent1.getFemale()))
 			.andDo(document("students-get-byId",
 				pathParameters(idDescriptor),
 				responseFields(studentResponse)
 			));
 
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent2.getId())
+		mvc.perform(get("/api/v1/students/{id}", accessibleStudent2.getId())
 			.with(asUser()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(privilegedStudent2.getFirstName()))
-			.andExpect(jsonPath("lastName").value(privilegedStudent2.getLastName()))
-			.andExpect(jsonPath("female").value(privilegedStudent2.getFemale()));
+			.andExpect(jsonPath("firstName").value(accessibleStudent2.getFirstName()))
+			.andExpect(jsonPath("lastName").value(accessibleStudent2.getLastName()))
+			.andExpect(jsonPath("female").value(accessibleStudent2.getFemale()));
 
-		mvc.perform(get("/api/v1/students/{id}", privilegedStudent3.getId())
+		mvc.perform(get("/api/v1/students/{id}", accessibleStudent3.getId())
 			.with(asUser()))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("firstName").value(privilegedStudent3.getFirstName()))
-			.andExpect(jsonPath("lastName").value(privilegedStudent3.getLastName()))
-			.andExpect(jsonPath("female").value(privilegedStudent3.getFemale()));
+			.andExpect(jsonPath("firstName").value(accessibleStudent3.getFirstName()))
+			.andExpect(jsonPath("lastName").value(accessibleStudent3.getLastName()))
+			.andExpect(jsonPath("female").value(accessibleStudent3.getFemale()));
 	}
 
 	@Test
 	void test_findById_admin() throws Exception {
-		for (Student student : Arrays.asList(privilegedStudent1, privilegedStudent2, privilegedStudent3, unprivilegedStudent1, unprivilegedStudent2, unprivilegedStudent3)) {
+		for (Student student : Arrays.asList(accessibleStudent1, accessibleStudent2, accessibleStudent3, inaccessibleStudent1, inaccessibleStudent2, inaccessibleStudent3)) {
 			mvc.perform(get("/api/v1/students/{id}", student.getId())
 				.with(asAdmin()))
 				.andExpect(status().isOk())
@@ -234,7 +234,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findAllBySchoolClass_userAuthorized() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + privilegedClass.getId())
+		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + accessibleClass.getId())
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -249,7 +249,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_findAllBySchoolClass_admin() throws Exception {
-		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + unprivilegedClass.getId())
+		mvc.perform(get("/api/v1/students/search/findAllBySchoolClass?schoolClass=/api/v1/classes/" + inaccessibleClass.getId())
 			.accept(MediaType.APPLICATION_JSON)
 			.with(asAdmin()))
 			.andExpect(status().isOk())
@@ -305,7 +305,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_create_unauthorized() throws Exception {
-		String jsonStudent = givenNewStudent(unprivilegedClass.getId());
+		String jsonStudent = givenNewStudent(inaccessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -316,7 +316,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_create_userAuthorized() throws Exception {
-		String jsonStudent = givenNewStudent(privilegedClass.getId());
+		String jsonStudent = givenNewStudent(accessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -336,7 +336,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_create_admin() throws Exception {
-		String jsonStudent = givenNewStudent(unprivilegedClass.getId());
+		String jsonStudent = givenNewStudent(inaccessibleClass.getId());
 
 		mvc.perform(post("/api/v1/students")
 			.content(jsonStudent)
@@ -347,9 +347,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_edit_unauthorized() throws Exception {
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), "false", "new last name", "new first name", "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), "false", "new last name", "new first name", "2002-01-10");
 
-		mvc.perform(patch("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -362,9 +362,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
 
-		mvc.perform(patch("/api/v1/students/{id}", privilegedStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", accessibleStudent1.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -385,9 +385,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
 
-		mvc.perform(patch("/api/v1/students/{id}", privilegedStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", accessibleStudent1.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -396,7 +396,7 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andExpect(jsonPath("lastName").value(newLastName))
 			.andExpect(jsonPath("female").value(newFemale));
 
-		mvc.perform(patch("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(patch("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -412,9 +412,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", privilegedStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", accessibleStudent1.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -434,9 +434,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.content(json)
 			.with(asUser())
 			.accept(MediaType.APPLICATION_JSON))
@@ -449,9 +449,9 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		String newLastName = "new last name";
 		String newFirstName = "new first name";
 
-		String json = givenJsonStudent(String.format("/api/v1/classes/%s", privilegedClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
+		String json = givenJsonStudent(String.format("/api/v1/classes/%s", accessibleClass.getId()), newFemale, newLastName, newFirstName, "2002-01-10");
 
-		mvc.perform(put("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(put("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.content(json)
 			.with(asAdmin())
 			.accept(MediaType.APPLICATION_JSON))
@@ -463,14 +463,14 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_unauthorized() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.with(asUser()))
 			.andExpect(status().isForbidden());
 	}
 
 	@Test
 	void test_delete_authorized() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", privilegedStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", accessibleStudent1.getId())
 			.with(asUser()))
 			.andExpect(status().isNoContent())
 			.andDo(document("students-delete", pathParameters(idDescriptor)));
@@ -478,11 +478,11 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	@Test
 	void test_delete_admin() throws Exception {
-		mvc.perform(delete("/api/v1/students/{id}", privilegedStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", accessibleStudent1.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 
-		mvc.perform(delete("/api/v1/students/{id}", unprivilegedStudent1.getId())
+		mvc.perform(delete("/api/v1/students/{id}", inaccessibleStudent1.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 	}
@@ -490,58 +490,58 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 	private void setupClassScenario() {
 		SecurityHelper.runAs("admin", "admin", "ROLE_USER", "ROLE_ADMIN");
 
-		privilegedClass = classRepository.save(new ClassBuilder().setClassName("privilegedClass").createClass());
-		unprivilegedClass = classRepository.save(new ClassBuilder().setClassName("unprivilegedClass").createClass());
+		accessibleClass = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").createClass());
+		inaccessibleClass = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").createClass());
 
-		privilegedStudent1 = studentRepository.save(new StudentBuilder()
+		accessibleStudent1 = studentRepository.save(new StudentBuilder()
 			.setFirstName("first")
 			.setLastName("Student")
-			.setSchoolClass(privilegedClass)
+			.setSchoolClass(accessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(true)
 			.createStudent());
 
-		unprivilegedStudent1 = studentRepository.save(new StudentBuilder()
+		inaccessibleStudent1 = studentRepository.save(new StudentBuilder()
 			.setFirstName("second")
 			.setLastName("Student")
-			.setSchoolClass(unprivilegedClass)
+			.setSchoolClass(inaccessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(true)
 			.createStudent());
 
-		privilegedStudent2 = studentRepository.save(new StudentBuilder()
+		accessibleStudent2 = studentRepository.save(new StudentBuilder()
 			.setFirstName("third")
 			.setLastName("Student")
-			.setSchoolClass(privilegedClass)
+			.setSchoolClass(accessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(false)
 			.createStudent());
 
-		unprivilegedStudent2 = studentRepository.save(new StudentBuilder()
+		inaccessibleStudent2 = studentRepository.save(new StudentBuilder()
 			.setFirstName("fourth")
 			.setLastName("Student")
-			.setSchoolClass(unprivilegedClass)
+			.setSchoolClass(inaccessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(false)
 			.createStudent());
 
-		privilegedStudent3 = studentRepository.save(new StudentBuilder()
+		accessibleStudent3 = studentRepository.save(new StudentBuilder()
 			.setFirstName("fifth")
 			.setLastName("Student")
-			.setSchoolClass(privilegedClass)
+			.setSchoolClass(accessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(true)
 			.createStudent());
 
-		unprivilegedStudent3 = studentRepository.save(new StudentBuilder()
+		inaccessibleStudent3 = studentRepository.save(new StudentBuilder()
 			.setFirstName("sixth")
 			.setLastName("Student")
-			.setSchoolClass(unprivilegedClass)
+			.setSchoolClass(inaccessibleClass)
 			.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
 			.setFemale(true)
 			.createStudent());
 
-		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(privilegedClass).createUserPrivilege());
+		userPrivilegeRepository.save(new UserPrivilegeBuilder().setUser(user).setAccessibleClass(accessibleClass).createUserPrivilege());
 	}
 
 	private String givenJsonStudent(String newSchoolClass, String newFemale, String newLastName, String newFirstName, String birthDay) {
