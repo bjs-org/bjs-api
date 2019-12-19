@@ -430,8 +430,8 @@ class SportResultRepositoryIntegrationTest extends RepositoryIntegrationTest {
 
 	void setupSportResultScenario() {
 		runAsAdmin(() -> {
-			Class accessibleClass = classRepository.save(new ClassBuilder().setClassName("7A").setClassTeacherName("Teacher").createClass());
-			Class inaccessibleClass = classRepository.save(new ClassBuilder().setClassName("7B").setClassTeacherName("Teacher").createClass());
+			Class accessibleClass = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").setClassTeacherName("Teacher").createClass());
+			Class inaccessibleClass = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").setClassTeacherName("Teacher").createClass());
 
 			accessibleStudent = studentRepository.save(new StudentBuilder().setFirstName("First").setLastName("Student").setFemale(false).setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28))).setSchoolClass(accessibleClass).createStudent());
 			inaccessibleStudent = studentRepository.save(new StudentBuilder().setFirstName("First").setLastName("Student").setFemale(false).setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28))).setSchoolClass(inaccessibleClass).createStudent());

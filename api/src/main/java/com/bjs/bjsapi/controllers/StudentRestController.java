@@ -1,5 +1,14 @@
 package com.bjs.bjsapi.controllers;
 
+import java.time.Clock;
+import java.util.Collections;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bjs.bjsapi.database.model.SportResult;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.StudentPaper;
@@ -7,14 +16,6 @@ import com.bjs.bjsapi.database.repository.SportResultRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
 import com.bjs.bjsapi.helper.ClassificationInformationService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Clock;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/v1/students/{id}")
@@ -50,7 +51,7 @@ public class StudentRestController {
 			.orElse(ResponseEntity.notFound().build());
 	}
 
-	Integer calculateScore(Student student) {
+	public Integer calculateScore(Student student) {
 		return sportResultRepository.findByStudent(student)
 			.stream()
 			.map(sportResult -> calculatePoints(sportResult, student.getFemale()))

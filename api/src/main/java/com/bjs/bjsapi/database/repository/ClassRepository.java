@@ -1,6 +1,8 @@
 package com.bjs.bjsapi.database.repository;
 
-import com.bjs.bjsapi.database.model.Class;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -8,8 +10,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
-import java.util.Optional;
+import com.bjs.bjsapi.database.model.Class;
 
 @RepositoryRestResource(collectionResourceRel = "classes", path = "classes")
 public interface ClassRepository extends CrudRepository<Class, Long> {
@@ -26,7 +27,7 @@ public interface ClassRepository extends CrudRepository<Class, Long> {
 	@PostFilter("hasRole('ROLE_ADMIN') or @classPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Class> findByClassTeacherName(String classTeacherName);
 
-	@PostAuthorize("hasRole('ROLE_ADMIN') or @classPermissionEvaluator.hasPermission(authentication,returnObject.orElse(null),'read')")
+	@PostFilter("hasRole('ROLE_ADMIN') or @classPermissionEvaluator.hasPermission(authentication,filterObject,'read')")
 	List<Class> findByGrade(String grade);
 
 	@Override
