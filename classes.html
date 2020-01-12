@@ -480,6 +480,12 @@ All other fields can optionally be defined.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
@@ -495,10 +501,11 @@ All other fields can optionally be defined.</p>
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/classes HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 64
+Content-Length: 79
 
 {
-  "className": "7A",
+  "grade": "7",
+  "className": "A",
   "classTeacherName": "A Class Teacher"
 }</code></pre>
 </div>
@@ -512,7 +519,7 @@ Content-Length: 64
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/860
+Location: http://localhost:8080/api/v1/classes/102
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -520,17 +527,18 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 246
+Content-Length: 262
 
 {
-  "className" : "7A",
+  "grade" : "7",
+  "className" : "A",
   "classTeacherName" : "A Class Teacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/860"
+      "href" : "http://localhost:8080/api/v1/classes/102"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/860"
+      "href" : "http://localhost:8080/api/v1/classes/102"
     }
   }
 }</code></pre>
@@ -586,6 +594,11 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].classTeacherName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class teacher&#8217;s name</p></td>
@@ -613,19 +626,20 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 613
+Content-Length: 618
 
 {
   "_embedded" : {
     "classes" : [ {
-      "className" : "privilegedClass",
+      "grade" : "7",
+      "className" : "A",
       "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/802"
+          "href" : "http://localhost:8080/api/v1/classes/39"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/802"
+          "href" : "http://localhost:8080/api/v1/classes/39"
         }
       }
     } ]
@@ -677,7 +691,7 @@ Content-Length: 613
 <h4 id="_get_a_single_class_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/817 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/54 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -703,6 +717,11 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -732,17 +751,18 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 256
+Content-Length: 257
 
 {
-  "className" : "privilegedClass",
+  "grade" : "7",
+  "className" : "A",
   "classTeacherName" : "ClassTeacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/817"
+      "href" : "http://localhost:8080/api/v1/classes/54"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/817"
+      "href" : "http://localhost:8080/api/v1/classes/54"
     }
   }
 }</code></pre>
@@ -780,7 +800,7 @@ Content-Length: 256
 <h4 id="_get_class_by_name_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/search/findByClassName?className=privilegedClass HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/classes/search/findByClassName?className=A HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -806,6 +826,11 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -835,17 +860,18 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 256
+Content-Length: 259
 
 {
-  "className" : "privilegedClass",
+  "grade" : "7",
+  "className" : "A",
   "classTeacherName" : "ClassTeacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/873"
+      "href" : "http://localhost:8080/api/v1/classes/115"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/873"
+      "href" : "http://localhost:8080/api/v1/classes/115"
     }
   }
 }</code></pre>
@@ -922,6 +948,11 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].classTeacherName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class teacher&#8217;s name</p></td>
@@ -949,19 +980,20 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 501
+Content-Length: 506
 
 {
   "_embedded" : {
     "classes" : [ {
-      "className" : "privilegedClass",
+      "grade" : "7",
+      "className" : "A",
       "classTeacherName" : "ClassTeacher",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/852"
+          "href" : "http://localhost:8080/api/v1/classes/94"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/852"
+          "href" : "http://localhost:8080/api/v1/classes/94"
         }
       }
     } ]
@@ -1029,6 +1061,12 @@ This request edits only the given fields.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
@@ -1041,12 +1079,13 @@ This request edits only the given fields.</p>
 <h4 id="_edit_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/classes/777 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/classes/14 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 76
+Content-Length: 92
 
 {
+  "grade": "7",
   "className": "changed name",
   "classTeacherName": "new Class Teacher"
 }</code></pre>
@@ -1073,6 +1112,11 @@ Content-Length: 76
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1102,17 +1146,18 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 258
+Content-Length: 273
 
 {
+  "grade" : "7",
   "className" : "changed name",
   "classTeacherName" : "new Class Teacher",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/777"
+      "href" : "http://localhost:8080/api/v1/classes/14"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/777"
+      "href" : "http://localhost:8080/api/v1/classes/14"
     }
   }
 }</code></pre>
@@ -1173,6 +1218,12 @@ This request replaces the whole class in contrast to <code>PATCH</code> which on
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
@@ -1185,12 +1236,13 @@ This request replaces the whole class in contrast to <code>PATCH</code> which on
 <h4 id="_replace_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/classes/883 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/classes/125 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 59
+Content-Length: 75
 
 {
+  "grade": "7",
   "className": "changed name",
   "classTeacherName": ""
 }</code></pre>
@@ -1205,7 +1257,7 @@ Content-Length: 59
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/883
+Location: http://localhost:8080/api/v1/classes/125
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1213,17 +1265,18 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 241
+Content-Length: 258
 
 {
+  "grade" : "7",
   "className" : "changed name",
   "classTeacherName" : "",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/883"
+      "href" : "http://localhost:8080/api/v1/classes/125"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/883"
+      "href" : "http://localhost:8080/api/v1/classes/125"
     }
   }
 }</code></pre>
@@ -1262,7 +1315,7 @@ Content-Length: 241
 <h4 id="_delete_class_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/classes/797 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/classes/34 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1290,7 +1343,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-08 13:41:40 UTC
+Last updated 2020-01-12 17:37:03 UTC
 </div>
 </div>
 </body>
