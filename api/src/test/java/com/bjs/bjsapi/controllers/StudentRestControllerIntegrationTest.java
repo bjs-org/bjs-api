@@ -1,4 +1,4 @@
-package com.bjs.bjsapi.database.repository;
+package com.bjs.bjsapi.controllers;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,10 +18,11 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.bjs.bjsapi.config.ApiConfiguration;
-import com.bjs.bjsapi.controllers.StudentRestController;
 import com.bjs.bjsapi.database.model.SportResult;
 import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
+import com.bjs.bjsapi.database.repository.SportResultRepository;
+import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.helper.CalculationInformationService;
 import com.bjs.bjsapi.helper.ClassificationInformationService;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
