@@ -6,7 +6,6 @@ public class ClassBuilder {
 
 	private String className;
 	private String classTeacherName;
-	private String grade;
 
 	public ClassBuilder setClassName(String className) {
 		this.className = className;
@@ -19,12 +18,7 @@ public class ClassBuilder {
 	}
 
 	public Class createClass() {
-		return new Class(grade, className, classTeacherName);
+		return new Class(className, classTeacherName);
 	}
 
-
-	public ClassBuilder setGrade(String grade) {
-		this.grade = grade;
-		return this;
-	}
 }
