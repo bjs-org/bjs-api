@@ -508,9 +508,12 @@ The user will get a <code>403 Forbidden</code> if he requests, edits or deletes 
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/users HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 80
+Content-Length: 53
 
-{"username":"aNewUser","password":"123456","enabled":true,"administrator":false}</code></pre>
+{
+  "username": "jfskk",
+  "password": "idontknown"
+}</code></pre>
 </div>
 </div>
 </div>
@@ -569,7 +572,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/users/234
+Location: http://localhost:8080/api/v1/users/151
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -577,19 +580,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 330
+Content-Length: 430
 
 {
-  "username" : "aNewUser",
-  "password" : "$2a$10$aVjX4euqXXdZ./MXZfCPwugw.ZH7LU0hYRu7dXmfydx.ZqZpxMmp6",
+  "username" : "jfskk",
+  "password" : "$2a$10$uZN05yauBbGHPlprlg6uQeSwoSFC6ib6vlHc.Z2bE1ZKl2hsTMZWS",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/234"
+      "href" : "http://localhost:8080/api/v1/users/151"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/234"
+      "href" : "http://localhost:8080/api/v1/users/151"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/151/userPrivileges"
     }
   }
 }</code></pre>
@@ -681,60 +687,40 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1637
+Content-Length: 1301
 
 {
   "_embedded" : {
     "users" : [ {
-      "username" : "testUser",
-      "password" : "user",
+      "username" : "abcd",
+      "password" : "$2a$10$VmdWcFgESaqL063rQ5iO2uyScJ2aSuZ.SeQCW6Zc6MTARbdfWbWC6",
       "enabled" : true,
       "administrator" : false,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/users/190"
+          "href" : "http://localhost:8080/api/v1/users/129"
         },
         "user" : {
-          "href" : "http://localhost:8080/api/v1/users/190"
+          "href" : "http://localhost:8080/api/v1/users/129"
+        },
+        "userPrivileges" : {
+          "href" : "http://localhost:8080/api/v1/users/129/userPrivileges"
         }
       }
     }, {
-      "username" : "testAdmin",
-      "password" : "admin",
+      "username" : "administrator",
+      "password" : "$2a$10$TdtdTnQU5V0cA929pBZRRe3mFEpOGoWQFB4MShQGAUJpp0Nlm5kgW",
       "enabled" : true,
       "administrator" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/users/191"
+          "href" : "http://localhost:8080/api/v1/users/130"
         },
         "user" : {
-          "href" : "http://localhost:8080/api/v1/users/191"
-        }
-      }
-    }, {
-      "username" : "firstUser",
-      "password" : "new Password",
-      "enabled" : true,
-      "administrator" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/users/192"
+          "href" : "http://localhost:8080/api/v1/users/130"
         },
-        "user" : {
-          "href" : "http://localhost:8080/api/v1/users/192"
-        }
-      }
-    }, {
-      "username" : "secondUser",
-      "password" : "other Password",
-      "enabled" : true,
-      "administrator" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/users/193"
-        },
-        "user" : {
-          "href" : "http://localhost:8080/api/v1/users/193"
+        "userPrivileges" : {
+          "href" : "http://localhost:8080/api/v1/users/130/userPrivileges"
         }
       }
     } ]
@@ -783,7 +769,7 @@ Content-Length: 1637
 <h4 id="_get_a_single_user_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users/196 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users/131 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -851,19 +837,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 283
+Content-Length: 429
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$b.V16zbNP4anmTO0kgZfEOP.oiwqz.aGpzvlqRGDsPsLzTJTB82e2",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/196"
+      "href" : "http://localhost:8080/api/v1/users/131"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/196"
+      "href" : "http://localhost:8080/api/v1/users/131"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/131/userPrivileges"
     }
   }
 }</code></pre>
@@ -898,7 +887,7 @@ Content-Length: 283
 <h4 id="_get_user_by_username_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users/search/findByUsername?username=firstUser HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/users/search/findByUsername?username=abcd HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -966,19 +955,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 283
+Content-Length: 429
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$3ldAz7Q15hVYRdl6i7ZK6eKTCNQaEA3Y5cmJnUviZWk3BIRGrHh7C",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/204"
+      "href" : "http://localhost:8080/api/v1/users/135"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/204"
+      "href" : "http://localhost:8080/api/v1/users/135"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/135/userPrivileges"
     }
   }
 }</code></pre>
@@ -1065,7 +1057,7 @@ Content-Length: 283
 <h4 id="_edit_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/users/237 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/users/152 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 22
@@ -1138,19 +1130,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 284
+Content-Length: 430
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$z89YYdhPABROONjmln48XOukyiUuklxum0TN4G8gGlknxSJ5kwlxm",
   "enabled" : false,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/237"
+      "href" : "http://localhost:8080/api/v1/users/152"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/237"
+      "href" : "http://localhost:8080/api/v1/users/152"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/152/userPrivileges"
     }
   }
 }</code></pre>
@@ -1237,12 +1232,15 @@ Content-Length: 284
 <h4 id="_replace_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/users/228 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/users/147 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 80
+Content-Length: 53
 
-{"username":"aNewUser","password":"123456","enabled":true,"administrator":false}</code></pre>
+{
+  "username": "jfskk",
+  "password": "idontknown"
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1301,7 +1299,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/users/228
+Location: http://localhost:8080/api/v1/users/147
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1309,19 +1307,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 330
+Content-Length: 430
 
 {
-  "username" : "aNewUser",
-  "password" : "$2a$10$VBhjdwdzt8QfyjHhvkzRTez8aOt3/nS.owzM4klrZncnws0N7XyFe",
+  "username" : "jfskk",
+  "password" : "$2a$10$KHuVw2ZqA8.doSawftGxrOYtk9.WssSxeD/fAVhIGf5yF7xdc/.rG",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/228"
+      "href" : "http://localhost:8080/api/v1/users/147"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/228"
+      "href" : "http://localhost:8080/api/v1/users/147"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/147/userPrivileges"
     }
   }
 }</code></pre>
@@ -1357,7 +1358,7 @@ Content-Length: 330
 <h4 id="_delete_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/users/188 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/users/127 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1388,7 +1389,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-28 17:53:47 UTC
+Last updated 2020-02-06 18:02:42 UTC
 </div>
 </div>
 </body>

@@ -899,16 +899,16 @@ All other fields can optionally be defined.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -926,12 +926,12 @@ All other fields can optionally be defined.</p>
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/classes HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 79
+Content-Length: 67
 
 {
-  "grade": "7",
   "className": "A",
-  "classTeacherName": "A Class Teacher"
+  "classTeacherName": "ABC",
+  "grade": "7"
 }</code></pre>
 </div>
 </div>
@@ -947,7 +947,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/102
+Location: http://localhost:8080/api/v1/classes/92
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -955,18 +955,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 262
+Content-Length: 379
 
 {
   "grade" : "7",
   "className" : "A",
-  "classTeacherName" : "A Class Teacher",
+  "classTeacherName" : "ABC",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/102"
+      "href" : "http://localhost:8080/api/v1/classes/92"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/102"
+      "href" : "http://localhost:8080/api/v1/classes/92"
+    },
+    "students" : {
+      "href" : "http://localhost:8080/api/v1/classes/92/students{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1017,14 +1021,14 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All (visible) classes</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].classTeacherName</code></p></td>
@@ -1057,20 +1061,24 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 618
+Content-Length: 756
 
 {
   "_embedded" : {
     "classes" : [ {
-      "grade" : "7",
-      "className" : "A",
-      "classTeacherName" : "ClassTeacher",
+      "grade" : "8",
+      "className" : "a",
+      "classTeacherName" : "ABC",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/39"
+          "href" : "http://localhost:8080/api/v1/classes/34"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/39"
+          "href" : "http://localhost:8080/api/v1/classes/34"
+        },
+        "students" : {
+          "href" : "http://localhost:8080/api/v1/classes/34/students{?projection}",
+          "templated" : true
         }
       }
     } ]
@@ -1122,7 +1130,7 @@ Content-Length: 618
 <h4 id="_get_a_single_class_by_id_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/54 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/49 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1145,14 +1153,14 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1185,18 +1193,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 257
+Content-Length: 379
 
 {
-  "grade" : "7",
-  "className" : "A",
-  "classTeacherName" : "ClassTeacher",
+  "grade" : "8",
+  "className" : "a",
+  "classTeacherName" : "ABC",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/54"
+      "href" : "http://localhost:8080/api/v1/classes/49"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/54"
+      "href" : "http://localhost:8080/api/v1/classes/49"
+    },
+    "students" : {
+      "href" : "http://localhost:8080/api/v1/classes/49/students{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1234,7 +1246,7 @@ Content-Length: 257
 <h4 id="_get_class_by_name_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/search/findByClassName?className=A HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/search/findByClassName?className=a HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1257,14 +1269,14 @@ Host: localhost:8080</code></pre>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1297,18 +1309,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 259
+Content-Length: 382
 
 {
-  "grade" : "7",
-  "className" : "A",
-  "classTeacherName" : "ClassTeacher",
+  "grade" : "8",
+  "className" : "a",
+  "classTeacherName" : "ABC",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/115"
+      "href" : "http://localhost:8080/api/v1/classes/105"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/115"
+      "href" : "http://localhost:8080/api/v1/classes/105"
+    },
+    "students" : {
+      "href" : "http://localhost:8080/api/v1/classes/105/students{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1347,7 +1363,7 @@ Admins have rights for all users.</p>
 <h4 id="_get_class_by_class_teachers_name_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/search/findByClassTeacherName?classTeacherName=ClassTeacher HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/classes/search/findByClassTeacherName?classTeacherName=ABC HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1380,14 +1396,14 @@ Host: localhost:8080</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">All (visible) classes</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>_embedded.classes[].classTeacherName</code></p></td>
@@ -1420,27 +1436,31 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 506
+Content-Length: 635
 
 {
   "_embedded" : {
     "classes" : [ {
-      "grade" : "7",
-      "className" : "A",
-      "classTeacherName" : "ClassTeacher",
+      "grade" : "8",
+      "className" : "a",
+      "classTeacherName" : "ABC",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/classes/94"
+          "href" : "http://localhost:8080/api/v1/classes/84"
         },
         "class" : {
-          "href" : "http://localhost:8080/api/v1/classes/94"
+          "href" : "http://localhost:8080/api/v1/classes/84"
+        },
+        "students" : {
+          "href" : "http://localhost:8080/api/v1/classes/84/students{?projection}",
+          "templated" : true
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/search/findByClassTeacherName?classTeacherName=ClassTeacher"
+      "href" : "http://localhost:8080/api/v1/classes/search/findByClassTeacherName?classTeacherName=ABC"
     }
   }
 }</code></pre>
@@ -1495,16 +1515,16 @@ This request edits only the given fields.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1519,15 +1539,15 @@ This request edits only the given fields.</p>
 <h4 id="_edit_class_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/classes/14 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/classes/9 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 92
+Content-Length: 67
 
 {
-  "grade": "7",
-  "className": "changed name",
-  "classTeacherName": "new Class Teacher"
+  "className": "A",
+  "classTeacherName": "ABC",
+  "grade": "7"
 }</code></pre>
 </div>
 </div>
@@ -1549,14 +1569,14 @@ Content-Length: 92
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1589,18 +1609,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 273
+Content-Length: 376
 
 {
   "grade" : "7",
-  "className" : "changed name",
-  "classTeacherName" : "new Class Teacher",
+  "className" : "A",
+  "classTeacherName" : "ABC",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/14"
+      "href" : "http://localhost:8080/api/v1/classes/9"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/14"
+      "href" : "http://localhost:8080/api/v1/classes/9"
+    },
+    "students" : {
+      "href" : "http://localhost:8080/api/v1/classes/9/students{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1655,16 +1679,16 @@ This request replaces the whole class in contrast to <code>PATCH</code> which on
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The class' grade</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>className</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The class' name</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>grade</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The grade this class belongs to</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>classTeacherName</code></p></td>
@@ -1679,15 +1703,15 @@ This request replaces the whole class in contrast to <code>PATCH</code> which on
 <h4 id="_replace_class_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/classes/125 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/classes/115 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 75
+Content-Length: 67
 
 {
-  "grade": "7",
-  "className": "changed name",
-  "classTeacherName": ""
+  "className": "A",
+  "classTeacherName": "ABC",
+  "grade": "7"
 }</code></pre>
 </div>
 </div>
@@ -1703,7 +1727,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/classes/125
+Location: http://localhost:8080/api/v1/classes/115
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1711,18 +1735,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 258
+Content-Length: 382
 
 {
   "grade" : "7",
-  "className" : "changed name",
-  "classTeacherName" : "",
+  "className" : "A",
+  "classTeacherName" : "ABC",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/classes/125"
+      "href" : "http://localhost:8080/api/v1/classes/115"
     },
     "class" : {
-      "href" : "http://localhost:8080/api/v1/classes/125"
+      "href" : "http://localhost:8080/api/v1/classes/115"
+    },
+    "students" : {
+      "href" : "http://localhost:8080/api/v1/classes/115/students{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1761,7 +1789,7 @@ Content-Length: 258
 <h4 id="_delete_class_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/classes/34 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/classes/29 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1878,7 +1906,7 @@ Content-Length: 138
   "lastName": "Schwarz",
   "female": false,
   "birthDay": "2002-01-27",
-  "schoolClass": "/api/v1/classes/333"
+  "schoolClass": "/api/v1/classes/299"
 }</code></pre>
 </div>
 </div>
@@ -1938,7 +1966,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/students/342
+Location: http://localhost:8080/api/v1/students/304
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1946,7 +1974,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 404
+Content-Length: 739
 
 {
   "firstName" : "Simon",
@@ -1955,13 +1983,23 @@ Content-Length: 404
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/342"
+      "href" : "http://localhost:8080/api/v1/students/304"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/342"
+      "href" : "http://localhost:8080/api/v1/students/304{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/304/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/304/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/342/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/304/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/304/sportResults"
     }
   }
 }</code></pre>
@@ -2056,56 +2094,34 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1670
+Content-Length: 1138
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/192"
+          "href" : "http://localhost:8080/api/v1/students/218"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/192"
+          "href" : "http://localhost:8080/api/v1/students/218{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/218/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/218/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/192/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "third",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/194"
+          "href" : "http://localhost:8080/api/v1/students/218/schoolClass"
         },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/194"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/194/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "fifth",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : true,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/196"
-        },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/196"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/196/schoolClass"
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/218/sportResults"
         }
       }
     } ]
@@ -2157,7 +2173,7 @@ Content-Length: 1670
 <h4 id="_get_a_single_student_by_id_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/203 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/318 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -2224,22 +2240,32 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 385
+Content-Length: 716
 
 {
-  "firstName" : "first",
-  "lastName" : "Student",
+  "firstName" : "Liam",
+  "lastName" : "Heß",
   "birthDay" : "2002-03-28",
   "female" : true,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/203"
+      "href" : "http://localhost:8080/api/v1/students/318"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/203"
+      "href" : "http://localhost:8080/api/v1/students/318{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/318/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/318/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/203/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/318/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/318/sportResults"
     }
   }
 }</code></pre>
@@ -2277,7 +2303,7 @@ Content-Length: 385
 <h4 id="_get_students_by_first_name_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByFirstName?firstName=first HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByFirstName?firstName=Liam HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -2355,31 +2381,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 631
+Content-Length: 1001
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/392"
+          "href" : "http://localhost:8080/api/v1/students/346"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/392"
+          "href" : "http://localhost:8080/api/v1/students/346{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/346/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/346/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/392/schoolClass"
+          "href" : "http://localhost:8080/api/v1/students/346/schoolClass"
+        },
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/346/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByFirstName?firstName=first"
+      "href" : "http://localhost:8080/api/v1/students/search/findByFirstName?firstName=Liam"
     }
   }
 }</code></pre>
@@ -2417,7 +2453,7 @@ Content-Length: 631
 <h4 id="_get_students_by_last_name_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByLastName?lastName=Student HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByLastName?lastName=He%C3%9F HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -2495,63 +2531,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1534
+Content-Length: 1003
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/403"
+          "href" : "http://localhost:8080/api/v1/students/367"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/403"
+          "href" : "http://localhost:8080/api/v1/students/367{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/367/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/367/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/403/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "third",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/405"
+          "href" : "http://localhost:8080/api/v1/students/367/schoolClass"
         },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/405"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/405/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "fifth",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : true,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/407"
-        },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/407"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/407/schoolClass"
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/367/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByLastName?lastName=Student"
+      "href" : "http://localhost:8080/api/v1/students/search/findByLastName?lastName=He%C3%9F"
     }
   }
 }</code></pre>
@@ -2593,7 +2607,7 @@ Content-Length: 1534
 <h4 id="_get_students_by_first_and_last_name_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByFirstNameAndLastName?firstName=first&amp;lastName=Student HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&amp;lastName=He%C3%9F HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -2671,31 +2685,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 659
+Content-Length: 1030
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/381"
+          "href" : "http://localhost:8080/api/v1/students/339"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/381"
+          "href" : "http://localhost:8080/api/v1/students/339{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/339/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/339/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/381/schoolClass"
+          "href" : "http://localhost:8080/api/v1/students/339/schoolClass"
+        },
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/339/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByFirstNameAndLastName?firstName=first&amp;lastName=Student"
+      "href" : "http://localhost:8080/api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&amp;lastName=He%C3%9F"
     }
   }
 }</code></pre>
@@ -2785,17 +2809,17 @@ Content-Length: 659
 <h4 id="_edit_student_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/students/269 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/students/260 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 153
+Content-Length: 138
 
 {
-  "firstName": "new first name",
-  "lastName": "new last name",
+  "firstName": "Simon",
+  "lastName": "Schwarz",
   "female": false,
-  "birthDay": "2002-01-10",
-  "schoolClass": "/api/v1/classes/267"
+  "birthDay": "2002-01-27",
+  "schoolClass": "/api/v1/classes/257"
 }</code></pre>
 </div>
 </div>
@@ -2862,22 +2886,32 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 419
+Content-Length: 739
 
 {
-  "firstName" : "new first name",
-  "lastName" : "new last name",
-  "birthDay" : "2002-01-10T00:00:00.000+0000",
+  "firstName" : "Simon",
+  "lastName" : "Schwarz",
+  "birthDay" : "2002-01-27T00:00:00.000+0000",
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/269"
+      "href" : "http://localhost:8080/api/v1/students/260"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/269"
+      "href" : "http://localhost:8080/api/v1/students/260{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/260/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/260/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/269/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/260/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/260/sportResults"
     }
   }
 }</code></pre>
@@ -2967,7 +3001,7 @@ Content-Length: 419
 <h4 id="_replace_student_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/students/425 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/students/381 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 153
@@ -2977,7 +3011,7 @@ Content-Length: 153
   "lastName": "new last name",
   "female": false,
   "birthDay": "2002-01-10",
-  "schoolClass": "/api/v1/classes/423"
+  "schoolClass": "/api/v1/classes/378"
 }</code></pre>
 </div>
 </div>
@@ -3037,7 +3071,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/students/425
+Location: http://localhost:8080/api/v1/students/381
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -3045,7 +3079,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 419
+Content-Length: 754
 
 {
   "firstName" : "new first name",
@@ -3054,13 +3088,23 @@ Content-Length: 419
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/425"
+      "href" : "http://localhost:8080/api/v1/students/381"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/425"
+      "href" : "http://localhost:8080/api/v1/students/381{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/381/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/381/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/425/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/381/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/381/sportResults"
     }
   }
 }</code></pre>
@@ -3099,7 +3143,7 @@ Content-Length: 419
 <h4 id="_delete_student_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/students/170 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/students/204 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -3195,7 +3239,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/566"
+  "student":"/510"
 }</code></pre>
 </div>
 </div>
@@ -3250,7 +3294,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/571
+Location: http://localhost:8080/api/v1/sport_results/514
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -3258,20 +3302,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571"
+      "href" : "http://localhost:8080/api/v1/sport_results/514"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571"
+      "href" : "http://localhost:8080/api/v1/sport_results/514"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/514/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -3358,7 +3403,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 735
+Content-Length: 778
 
 {
   "_embedded" : {
@@ -3367,13 +3412,14 @@ Content-Length: 735
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659"
+          "href" : "http://localhost:8080/api/v1/sport_results/603"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659"
+          "href" : "http://localhost:8080/api/v1/sport_results/603"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/603/student{?projection}",
+          "templated" : true
         }
       }
     } ]
@@ -3422,7 +3468,7 @@ Content-Length: 735
 <h4 id="_get_a_single_result_by_id_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/sport_results/541 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/sport_results/485 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -3485,20 +3531,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 342
+Content-Length: 381
 
 {
   "result" : 6.6,
   "discipline" : "RUN_50",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541"
+      "href" : "http://localhost:8080/api/v1/sport_results/485"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541"
+      "href" : "http://localhost:8080/api/v1/sport_results/485"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/485/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -3533,7 +3580,7 @@ Content-Length: 342
 <h4 id="_get_result_by_student_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/696 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/640 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -3606,7 +3653,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 585
+Content-Length: 628
 
 {
   "_embedded" : {
@@ -3615,20 +3662,21 @@ Content-Length: 585
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698"
+          "href" : "http://localhost:8080/api/v1/sport_results/642"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698"
+          "href" : "http://localhost:8080/api/v1/sport_results/642"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/642/student{?projection}",
+          "templated" : true
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/696"
+      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/640"
     }
   }
 }</code></pre>
@@ -3736,7 +3784,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 593
+Content-Length: 636
 
 {
   "_embedded" : {
@@ -3745,13 +3793,14 @@ Content-Length: 593
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724"
+          "href" : "http://localhost:8080/api/v1/sport_results/668"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724"
+          "href" : "http://localhost:8080/api/v1/sport_results/668"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/668/student{?projection}",
+          "templated" : true
         }
       }
     } ]
@@ -3833,7 +3882,7 @@ Content-Length: 593
 <h4 id="_edit_result_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/sport_results/688 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/sport_results/632 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -3841,7 +3890,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/686"
+  "student":"/630"
 }</code></pre>
 </div>
 </div>
@@ -3903,20 +3952,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688"
+      "href" : "http://localhost:8080/api/v1/sport_results/632"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688"
+      "href" : "http://localhost:8080/api/v1/sport_results/632"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/632/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -3991,7 +4041,7 @@ Content-Length: 343
 <h4 id="_replace_result_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/sport_results/715 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/sport_results/659 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -3999,7 +4049,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/713"
+  "student":"/657"
 }</code></pre>
 </div>
 </div>
@@ -4054,7 +4104,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/715
+Location: http://localhost:8080/api/v1/sport_results/659
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -4062,20 +4112,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715"
+      "href" : "http://localhost:8080/api/v1/sport_results/659"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715"
+      "href" : "http://localhost:8080/api/v1/sport_results/659"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/659/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -4111,7 +4162,7 @@ Content-Length: 343
 <h4 id="_delete_result_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/sport_results/505 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/sport_results/449 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -4213,9 +4264,12 @@ The user will get a <code>403 Forbidden</code> if he requests, edits or deletes 
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/v1/users HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 80
+Content-Length: 53
 
-{"username":"aNewUser","password":"123456","enabled":true,"administrator":false}</code></pre>
+{
+  "username": "jfskk",
+  "password": "idontknown"
+}</code></pre>
 </div>
 </div>
 </div>
@@ -4274,7 +4328,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/users/234
+Location: http://localhost:8080/api/v1/users/151
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -4282,19 +4336,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 330
+Content-Length: 430
 
 {
-  "username" : "aNewUser",
-  "password" : "$2a$10$aVjX4euqXXdZ./MXZfCPwugw.ZH7LU0hYRu7dXmfydx.ZqZpxMmp6",
+  "username" : "jfskk",
+  "password" : "$2a$10$uZN05yauBbGHPlprlg6uQeSwoSFC6ib6vlHc.Z2bE1ZKl2hsTMZWS",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/234"
+      "href" : "http://localhost:8080/api/v1/users/151"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/234"
+      "href" : "http://localhost:8080/api/v1/users/151"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/151/userPrivileges"
     }
   }
 }</code></pre>
@@ -4386,60 +4443,40 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1637
+Content-Length: 1301
 
 {
   "_embedded" : {
     "users" : [ {
-      "username" : "testUser",
-      "password" : "user",
+      "username" : "abcd",
+      "password" : "$2a$10$VmdWcFgESaqL063rQ5iO2uyScJ2aSuZ.SeQCW6Zc6MTARbdfWbWC6",
       "enabled" : true,
       "administrator" : false,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/users/190"
+          "href" : "http://localhost:8080/api/v1/users/129"
         },
         "user" : {
-          "href" : "http://localhost:8080/api/v1/users/190"
+          "href" : "http://localhost:8080/api/v1/users/129"
+        },
+        "userPrivileges" : {
+          "href" : "http://localhost:8080/api/v1/users/129/userPrivileges"
         }
       }
     }, {
-      "username" : "testAdmin",
-      "password" : "admin",
+      "username" : "administrator",
+      "password" : "$2a$10$TdtdTnQU5V0cA929pBZRRe3mFEpOGoWQFB4MShQGAUJpp0Nlm5kgW",
       "enabled" : true,
       "administrator" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/users/191"
+          "href" : "http://localhost:8080/api/v1/users/130"
         },
         "user" : {
-          "href" : "http://localhost:8080/api/v1/users/191"
-        }
-      }
-    }, {
-      "username" : "firstUser",
-      "password" : "new Password",
-      "enabled" : true,
-      "administrator" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/users/192"
+          "href" : "http://localhost:8080/api/v1/users/130"
         },
-        "user" : {
-          "href" : "http://localhost:8080/api/v1/users/192"
-        }
-      }
-    }, {
-      "username" : "secondUser",
-      "password" : "other Password",
-      "enabled" : true,
-      "administrator" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/users/193"
-        },
-        "user" : {
-          "href" : "http://localhost:8080/api/v1/users/193"
+        "userPrivileges" : {
+          "href" : "http://localhost:8080/api/v1/users/130/userPrivileges"
         }
       }
     } ]
@@ -4488,7 +4525,7 @@ Content-Length: 1637
 <h4 id="_get_a_single_user_by_id_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/users/196 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/users/131 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -4556,19 +4593,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 283
+Content-Length: 429
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$b.V16zbNP4anmTO0kgZfEOP.oiwqz.aGpzvlqRGDsPsLzTJTB82e2",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/196"
+      "href" : "http://localhost:8080/api/v1/users/131"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/196"
+      "href" : "http://localhost:8080/api/v1/users/131"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/131/userPrivileges"
     }
   }
 }</code></pre>
@@ -4603,7 +4643,7 @@ Content-Length: 283
 <h4 id="_get_user_by_username_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/users/search/findByUsername?username=firstUser HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/v1/users/search/findByUsername?username=abcd HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -4671,19 +4711,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 283
+Content-Length: 429
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$3ldAz7Q15hVYRdl6i7ZK6eKTCNQaEA3Y5cmJnUviZWk3BIRGrHh7C",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/204"
+      "href" : "http://localhost:8080/api/v1/users/135"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/204"
+      "href" : "http://localhost:8080/api/v1/users/135"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/135/userPrivileges"
     }
   }
 }</code></pre>
@@ -4770,7 +4813,7 @@ Content-Length: 283
 <h4 id="_edit_student_2_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/users/237 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/v1/users/152 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 22
@@ -4843,19 +4886,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 284
+Content-Length: 430
 
 {
-  "username" : "firstUser",
-  "password" : "new Password",
+  "username" : "abcd",
+  "password" : "$2a$10$z89YYdhPABROONjmln48XOukyiUuklxum0TN4G8gGlknxSJ5kwlxm",
   "enabled" : false,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/237"
+      "href" : "http://localhost:8080/api/v1/users/152"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/237"
+      "href" : "http://localhost:8080/api/v1/users/152"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/152/userPrivileges"
     }
   }
 }</code></pre>
@@ -4942,12 +4988,15 @@ Content-Length: 284
 <h4 id="_replace_student_2_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/users/228 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/v1/users/147 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 80
+Content-Length: 53
 
-{"username":"aNewUser","password":"123456","enabled":true,"administrator":false}</code></pre>
+{
+  "username": "jfskk",
+  "password": "idontknown"
+}</code></pre>
 </div>
 </div>
 </div>
@@ -5006,7 +5055,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/users/228
+Location: http://localhost:8080/api/v1/users/147
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -5014,19 +5063,22 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 330
+Content-Length: 430
 
 {
-  "username" : "aNewUser",
-  "password" : "$2a$10$VBhjdwdzt8QfyjHhvkzRTez8aOt3/nS.owzM4klrZncnws0N7XyFe",
+  "username" : "jfskk",
+  "password" : "$2a$10$KHuVw2ZqA8.doSawftGxrOYtk9.WssSxeD/fAVhIGf5yF7xdc/.rG",
   "enabled" : true,
   "administrator" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/users/228"
+      "href" : "http://localhost:8080/api/v1/users/147"
     },
     "user" : {
-      "href" : "http://localhost:8080/api/v1/users/228"
+      "href" : "http://localhost:8080/api/v1/users/147"
+    },
+    "userPrivileges" : {
+      "href" : "http://localhost:8080/api/v1/users/147/userPrivileges"
     }
   }
 }</code></pre>
@@ -5062,7 +5114,7 @@ Content-Length: 330
 <h4 id="_delete_student_2_http_request">Example request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/users/188 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/v1/users/127 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -5146,8 +5198,8 @@ Host: localhost:8080
 Content-Length: 77
 
 {
-  "accessibleClass": "/api/v1/classes/125",
-  "user": "/api/v1/users/124"
+  "accessibleClass": "/api/v1/classes/124",
+  "user": "/api/v1/users/122"
 }</code></pre>
 </div>
 </div>
@@ -5513,7 +5565,7 @@ Host: localhost:8080
 Content-Length: 46
 
 {
-  "accessibleClass": "/api/v1/classes/166"
+  "accessibleClass": "/api/v1/classes/165"
 }</code></pre>
 </div>
 </div>
@@ -5659,8 +5711,8 @@ Host: localhost:8080
 Content-Length: 77
 
 {
-  "accessibleClass": "/api/v1/classes/161",
-  "user": "/api/v1/users/160"
+  "accessibleClass": "/api/v1/classes/160",
+  "user": "/api/v1/users/158"
 }</code></pre>
 </div>
 </div>
@@ -5799,7 +5851,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-28 17:53:47 UTC
+Last updated 2020-02-06 18:02:42 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/github.min.css">

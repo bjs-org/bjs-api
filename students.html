@@ -523,7 +523,7 @@ Content-Length: 138
   "lastName": "Schwarz",
   "female": false,
   "birthDay": "2002-01-27",
-  "schoolClass": "/api/v1/classes/333"
+  "schoolClass": "/api/v1/classes/299"
 }</code></pre>
 </div>
 </div>
@@ -583,7 +583,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/students/342
+Location: http://localhost:8080/api/v1/students/304
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -591,7 +591,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 404
+Content-Length: 739
 
 {
   "firstName" : "Simon",
@@ -600,13 +600,23 @@ Content-Length: 404
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/342"
+      "href" : "http://localhost:8080/api/v1/students/304"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/342"
+      "href" : "http://localhost:8080/api/v1/students/304{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/304/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/304/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/342/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/304/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/304/sportResults"
     }
   }
 }</code></pre>
@@ -701,56 +711,34 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1670
+Content-Length: 1138
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/192"
+          "href" : "http://localhost:8080/api/v1/students/218"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/192"
+          "href" : "http://localhost:8080/api/v1/students/218{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/218/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/218/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/192/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "third",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/194"
+          "href" : "http://localhost:8080/api/v1/students/218/schoolClass"
         },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/194"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/194/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "fifth",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : true,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/196"
-        },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/196"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/196/schoolClass"
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/218/sportResults"
         }
       }
     } ]
@@ -802,7 +790,7 @@ Content-Length: 1670
 <h4 id="_get_a_single_student_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/203 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/318 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -869,22 +857,32 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 385
+Content-Length: 716
 
 {
-  "firstName" : "first",
-  "lastName" : "Student",
+  "firstName" : "Liam",
+  "lastName" : "Heß",
   "birthDay" : "2002-03-28",
   "female" : true,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/203"
+      "href" : "http://localhost:8080/api/v1/students/318"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/203"
+      "href" : "http://localhost:8080/api/v1/students/318{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/318/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/318/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/203/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/318/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/318/sportResults"
     }
   }
 }</code></pre>
@@ -922,7 +920,7 @@ Content-Length: 385
 <h4 id="_get_students_by_first_name_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByFirstName?firstName=first HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByFirstName?firstName=Liam HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1000,31 +998,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 631
+Content-Length: 1001
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/392"
+          "href" : "http://localhost:8080/api/v1/students/346"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/392"
+          "href" : "http://localhost:8080/api/v1/students/346{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/346/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/346/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/392/schoolClass"
+          "href" : "http://localhost:8080/api/v1/students/346/schoolClass"
+        },
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/346/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByFirstName?firstName=first"
+      "href" : "http://localhost:8080/api/v1/students/search/findByFirstName?firstName=Liam"
     }
   }
 }</code></pre>
@@ -1062,7 +1070,7 @@ Content-Length: 631
 <h4 id="_get_students_by_last_name_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByLastName?lastName=Student HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByLastName?lastName=He%C3%9F HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1140,63 +1148,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 1534
+Content-Length: 1003
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/403"
+          "href" : "http://localhost:8080/api/v1/students/367"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/403"
+          "href" : "http://localhost:8080/api/v1/students/367{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/367/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/367/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/403/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "third",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : false,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/405"
+          "href" : "http://localhost:8080/api/v1/students/367/schoolClass"
         },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/405"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/405/schoolClass"
-        }
-      }
-    }, {
-      "firstName" : "fifth",
-      "lastName" : "Student",
-      "birthDay" : "2002-03-28",
-      "female" : true,
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:8080/api/v1/students/407"
-        },
-        "student" : {
-          "href" : "http://localhost:8080/api/v1/students/407"
-        },
-        "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/407/schoolClass"
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/367/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByLastName?lastName=Student"
+      "href" : "http://localhost:8080/api/v1/students/search/findByLastName?lastName=He%C3%9F"
     }
   }
 }</code></pre>
@@ -1238,7 +1224,7 @@ Content-Length: 1534
 <h4 id="_get_students_by_first_and_last_name_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByFirstNameAndLastName?firstName=first&amp;lastName=Student HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&amp;lastName=He%C3%9F HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -1316,31 +1302,41 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 659
+Content-Length: 1030
 
 {
   "_embedded" : {
     "students" : [ {
-      "firstName" : "first",
-      "lastName" : "Student",
+      "firstName" : "Liam",
+      "lastName" : "Heß",
       "birthDay" : "2002-03-28",
       "female" : true,
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/students/381"
+          "href" : "http://localhost:8080/api/v1/students/339"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/students/381"
+          "href" : "http://localhost:8080/api/v1/students/339{?projection}",
+          "templated" : true
+        },
+        "score" : {
+          "href" : "http://localhost:8080/api/v1/students/339/score"
+        },
+        "classification" : {
+          "href" : "http://localhost:8080/api/v1/students/339/classification"
         },
         "schoolClass" : {
-          "href" : "http://localhost:8080/api/v1/students/381/schoolClass"
+          "href" : "http://localhost:8080/api/v1/students/339/schoolClass"
+        },
+        "sportResults" : {
+          "href" : "http://localhost:8080/api/v1/students/339/sportResults"
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/search/findByFirstNameAndLastName?firstName=first&amp;lastName=Student"
+      "href" : "http://localhost:8080/api/v1/students/search/findByFirstNameAndLastName?firstName=Liam&amp;lastName=He%C3%9F"
     }
   }
 }</code></pre>
@@ -1430,17 +1426,17 @@ Content-Length: 659
 <h4 id="_edit_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/students/269 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/students/260 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 153
+Content-Length: 138
 
 {
-  "firstName": "new first name",
-  "lastName": "new last name",
+  "firstName": "Simon",
+  "lastName": "Schwarz",
   "female": false,
-  "birthDay": "2002-01-10",
-  "schoolClass": "/api/v1/classes/267"
+  "birthDay": "2002-01-27",
+  "schoolClass": "/api/v1/classes/257"
 }</code></pre>
 </div>
 </div>
@@ -1507,22 +1503,32 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 419
+Content-Length: 739
 
 {
-  "firstName" : "new first name",
-  "lastName" : "new last name",
-  "birthDay" : "2002-01-10T00:00:00.000+0000",
+  "firstName" : "Simon",
+  "lastName" : "Schwarz",
+  "birthDay" : "2002-01-27T00:00:00.000+0000",
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/269"
+      "href" : "http://localhost:8080/api/v1/students/260"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/269"
+      "href" : "http://localhost:8080/api/v1/students/260{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/260/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/260/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/269/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/260/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/260/sportResults"
     }
   }
 }</code></pre>
@@ -1612,7 +1618,7 @@ Content-Length: 419
 <h4 id="_replace_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/students/425 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/students/381 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 153
@@ -1622,7 +1628,7 @@ Content-Length: 153
   "lastName": "new last name",
   "female": false,
   "birthDay": "2002-01-10",
-  "schoolClass": "/api/v1/classes/423"
+  "schoolClass": "/api/v1/classes/378"
 }</code></pre>
 </div>
 </div>
@@ -1682,7 +1688,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/students/425
+Location: http://localhost:8080/api/v1/students/381
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1690,7 +1696,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 419
+Content-Length: 754
 
 {
   "firstName" : "new first name",
@@ -1699,13 +1705,23 @@ Content-Length: 419
   "female" : false,
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/students/425"
+      "href" : "http://localhost:8080/api/v1/students/381"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/students/425"
+      "href" : "http://localhost:8080/api/v1/students/381{?projection}",
+      "templated" : true
+    },
+    "score" : {
+      "href" : "http://localhost:8080/api/v1/students/381/score"
+    },
+    "classification" : {
+      "href" : "http://localhost:8080/api/v1/students/381/classification"
     },
     "schoolClass" : {
-      "href" : "http://localhost:8080/api/v1/students/425/schoolClass"
+      "href" : "http://localhost:8080/api/v1/students/381/schoolClass"
+    },
+    "sportResults" : {
+      "href" : "http://localhost:8080/api/v1/students/381/sportResults"
     }
   }
 }</code></pre>
@@ -1744,7 +1760,7 @@ Content-Length: 419
 <h4 id="_delete_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/students/170 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/students/204 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1775,7 +1791,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-28 17:53:47 UTC
+Last updated 2020-02-06 18:02:42 UTC
 </div>
 </div>
 </body>

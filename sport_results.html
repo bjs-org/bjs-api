@@ -502,7 +502,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/566"
+  "student":"/510"
 }</code></pre>
 </div>
 </div>
@@ -557,7 +557,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/571
+Location: http://localhost:8080/api/v1/sport_results/514
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -565,20 +565,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571"
+      "href" : "http://localhost:8080/api/v1/sport_results/514"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571"
+      "href" : "http://localhost:8080/api/v1/sport_results/514"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/571/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/514/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -665,7 +666,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 735
+Content-Length: 778
 
 {
   "_embedded" : {
@@ -674,13 +675,14 @@ Content-Length: 735
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659"
+          "href" : "http://localhost:8080/api/v1/sport_results/603"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659"
+          "href" : "http://localhost:8080/api/v1/sport_results/603"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/659/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/603/student{?projection}",
+          "templated" : true
         }
       }
     } ]
@@ -729,7 +731,7 @@ Content-Length: 735
 <h4 id="_get_a_single_result_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/541 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/485 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -792,20 +794,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 342
+Content-Length: 381
 
 {
   "result" : 6.6,
   "discipline" : "RUN_50",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541"
+      "href" : "http://localhost:8080/api/v1/sport_results/485"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541"
+      "href" : "http://localhost:8080/api/v1/sport_results/485"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/541/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/485/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -840,7 +843,7 @@ Content-Length: 342
 <h4 id="_get_result_by_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/696 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/sport_results/search/findByStudent?student=/640 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -913,7 +916,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 585
+Content-Length: 628
 
 {
   "_embedded" : {
@@ -922,20 +925,21 @@ Content-Length: 585
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698"
+          "href" : "http://localhost:8080/api/v1/sport_results/642"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698"
+          "href" : "http://localhost:8080/api/v1/sport_results/642"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/698/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/642/student{?projection}",
+          "templated" : true
         }
       }
     } ]
   },
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/696"
+      "href" : "http://localhost:8080/api/v1/sport_results/search/findByStudent?student=/640"
     }
   }
 }</code></pre>
@@ -1043,7 +1047,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 593
+Content-Length: 636
 
 {
   "_embedded" : {
@@ -1052,13 +1056,14 @@ Content-Length: 593
       "discipline" : "RUN_50",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724"
+          "href" : "http://localhost:8080/api/v1/sport_results/668"
         },
         "sportResult" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724"
+          "href" : "http://localhost:8080/api/v1/sport_results/668"
         },
         "student" : {
-          "href" : "http://localhost:8080/api/v1/sport_results/724/student"
+          "href" : "http://localhost:8080/api/v1/sport_results/668/student{?projection}",
+          "templated" : true
         }
       }
     } ]
@@ -1140,7 +1145,7 @@ Content-Length: 593
 <h4 id="_edit_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/sport_results/688 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/sport_results/632 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -1148,7 +1153,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/686"
+  "student":"/630"
 }</code></pre>
 </div>
 </div>
@@ -1210,20 +1215,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688"
+      "href" : "http://localhost:8080/api/v1/sport_results/632"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688"
+      "href" : "http://localhost:8080/api/v1/sport_results/632"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/688/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/632/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1298,7 +1304,7 @@ Content-Length: 343
 <h4 id="_replace_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/sport_results/715 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/sport_results/659 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
 Content-Length: 64
@@ -1306,7 +1312,7 @@ Content-Length: 64
 {
   "result":6.6,
   "discipline":"RUN_100",
-  "student":"/713"
+  "student":"/657"
 }</code></pre>
 </div>
 </div>
@@ -1361,7 +1367,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/sport_results/715
+Location: http://localhost:8080/api/v1/sport_results/659
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1369,20 +1375,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 343
+Content-Length: 382
 
 {
   "result" : 6.6,
   "discipline" : "RUN_100",
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715"
+      "href" : "http://localhost:8080/api/v1/sport_results/659"
     },
     "sportResult" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715"
+      "href" : "http://localhost:8080/api/v1/sport_results/659"
     },
     "student" : {
-      "href" : "http://localhost:8080/api/v1/sport_results/715/student"
+      "href" : "http://localhost:8080/api/v1/sport_results/659/student{?projection}",
+      "templated" : true
     }
   }
 }</code></pre>
@@ -1418,7 +1425,7 @@ Content-Length: 343
 <h4 id="_delete_result_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/sport_results/505 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/sport_results/449 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1449,7 +1456,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-28 17:53:47 UTC
+Last updated 2020-02-06 18:02:42 UTC
 </div>
 </div>
 </body>
