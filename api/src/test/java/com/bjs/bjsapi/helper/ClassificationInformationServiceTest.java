@@ -61,6 +61,18 @@ public class ClassificationInformationServiceTest {
     }
 
     @Test
+    void test_getValue_edgeCases_7() {
+        assertThat(informationService.getVictoryValue(true, 7)).isEqualTo(475);
+        assertThat(informationService.getHonorValue(true, 7)).isEqualTo(625);
+    }
+
+    @Test
+    void test_getValue_edgeCases_20() {
+        assertThat(informationService.getVictoryValue(true, 20)).isEqualTo(950);
+        assertThat(informationService.getHonorValue(true, 20)).isEqualTo(1150);
+    }
+
+    @Test
     public void test_getValue_female_victory_17() {
         assertThat(informationService.getValue(true, true, 17)).isEqualTo(925);
         assertThat(informationService.getVictoryValue(true, 17)).isEqualTo(925);

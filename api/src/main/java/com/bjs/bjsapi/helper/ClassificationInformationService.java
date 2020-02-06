@@ -14,78 +14,82 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class ClassificationInformationService {
 
-    private static final Logger log = LoggerFactory.getLogger(ClassificationInformationService.class);
+	private static final Logger log = LoggerFactory.getLogger(ClassificationInformationService.class);
 
-    private final ApiConfiguration apiConfiguration;
+	private final ApiConfiguration apiConfiguration;
 
-    public ClassificationInformationService(ApiConfiguration apiConfiguration) {
-        this.apiConfiguration = apiConfiguration;
-    }
+	public ClassificationInformationService(ApiConfiguration apiConfiguration) {
+		this.apiConfiguration = apiConfiguration;
+	}
 
-    public int getVictoryValue(boolean female, Integer age) {
-        if (age <= 19) {
-            return getValue(female, true, age);
-        } else {
-            return getValue(female, true, 19);
-        }
-    }
+	public int getVictoryValue(boolean female, Integer age) {
+		if (age > 19) {
+			return getValue(female, true, 19);
+		} else if (age < 8) {
+			return getValue(female, true, 8);
+		} else
+			return getValue(female, true, age);
+	}
 
-    public int getHonorValue(boolean female, Integer age) {
-        if (age <= 19) {
-            return getValue(female, false, age);
-        } else {
-            return getValue(female, false, 19);
-        }
-    }
+	public int getHonorValue(boolean female, Integer age) {
+		if (age > 19) {
+			return getValue(female, false, 19);
+		} else if (age < 8) {
+			return getValue(female, false, 8);
+		} else {
+			return getValue(female, false, age);
+		}
+	}
 
-    int getValue(boolean female, boolean victory, Integer age) {
-        URL file = apiConfiguration.getClassificationInformationFilePath();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode root = objectMapper.readTree(file);
+	int getValue(boolean female, boolean victory, Integer age) {
+		URL file = apiConfiguration.getClassificationInformationFilePath();
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			JsonNode root = objectMapper.readTree(file);
 
-            JsonNode firstLayer = giveFirstLayer(root, female);
-            JsonNode secondLayer = giveSecondLayer(firstLayer, victory);
-            JsonNode thirdLayer = giveThirdLayer(secondLayer, age);
+			JsonNode firstLayer = giveFirstLayer(root, female);
+			JsonNode secondLayer = giveSecondLayer(firstLayer, victory);
+			JsonNode thirdLayer = giveThirdLayer(secondLayer, age);
 
-            return thirdLayer.asInt();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(String.format("Could not parse file \"%s\"", file), e);
-        }
-    }
+			return thirdLayer.asInt();
+		} catch (IOException e) {
+			throw new IllegalArgumentException(String.format("Could not parse file \"%s\"", file), e);
+		}
+	}
 
-    private JsonNode giveThirdLayer(JsonNode secondLayer, Integer age) {
-        return throwIfNotAccessible(secondLayer, age.toString());
-    }
+	private JsonNode giveThirdLayer(JsonNode secondLayer, Integer age) {
+		return throwIfNotAccessible(secondLayer, age.toString());
+	}
 
-    private JsonNode giveFirstLayer(JsonNode root, boolean female) {
-        JsonNode firstLayer;
-        if (female) {
-            firstLayer = throwIfNotAccessible(root, "female");
-        } else {
-            firstLayer = throwIfNotAccessible(root, "male");
-        }
-        return firstLayer;
-    }
+	private JsonNode giveFirstLayer(JsonNode root, boolean female) {
+		JsonNode firstLayer;
+		if (female) {
+			firstLayer = throwIfNotAccessible(root, "female");
+		} else {
+			firstLayer = throwIfNotAccessible(root, "male");
+		}
+		return firstLayer;
+	}
 
-    private JsonNode giveSecondLayer(JsonNode maleFemaleInformation, boolean victory) {
-        JsonNode secondLayer;
-        if (victory) {
-            secondLayer = throwIfNotAccessible(maleFemaleInformation, "victory");
-        } else {
-            secondLayer = throwIfNotAccessible(maleFemaleInformation, "honor");
-        }
+	private JsonNode giveSecondLayer(JsonNode maleFemaleInformation, boolean victory) {
+		JsonNode secondLayer;
+		if (victory) {
+			secondLayer = throwIfNotAccessible(maleFemaleInformation, "victory");
+		} else {
+			secondLayer = throwIfNotAccessible(maleFemaleInformation, "honor");
+		}
 
-        return secondLayer;
-    }
+		return secondLayer;
+	}
 
-    private JsonNode throwIfNotAccessible(JsonNode fromJsonNode, String keyword) {
-        JsonNode returnJsonNode;
-        if (fromJsonNode.hasNonNull(keyword)) {
-            returnJsonNode = fromJsonNode.get(keyword);
-        } else {
-            throw new IllegalArgumentException(String.format("The JSON file has a wrong format. Could not find property \"%s\"", keyword));
-        }
-        return returnJsonNode;
-    }
+	private JsonNode throwIfNotAccessible(JsonNode fromJsonNode, String keyword) {
+		JsonNode returnJsonNode;
+		if (fromJsonNode.hasNonNull(keyword)) {
+			returnJsonNode = fromJsonNode.get(keyword);
+		} else {
+			throw new IllegalArgumentException(String.format("The JSON file has a wrong format. Could not find property \"%s\"", keyword));
+		}
+		return returnJsonNode;
+	}
+
 }
