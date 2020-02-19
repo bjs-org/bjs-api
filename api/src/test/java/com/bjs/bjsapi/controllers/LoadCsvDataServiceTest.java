@@ -52,7 +52,7 @@ class LoadCsvDataServiceTest {
 	}
 
 	@Test
-	void test_wrongFormat_noClassName() throws IOException {
+	void test_noClassName() throws IOException {
 		final Path path = Paths.get("src/test/resources/sample_student_csv_no_class_name.csv");
 		final List<String> strings = Files.readAllLines(path);
 
@@ -72,7 +72,7 @@ class LoadCsvDataServiceTest {
 	}
 
 	@Test
-	void test_wrongFormat_multipleClasses() throws IOException {
+	void test_multipleClasses() throws IOException {
 		final Path path = Paths.get("src/test/resources/sample_student_csv_multiple_classes.csv");
 		final List<String> strings = Files.readAllLines(path);
 
@@ -89,11 +89,11 @@ class LoadCsvDataServiceTest {
 		assertThat(allValues)
 			.anySatisfy(schoolClass -> {
 				assertThat(schoolClass.getGrade()).isEqualTo("8");
-				assertThat(schoolClass.getGrade()).isEqualTo("a");
+				assertThat(schoolClass.getClassName()).isEqualTo("a");
 			})
 			.anySatisfy(schoolClass -> {
 				assertThat(schoolClass.getGrade()).isEqualTo("8");
-				assertThat(schoolClass.getGrade()).isEqualTo("b");
+				assertThat(schoolClass.getClassName()).isEqualTo("b");
 			});
 	}
 
