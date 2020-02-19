@@ -1,4 +1,4 @@
-﻿"Nachname"   ;"Vorname" ;"Klasse";"Geburtsdatum";"Geschlecht"
-"Borstelmann";"Ayk"     ;"8a"    ;28.03.2002    ;"m"
-"Buscemi"    ;"Jalen"   ;"8a"    ;24.11.2001    ;"m"
-"Heß"        ;"Liam Sky";"8a"    ;15.08.2001    ;"m"
+﻿"Nachname";"Vorname";"Klasse";"Geburtsdatum";"Geschlecht"
+"Borstelmann";"Ayk";"8a";28.03.2002;"m"
+"Buscemi";"Jalen";"8a";24.11.2001;"m"
+"Heß";"Liam Sky";"8a";15.08.2001;"m"

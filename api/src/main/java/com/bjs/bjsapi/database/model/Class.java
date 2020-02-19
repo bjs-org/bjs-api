@@ -1,6 +1,7 @@
 package com.bjs.bjsapi.database.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -84,6 +85,22 @@ public class Class {
 	@Override
 	public String toString() {
 		return String.format("Class{id=%d, grade='%s', className='%s', classTeacherName='%s'}", id, grade, className, classTeacherName);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Class)) return false;
+		Class aClass = (Class) o;
+		return Objects.equals(getId(), aClass.getId()) &&
+			getGrade().equals(aClass.getGrade()) &&
+			getClassName().equals(aClass.getClassName()) &&
+			Objects.equals(getClassTeacherName(), aClass.getClassTeacherName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getGrade(), getClassName(), getClassTeacherName());
 	}
 
 }
