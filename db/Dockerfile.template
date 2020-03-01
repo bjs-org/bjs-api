@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN /etc/init.d/postgresql start &&\
-    psql --command "ALTER USER postgres WITH SUPERUSER PASSWORD 'postgres';" &&\
+    psql --command "ALTER USER postgres WITH SUPERUSER PASSWORD 'bjs-org';" &&\
     createdb -O postgres db
 
 # Adjust PostgreSQL configuration so that remote connections to the

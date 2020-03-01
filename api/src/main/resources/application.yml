@@ -8,9 +8,9 @@ spring:
       base-path: /api/v1
   
   datasource:
-    url: jdbc:postgresql://bjs.system.model.db:5432/db
+    url: jdbc:postgresql://db:5432/db
     username: postgres
-    password: postgres
+    password: bjs-org
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -35,5 +35,3 @@ spring:
 logging:
   file:
     name: logs/bjs-api.log
-    
-    
