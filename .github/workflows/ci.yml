@@ -43,13 +43,13 @@ jobs:
 
   deploy-balena:
     needs: [build]
-    name: Deploy to Balena Cloud
+    name: Trigger Deploy
     runs-on: [ubuntu-latest]
     if: github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v1
-      - name: Balena Push
-        uses: theaccordance/balena-push@v1.0.0
+      - name: Dispatch
+        uses: peter-evans/repository-dispatch@v1.0.0
         with:
-          api-token: ${{secrets.BALENA_API_TOKEN}}
-          application-name: ${{secrets.BALENA_APPLICATION_NAME}}
+          token: ${{ secrets.PAT }}
+          repository: bjs-org/bjs-org
+          event-type: docker-deploy
