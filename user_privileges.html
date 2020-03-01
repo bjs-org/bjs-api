@@ -487,11 +487,11 @@ The user will get a <code>403 Forbidden</code> if he requests, edits or deletes 
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/user_privileges/ HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 77
+Content-Length: 75
 
 {
-  "accessibleClass": "/api/v1/classes/124",
-  "user": "/api/v1/users/122"
+  "accessibleClass": "/api/v1/classes/39",
+  "user": "/api/v1/users/37"
 }</code></pre>
 </div>
 </div>
@@ -541,7 +541,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/user_privileges/127
+Location: http://localhost:8080/api/v1/user_privileges/42
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -549,21 +549,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 414
+Content-Length: 410
 
 {
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/127"
+      "href" : "http://localhost:8080/api/v1/user_privileges/42"
     },
     "userPrivilege" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/127"
-    },
-    "user" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/127/user"
+      "href" : "http://localhost:8080/api/v1/user_privileges/42"
     },
     "accessibleClass" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/127/accessibleClass"
+      "href" : "http://localhost:8080/api/v1/user_privileges/42/accessibleClass"
+    },
+    "user" : {
+      "href" : "http://localhost:8080/api/v1/user_privileges/42/user"
     }
   }
 }</code></pre>
@@ -645,23 +645,23 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 819
+Content-Length: 815
 
 {
   "_embedded" : {
     "user_privileges" : [ {
       "_links" : {
         "self" : {
-          "href" : "http://localhost:8080/api/v1/user_privileges/121"
+          "href" : "http://localhost:8080/api/v1/user_privileges/36"
         },
         "userPrivilege" : {
-          "href" : "http://localhost:8080/api/v1/user_privileges/121"
-        },
-        "user" : {
-          "href" : "http://localhost:8080/api/v1/user_privileges/121/user"
+          "href" : "http://localhost:8080/api/v1/user_privileges/36"
         },
         "accessibleClass" : {
-          "href" : "http://localhost:8080/api/v1/user_privileges/121/accessibleClass"
+          "href" : "http://localhost:8080/api/v1/user_privileges/36/accessibleClass"
+        },
+        "user" : {
+          "href" : "http://localhost:8080/api/v1/user_privileges/36/user"
         }
       }
     } ]
@@ -710,7 +710,7 @@ Content-Length: 819
 <h4 id="_get_a_single_user_by_id_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/user_privileges/132 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/user_privileges/47 HTTP/1.1
 Accept: application/json
 Host: localhost:8080</code></pre>
 </div>
@@ -768,21 +768,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 414
+Content-Length: 410
 
 {
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/132"
+      "href" : "http://localhost:8080/api/v1/user_privileges/47"
     },
     "userPrivilege" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/132"
-    },
-    "user" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/132/user"
+      "href" : "http://localhost:8080/api/v1/user_privileges/47"
     },
     "accessibleClass" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/132/accessibleClass"
+      "href" : "http://localhost:8080/api/v1/user_privileges/47/accessibleClass"
+    },
+    "user" : {
+      "href" : "http://localhost:8080/api/v1/user_privileges/47/user"
     }
   }
 }</code></pre>
@@ -851,13 +851,13 @@ Content-Length: 414
 <h4 id="_edit_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/user_privileges/167 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PATCH /api/v1/user_privileges/82 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 46
+Content-Length: 45
 
 {
-  "accessibleClass": "/api/v1/classes/165"
+  "accessibleClass": "/api/v1/classes/80"
 }</code></pre>
 </div>
 </div>
@@ -914,21 +914,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 414
+Content-Length: 410
 
 {
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/167"
+      "href" : "http://localhost:8080/api/v1/user_privileges/82"
     },
     "userPrivilege" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/167"
-    },
-    "user" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/167/user"
+      "href" : "http://localhost:8080/api/v1/user_privileges/82"
     },
     "accessibleClass" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/167/accessibleClass"
+      "href" : "http://localhost:8080/api/v1/user_privileges/82/accessibleClass"
+    },
+    "user" : {
+      "href" : "http://localhost:8080/api/v1/user_privileges/82/user"
     }
   }
 }</code></pre>
@@ -997,14 +997,14 @@ Content-Length: 414
 <h4 id="_replace_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/user_privileges/162 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/user_privileges/77 HTTP/1.1
 Accept: application/json
 Host: localhost:8080
-Content-Length: 77
+Content-Length: 75
 
 {
-  "accessibleClass": "/api/v1/classes/160",
-  "user": "/api/v1/users/158"
+  "accessibleClass": "/api/v1/classes/75",
+  "user": "/api/v1/users/73"
 }</code></pre>
 </div>
 </div>
@@ -1054,7 +1054,7 @@ Vary: Access-Control-Request-Headers
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Location: http://localhost:8080/api/v1/user_privileges/162
+Location: http://localhost:8080/api/v1/user_privileges/77
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -1062,21 +1062,21 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 414
+Content-Length: 410
 
 {
   "_links" : {
     "self" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/162"
+      "href" : "http://localhost:8080/api/v1/user_privileges/77"
     },
     "userPrivilege" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/162"
-    },
-    "user" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/162/user"
+      "href" : "http://localhost:8080/api/v1/user_privileges/77"
     },
     "accessibleClass" : {
-      "href" : "http://localhost:8080/api/v1/user_privileges/162/accessibleClass"
+      "href" : "http://localhost:8080/api/v1/user_privileges/77/accessibleClass"
+    },
+    "user" : {
+      "href" : "http://localhost:8080/api/v1/user_privileges/77/user"
     }
   }
 }</code></pre>
@@ -1112,7 +1112,7 @@ Content-Length: 414
 <h4 id="_delete_student_http_request">HTTP request</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/user_privileges/111 HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/user_privileges/26 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1143,7 +1143,7 @@ X-Frame-Options: DENY</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-02-06 18:49:49 UTC
+Last updated 2020-03-01 17:00:00 UTC
 </div>
 </div>
 </body>
