@@ -116,7 +116,7 @@ public class TopStudentsControllerTest {
 			.setSchoolClass(class7A)
 			.createStudent();
 
-		Class class7B = new ClassBuilder().setGrade("7").setClassName("A").createClass();
+		Class class7B = new ClassBuilder().setGrade("7").setClassName("B").createClass();
 
 		class7B_student1 = new StudentBuilder()
 			.setFirstName("Marius")

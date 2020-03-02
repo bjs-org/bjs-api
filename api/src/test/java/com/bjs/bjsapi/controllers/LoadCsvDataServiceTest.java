@@ -110,7 +110,7 @@ class LoadCsvDataServiceTest {
 		ArgumentCaptor<Student> studentArgumentCaptor = ArgumentCaptor.forClass(Student.class);
 		ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
 
-		verify(classRepository, atLeastOnce()).save(classArgumentCaptor.capture());
+		verify(classRepository, times(1)).save(classArgumentCaptor.capture());
 		verify(studentRepository, atLeastOnce()).save(studentArgumentCaptor.capture());
 
 		final Class capturedClass = classArgumentCaptor.getValue();
