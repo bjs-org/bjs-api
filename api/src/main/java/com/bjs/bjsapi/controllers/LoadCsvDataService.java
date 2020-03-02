@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ import com.bjs.bjsapi.database.repository.StudentRepository;
 
 @Service
 public class LoadCsvDataService {
+
+	private static final String GRADE_CLASSNAME_REGEX = "^(?<grade>\\d+)(?<className>\\w)$";
+	private static final String DEFAULT_HEADER_ROW = "Nachname;Vorname;Klasse;Geburtsdatum;Geschlecht";
 
 	private final StudentRepository studentRepository;
 	private final ClassRepository classRepository;
@@ -36,38 +41,57 @@ public class LoadCsvDataService {
 	}
 
 	public void loadCsv(List<String> lines) {
-		lines.remove(0);
 
-		final List<List<String>> csv = lines.stream()
-			.map(this::splitLine)
-			.collect(toList());
+		if (lines.size() > 0) {
+			validateFormat(lines.remove(0));
 
-		csv.stream()
-			.map(this::parseClass)
-			.distinct()
-			.forEach(classRepository::save);
+			lines.stream()
+				.map(this::splitLine)
+				.collect(Collectors.groupingBy(this::parseClass, Collectors.mapping(this::parseStudent, toList())))
+				.entrySet()
+				.stream()
+				.peek(classListEntry -> classRepository.save(classListEntry.getKey()))
+				.peek(classListEntry -> classListEntry.getValue().forEach(student -> student.setSchoolClass(classListEntry.getKey())))
+				.forEach(classListEntry -> classListEntry.getValue().stream().distinct().forEach(studentRepository::save));
+		}
+	}
 
-		csv.stream()
-			.map(this::parseStudent)
-			.distinct()
-			.forEach(studentRepository::save);
+	private void validateFormat(String header) throws IllegalArgumentException {
+		final List<String> columns = splitLine(header);
+
+		if (columns.size() != 5)
+			throw new IllegalArgumentException(String.format("Could not parse format, expected 5 columns but got %d", columns.size()));
 	}
 
 	private Class parseClass(List<String> line) {
 		final String classInformation = line.get(2);
-		return new ClassBuilder()
-			.setGrade(classInformation.substring(0, 1))
-			.setClassName(classInformation.substring(1))
-			.createClass();
+
+		final Pattern pattern = Pattern.compile(GRADE_CLASSNAME_REGEX);
+		final Matcher matcher = pattern.matcher(classInformation);
+		if (matcher.matches()) {
+			return new ClassBuilder()
+				.setGrade(matcher.group("grade"))
+				.setClassName(matcher.group("className"))
+				.createClass();
+		} else {
+			return new ClassBuilder()
+				.setGrade(classInformation)
+				.setClassName("")
+				.createClass();
+		}
 	}
 
-	private Student parseStudent(List<String> line) {
-		return new StudentBuilder()
-			.setFirstName(line.get(1))
-			.setLastName(line.get(0))
-			.setBirthDay(Date.valueOf(LocalDate.parse(line.get(3), DateTimeFormatter.ofPattern("dd.MM.uuuu"))))
-			.setFemale(line.get(4).equals("w"))
-			.createStudent();
+	private Student parseStudent(List<String> line) throws IllegalArgumentException{
+		try {
+			return new StudentBuilder()
+				.setFirstName(line.get(1))
+				.setLastName(line.get(0))
+				.setBirthDay(Date.valueOf(LocalDate.parse(line.get(3), DateTimeFormatter.ofPattern("dd.MM.uuuu"))))
+				.setFemale(line.get(4).equals("w"))
+				.createStudent();
+		} catch (Exception e) {
+			throw new IllegalArgumentException(String.format("Could not parse line \"%s\"", line.toString()));
+		}
 	}
 
 }
