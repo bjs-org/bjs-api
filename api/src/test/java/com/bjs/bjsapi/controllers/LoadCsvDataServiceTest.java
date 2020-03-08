@@ -39,7 +39,7 @@ class LoadCsvDataServiceTest {
 
 	@Test
 	void test_empty() {
-		loadCsvDataService.loadCsv(Collections.emptyList());
+		loadCsvDataService.loadAndSaveCsv(Collections.emptyList());
 	}
 
 	@Test
@@ -52,41 +52,28 @@ class LoadCsvDataServiceTest {
 	}
 
 	@Test
-	void test_noClassName() throws IOException {
+	void test_loadCsv_noClassName() throws IOException {
 		final Path path = Paths.get("src/test/resources/sample_student_csv_no_class_name.csv");
 		final List<String> strings = Files.readAllLines(path);
 
-		when(classRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
-		when(studentRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
+		final List<Class> classes = loadCsvDataService.loadCsv(strings);
+		final Class firstClass = classes.get(0);
 
-		loadCsvDataService.loadCsv(strings);
-
-		ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
-
-		verify(classRepository, atLeastOnce()).save(classArgumentCaptor.capture());
-
-		final Class capturedClass = classArgumentCaptor.getValue();
-
-		assertThat(capturedClass.getClassName()).isEqualTo("");
-		assertThat(capturedClass.getGrade()).isEqualTo("EF");
+		assertThat(classes)
+			.anySatisfy(schoolClass -> {
+				assertThat(firstClass.getClassName()).isEqualTo("");
+				assertThat(firstClass.getGrade()).isEqualTo("EF");
+			});
 	}
 
 	@Test
-	void test_multipleClasses() throws IOException {
+	void test_loadCsv_multipleClasses() throws IOException {
 		final Path path = Paths.get("src/test/resources/sample_student_csv_multiple_classes.csv");
 		final List<String> strings = Files.readAllLines(path);
 
-		when(classRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
-		when(studentRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
+		final List<Class> classes = loadCsvDataService.loadCsv(strings);
 
-		loadCsvDataService.loadCsv(strings);
-
-		ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
-
-		verify(classRepository, atLeastOnce()).save(classArgumentCaptor.capture());
-
-		final List<Class> allValues = classArgumentCaptor.getAllValues();
-		assertThat(allValues)
+		assertThat(classes)
 			.anySatisfy(schoolClass -> {
 				assertThat(schoolClass.getGrade()).isEqualTo("8");
 				assertThat(schoolClass.getClassName()).isEqualTo("a");
@@ -98,14 +85,14 @@ class LoadCsvDataServiceTest {
 	}
 
 	@Test
-	void test_loadCsv() throws IOException {
+	void test_loadCsvAndSave() throws IOException {
 		final Path path = Paths.get("src/test/resources/sample_student_csv.csv");
 		final List<String> strings = Files.readAllLines(path);
 
 		when(classRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
 		when(studentRepository.save(any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
 
-		loadCsvDataService.loadCsv(strings);
+		loadCsvDataService.loadAndSaveCsv(strings);
 
 		ArgumentCaptor<Student> studentArgumentCaptor = ArgumentCaptor.forClass(Student.class);
 		ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);

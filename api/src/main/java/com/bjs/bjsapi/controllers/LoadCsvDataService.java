@@ -6,7 +6,10 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -34,26 +37,43 @@ public class LoadCsvDataService {
 		this.classRepository = classRepository;
 	}
 
-	private List<String> splitLine(String line) {
-		return Arrays.stream(line.split(";"))
-			.map(s -> s.replaceAll("\"", ""))
-			.collect(Collectors.toList());
-	}
-
-	public void loadCsv(List<String> lines) {
-
+	public List<Class> loadCsv(List<String> lines) {
 		if (lines.size() > 0) {
 			validateFormat(lines.remove(0));
 
-			lines.stream()
+			return lines.stream()
 				.map(this::splitLine)
 				.collect(Collectors.groupingBy(this::parseClass, Collectors.mapping(this::parseStudent, toList())))
 				.entrySet()
 				.stream()
-				.peek(classListEntry -> classRepository.save(classListEntry.getKey()))
 				.peek(classListEntry -> classListEntry.getValue().forEach(student -> student.setSchoolClass(classListEntry.getKey())))
-				.forEach(classListEntry -> classListEntry.getValue().stream().distinct().forEach(studentRepository::save));
+				.peek(classListEntry -> classListEntry.setValue(classListEntry.getValue().stream().distinct().collect(toList())))
+				.peek(classListEntry -> classListEntry.getKey().setStudents(classListEntry.getValue()))
+				.map(Map.Entry::getKey)
+				.collect(Collectors.toList());
 		}
+		return Collections.emptyList();
+	}
+
+	public List<Class> loadAndSaveCsv(List<String> lines) {
+		final List<Class> classStudentMap = loadCsv(lines);
+		save(classStudentMap);
+		return classStudentMap;
+	}
+
+	private void save(List<Class> classes) {
+		classes
+			.stream()
+			.peek(classRepository::save)
+			.map(Class::getStudents)
+			.flatMap(Collection::stream)
+			.forEach(studentRepository::save);
+	}
+
+	private List<String> splitLine(String line) {
+		return Arrays.stream(line.split(";"))
+			.map(s -> s.replaceAll("\"", ""))
+			.collect(Collectors.toList());
 	}
 
 	private void validateFormat(String header) throws IllegalArgumentException {
@@ -81,7 +101,7 @@ public class LoadCsvDataService {
 		}
 	}
 
-	private Student parseStudent(List<String> line) throws IllegalArgumentException{
+	private Student parseStudent(List<String> line) throws IllegalArgumentException {
 		try {
 			return new StudentBuilder()
 				.setFirstName(line.get(1))
