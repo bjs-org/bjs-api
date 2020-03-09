@@ -27,7 +27,7 @@ import com.bjs.bjsapi.database.repository.StudentRepository;
 public class LoadCsvDataService {
 
 	private static final String GRADE_CLASSNAME_REGEX = "^(?<grade>\\d+)(?<className>\\w)$";
-	private static final String DEFAULT_HEADER_ROW = "Nachname;Vorname;Klasse;Geburtsdatum;Geschlecht";
+	private static final String DEFAULT_FORMAT = "<lastname>;<firstname>;<grade><className>;<birthday>;<gender(m or w)>";
 
 	private final StudentRepository studentRepository;
 	private final ClassRepository classRepository;
@@ -80,7 +80,7 @@ public class LoadCsvDataService {
 		final List<String> columns = splitLine(header);
 
 		if (columns.size() != 5)
-			throw new IllegalArgumentException(String.format("Could not parse format, expected 5 columns but got %d", columns.size()));
+			throw new IllegalArgumentException(String.format("Could not parse format, expected 5 columns in the format \"%s\" but got %d", DEFAULT_FORMAT, columns.size()));
 	}
 
 	private Class parseClass(List<String> line) {
@@ -110,7 +110,7 @@ public class LoadCsvDataService {
 				.setFemale(line.get(4).equals("w"))
 				.createStudent();
 		} catch (Exception e) {
-			throw new IllegalArgumentException(String.format("Could not parse line \"%s\"", line.toString()));
+			throw new IllegalArgumentException(String.format("Could not parse line \"%s\", it does not matches the format \"%s\"", line.toString(), DEFAULT_FORMAT));
 		}
 	}
 
