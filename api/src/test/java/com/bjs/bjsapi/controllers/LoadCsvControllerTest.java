@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.bjs.bjsapi.TestSecurityConfiguration;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
-@WebMvcTest
+@WebMvcTest(controllers = LoadCsvController.class)
 @Import(TestSecurityConfiguration.class)
 class LoadCsvControllerTest {
 
