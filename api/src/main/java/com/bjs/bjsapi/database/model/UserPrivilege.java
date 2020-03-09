@@ -8,6 +8,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "user_privileges")
 public class UserPrivilege {
@@ -18,43 +31,12 @@ public class UserPrivilege {
 
 	@ManyToOne
 	@JoinColumn
+	@EqualsAndHashCode.Exclude
 	private User user;
 
 	@ManyToOne
 	@JoinColumn
+	@EqualsAndHashCode.Exclude
 	private Class accessibleClass;
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Class getAccessibleClass() {
-		return accessibleClass;
-	}
-
-	public void setAccessibleClass(Class accessibleClass) {
-		this.accessibleClass = accessibleClass;
-	}
-
-	public UserPrivilege() {
-	}
-
-	public UserPrivilege(User user, Class accessibleClass) {
-		this.user = user;
-		this.accessibleClass = accessibleClass;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("UserPrivilege{id=%d, user=%s, accessibleClass=%s}", id, user, accessibleClass);
-	}
 
 }

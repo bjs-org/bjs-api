@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bjs.bjsapi.database.model.User;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
 class UserRepositoryEventHandlerTest {
@@ -34,7 +33,7 @@ class UserRepositoryEventHandlerTest {
 	void test_beforeCreate() {
 		String password = "password";
 
-		User user = new UserBuilder().setUsername("testUser").createUser();
+		User user = User.builder().username("testUser").build();
 		user.setPassword(password);
 		userRepositoryEventHandler.onBeforeCreate(user);
 
@@ -46,12 +45,12 @@ class UserRepositoryEventHandlerTest {
 		String newPassword = "password";
 		String username = "user";
 
-		User oldUser = new UserBuilder().setUsername(username).createUser();
+		User oldUser = User.builder().username(username).build();
 		oldUser.setPassword(passwordEncoder.encode("old password"));
 
 		doReturn(Optional.of(oldUser)).when(userRepository).findById(any());
 
-		User newUser = new UserBuilder().setUsername(username).createUser();
+		User newUser = User.builder().username(username).build();
 		newUser.setPassword(newPassword);
 
 		userRepositoryEventHandler.onBeforeSave(newUser);
@@ -66,12 +65,12 @@ class UserRepositoryEventHandlerTest {
 
 		String encodedPassword = passwordEncoder.encode(password);
 
-		User oldUser = new UserBuilder().setUsername(username).createUser();
+		User oldUser = User.builder().username(username).build();
 		oldUser.setPassword(encodedPassword);
 
 		doReturn(Optional.of(oldUser)).when(userRepository).findById(any());
 
-		User newUser = new UserBuilder().setUsername(username).createUser();
+		User newUser = User.builder().username(username).build();
 		newUser.setPassword(encodedPassword);
 		newUser.setAdministrator(true);
 

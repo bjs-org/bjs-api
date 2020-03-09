@@ -7,7 +7,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bjs.bjsapi.database.model.User;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
 import com.bjs.bjsapi.database.repository.UserRepository;
 
 @Service
@@ -25,7 +24,7 @@ public class Initializer implements CommandLineRunner {
 	public void run(String... args) {
 		runAsAdmin(() -> {
 			if (!userRepository.findByUsername("admin").isPresent()) {
-				User admin = new UserBuilder().setUsername("admin").createUser();
+				User admin = User.builder().username("admin").build();
 				admin.setAdministrator(true);
 				admin.setPassword(passwordEncoder.encode("admin"));
 				userRepository.save(admin);

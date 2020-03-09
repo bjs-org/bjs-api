@@ -3,8 +3,6 @@ package com.bjs.bjsapi.helper;
 import java.io.IOException;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.bjs.bjsapi.config.ApiConfiguration;
@@ -13,8 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ClassificationInformationService {
-
-	private static final Logger log = LoggerFactory.getLogger(ClassificationInformationService.class);
 
 	private final ApiConfiguration apiConfiguration;
 

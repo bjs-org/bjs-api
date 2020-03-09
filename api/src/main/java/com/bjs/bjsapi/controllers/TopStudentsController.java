@@ -9,8 +9,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.hateoas.EntityModel;
@@ -42,8 +40,6 @@ public class TopStudentsController {
 	private final ClassRepository classRepository;
 	private final EntityLinks entityLinks;
 	private final StudentPermissionEvaluator studentPermissionEvaluator;
-
-	private Logger log = LoggerFactory.getLogger(TopStudentsController.class);
 
 	public TopStudentsController(StudentCalculationService studentCalculationService, StudentRepository studentRepository, ClassRepository classRepository, EntityLinks entityLinks, StudentPermissionEvaluator studentPermissionEvaluator) {
 		this.studentCalculationService = studentCalculationService;
