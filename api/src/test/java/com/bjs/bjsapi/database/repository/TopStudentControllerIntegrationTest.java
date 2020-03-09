@@ -24,9 +24,7 @@ import org.springframework.restdocs.request.ParameterDescriptor;
 import com.bjs.bjsapi.controllers.StudentCalculationService;
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.StudentBuilder;
-import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
+import com.bjs.bjsapi.database.model.UserPrivilege;
 
 public class TopStudentControllerIntegrationTest extends RepositoryIntegrationTest {
 
@@ -108,32 +106,32 @@ public class TopStudentControllerIntegrationTest extends RepositoryIntegrationTe
 		runAsAdmin(() -> {
 			testData.setupUsers();
 
-			Class class7a = classRepository.save(new ClassBuilder().setClassName("A").setGrade("7").setClassTeacherName("Teacher").createClass());
-			Class class7b = classRepository.save(new ClassBuilder().setClassName("B").setGrade("7").setClassTeacherName("Teacher").createClass());
+			Class class7a = classRepository.save(Class.builder().className("A").grade("7").classTeacherName("Teacher").build());
+			Class class7b = classRepository.save(Class.builder().className("B").grade("7").classTeacherName("Teacher").build());
 
 			// 7B
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Moritz").setLastName("Bushaltestellenwart").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Casper").setLastName("Flugpilot").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Alfred").setLastName("Taxifahrer").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Moritz").lastName("Bushaltestellenwart").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Casper").lastName("Flugpilot").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Alfred").lastName("Taxifahrer").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
 
 			// 7A
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Liam").setLastName("Gott").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Ayk").setLastName("Teufel").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Dominic").setLastName("Arzt").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(false).createStudent());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Liam").lastName("Gott").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Ayk").lastName("Teufel").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Dominic").lastName("Arzt").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(false).build());
 
 			// 7A
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Anja").setLastName("Chefin").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Simone").setLastName("Mauerer").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7a).setFirstName("Nicole").setLastName("Arbeitslose").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Anja").lastName("Chefin").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Simone").lastName("Mauerer").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
+			studentRepository.save(Student.builder().schoolClass(class7a).firstName("Nicole").lastName("Arbeitslose").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
 
 			// 7B
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Anke").setLastName("Chirog").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Betina").setLastName("Notfallarzt").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
-			studentRepository.save(new StudentBuilder().setSchoolClass(class7b).setFirstName("Marie").setLastName("Lastkraftfahrerin").setBirthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).setFemale(true).createStudent());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Anke").lastName("Chirog").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Betina").lastName("Notfallarzt").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
+			studentRepository.save(Student.builder().schoolClass(class7b).firstName("Marie").lastName("Lastkraftfahrerin").birthDay(Date.valueOf(LocalDate.of(2000, 1, 1))).female(true).build());
 
 			when(studentCalculationService.calculateScore(any())).thenAnswer(invocation -> invocation.<Student>getArgument(0).getId().intValue() * 100);
 
-			userPrivilegeRepository.save(new UserPrivilegeBuilder().setAccessibleClass(class7a).setUser(testData.user).createUserPrivilege());
+			userPrivilegeRepository.save(UserPrivilege.builder().accessibleClass(class7a).user(testData.user).build());
 		});
 	}
 

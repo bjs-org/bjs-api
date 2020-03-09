@@ -1,32 +1,17 @@
 package com.bjs.bjsapi.controllers.responses;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MaleFemaleResponse<T> {
 
 	private T male;
 	private T female;
-
-	public MaleFemaleResponse(T male, T female) {
-		this.male = male;
-		this.female = female;
-	}
-
-	public MaleFemaleResponse() {
-	}
-
-	public T getMale() {
-		return male;
-	}
-
-	public void setMale(T male) {
-		this.male = male;
-	}
-
-	public T getFemale() {
-		return female;
-	}
-
-	public void setFemale(T female) {
-		this.female = female;
-	}
 
 }

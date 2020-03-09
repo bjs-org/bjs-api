@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.StudentBuilder;
 import com.bjs.bjsapi.database.repository.ClassRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 
@@ -89,26 +87,26 @@ public class LoadCsvDataService {
 		final Pattern pattern = Pattern.compile(GRADE_CLASSNAME_REGEX);
 		final Matcher matcher = pattern.matcher(classInformation);
 		if (matcher.matches()) {
-			return new ClassBuilder()
-				.setGrade(matcher.group("grade"))
-				.setClassName(matcher.group("className"))
-				.createClass();
+			return Class.builder()
+				.grade(matcher.group("grade"))
+				.className(matcher.group("className"))
+				.build();
 		} else {
-			return new ClassBuilder()
-				.setGrade(classInformation)
-				.setClassName("")
-				.createClass();
+			return Class.builder()
+				.grade(classInformation)
+				.className("")
+				.build();
 		}
 	}
 
 	private Student parseStudent(List<String> line) throws IllegalArgumentException {
 		try {
-			return new StudentBuilder()
-				.setFirstName(line.get(1))
-				.setLastName(line.get(0))
-				.setBirthDay(Date.valueOf(LocalDate.parse(line.get(3), DateTimeFormatter.ofPattern("dd.MM.uuuu"))))
-				.setFemale(line.get(4).equals("w"))
-				.createStudent();
+			return Student.builder()
+				.firstName(line.get(1))
+				.lastName(line.get(0))
+				.birthDay(Date.valueOf(LocalDate.parse(line.get(3), DateTimeFormatter.ofPattern("dd.MM.uuuu"))))
+				.female(line.get(4).equals("w"))
+				.build();
 		} catch (Exception e) {
 			throw new IllegalArgumentException(String.format("Could not parse line \"%s\", it does not matches the format \"%s\"", line.toString(), DEFAULT_FORMAT));
 		}

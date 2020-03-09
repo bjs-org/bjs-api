@@ -3,18 +3,16 @@ package com.bjs.bjsapi.config;
 import java.io.IOException;
 import java.net.URL;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
 @ConfigurationProperties(prefix = "api")
+@Slf4j
 public class ApiConfiguration {
-
-	private static final Logger log = LoggerFactory.getLogger(ApiConfiguration.class);
-
 	private String calculationInformationFile = "calculation_information.json";
 	private String classificationInformationFile = "classification_information.json";
 

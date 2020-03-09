@@ -3,6 +3,7 @@ package com.bjs.bjsapi.database.model;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,19 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "students")
 public class Student {
@@ -44,87 +58,12 @@ public class Student {
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	@JsonBackReference
+	@EqualsAndHashCode.Exclude
 	private Class schoolClass;
 
 	@OneToMany(mappedBy = "student")
+	@EqualsAndHashCode.Exclude
 	private List<SportResult> sportResults;
-
-	public Boolean getFemale() {
-		return female;
-	}
-
-	public void setFemale(Boolean female) {
-		this.female = female;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public Date getBirthDay() {
-		return birthDay;
-	}
-
-	public void setBirthDay(Date birthDay) {
-		this.birthDay = birthDay;
-	}
-
-	public Class getSchoolClass() {
-		return schoolClass;
-	}
-
-	public void setSchoolClass(Class schoolClass) {
-		this.schoolClass = schoolClass;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public List<SportResult> getSportResults() {
-		return sportResults;
-	}
-
-	public void setSportResults(List<SportResult> sportResults) {
-		this.sportResults = sportResults;
-	}
-
-	public Student() {
-	}
-
-	public Student(String firstName, String lastName, Date birthDay, Class schoolClass, Boolean female) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.birthDay = birthDay;
-		this.schoolClass = schoolClass;
-		this.female = female;
-	}
-
-	public Student(Long id, String firstName, String lastName, Date birthDay, Class schoolClass, Boolean female) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.birthDay = birthDay;
-		this.schoolClass = schoolClass;
-		this.female = female;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Student{id=%d, firstName='%s', lastName='%s', birthDay=%s, female=%s, schoolClass=%s}", id, firstName, lastName, birthDay, female, schoolClass);
-	}
 
 	public int getAgeByYear(Clock clock) {
 		final int birthYear = Instant.ofEpochMilli(getBirthDay().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().getYear();

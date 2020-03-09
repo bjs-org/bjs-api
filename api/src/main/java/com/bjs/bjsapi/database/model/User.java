@@ -10,6 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "users")
 public class User {
@@ -25,65 +38,13 @@ public class User {
 	private String password;
 
 	@OneToMany(mappedBy = "user")
+	@EqualsAndHashCode.Exclude
 	private List<UserPrivilege> userPrivileges;
 
+	@Builder.Default
 	private Boolean enabled = true;
 
-	private boolean administrator = false;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public boolean getAdministrator() {
-		return administrator;
-	}
-
-	public void setAdministrator(boolean administrator) {
-		this.administrator = administrator;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public User() {
-	}
-
-	public User(String username, String password, Boolean enabled, Boolean administrator) {
-		this.username = username;
-		this.password = password;
-		this.enabled = enabled;
-		this.administrator = administrator;
-	}
-
-	public User(String username) {
-		this.username = username;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("User{id=%d, username='%s', password='%s', enabled=%s, administrator=%s}", id, username, password, enabled, administrator);
-	}
+	@Builder.Default
+	private Boolean administrator = false;
 
 }

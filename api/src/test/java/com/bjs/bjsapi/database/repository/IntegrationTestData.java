@@ -13,11 +13,6 @@ import com.bjs.bjsapi.database.model.Student;
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.database.model.UserPrivilege;
 import com.bjs.bjsapi.database.model.enums.DisciplineType;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.SportResultBuilder;
-import com.bjs.bjsapi.database.model.helper.StudentBuilder;
-import com.bjs.bjsapi.database.model.helper.UserBuilder;
-import com.bjs.bjsapi.database.model.helper.UserPrivilegeBuilder;
 
 @TestConfiguration
 public class IntegrationTestData {
@@ -56,16 +51,16 @@ public class IntegrationTestData {
 
 	public boolean setupUsers() {
 		if (userRepository != null) {
-			user = userRepository.save(new UserBuilder()
-				.setUsername("abcd")
-				.setPassword(encoder.encode("password"))
-				.createUser());
+			user = userRepository.save(User.builder()
+				.username("abcd")
+				.password(encoder.encode("password"))
+				.build());
 
-			admin = userRepository.save(new UserBuilder()
-				.setUsername("administrator")
-				.setPassword(encoder.encode("admin"))
-				.setAdministrator(true)
-				.createUser());
+			admin = userRepository.save(User.builder()
+				.username("administrator")
+				.password(encoder.encode("admin"))
+				.administrator(true)
+				.build());
 
 			return true;
 		} else {
@@ -75,22 +70,22 @@ public class IntegrationTestData {
 
 	public boolean setupClasses() {
 		if (setupUsers() && classRepository != null && userPrivilegeRepository != null) {
-			accessibleClass = classRepository.save(new ClassBuilder()
-				.setClassName("a")
-				.setGrade("8")
-				.setClassTeacherName("ABC")
-				.createClass());
+			accessibleClass = classRepository.save(Class.builder()
+				.className("a")
+				.grade("8")
+				.classTeacherName("ABC")
+				.build());
 
-			inaccessibleClass = classRepository.save(new ClassBuilder()
-				.setClassName("b")
-				.setGrade("8")
-				.setClassTeacherName("ABC")
-				.createClass());
+			inaccessibleClass = classRepository.save(Class.builder()
+				.className("b")
+				.grade("8")
+				.classTeacherName("ABC")
+				.build());
 
-			accessClassPrivilege = userPrivilegeRepository.save(new UserPrivilegeBuilder()
-				.setAccessibleClass(accessibleClass)
-				.setUser(user)
-				.createUserPrivilege());
+			accessClassPrivilege = userPrivilegeRepository.save(UserPrivilege.builder()
+				.accessibleClass(accessibleClass)
+				.user(user)
+				.build());
 
 			return true;
 		} else {
@@ -100,21 +95,21 @@ public class IntegrationTestData {
 
 	public boolean setupStudents() {
 		if (setupClasses() && studentRepository != null) {
-			accessibleStudent = studentRepository.save(new StudentBuilder()
-				.setFirstName("Liam")
-				.setLastName("Heß")
-				.setSchoolClass(accessibleClass)
-				.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-				.setFemale(true)
-				.createStudent());
+			accessibleStudent = studentRepository.save(Student.builder()
+				.firstName("Liam")
+				.lastName("Heß")
+				.schoolClass(accessibleClass)
+				.birthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
+				.female(true)
+				.build());
 
-			inaccessibleStudent = studentRepository.save(new StudentBuilder()
-				.setFirstName("Jalen")
-				.setLastName("Buscemi")
-				.setSchoolClass(inaccessibleClass)
-				.setBirthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
-				.setFemale(true)
-				.createStudent());
+			inaccessibleStudent = studentRepository.save(Student.builder()
+				.firstName("Jalen")
+				.lastName("Buscemi")
+				.schoolClass(inaccessibleClass)
+				.birthDay(Date.valueOf(LocalDate.of(2002, 3, 28)))
+				.female(true)
+				.build());
 
 			return true;
 		} else {
@@ -124,8 +119,8 @@ public class IntegrationTestData {
 
 	public boolean setupSportResults() {
 		if (setupStudents() && sportResultRepository != null) {
-			accessibleStudentsResult = sportResultRepository.save(new SportResultBuilder().setStudent(accessibleStudent).setDiscipline(DisciplineType.RUN_50).setResult(6.6F).createSportResult());
-			inaccessibleStudentsResult = sportResultRepository.save(new SportResultBuilder().setStudent(inaccessibleStudent).setDiscipline(DisciplineType.RUN_50).setResult(6.6F).createSportResult());
+			accessibleStudentsResult = sportResultRepository.save(SportResult.builder().student(accessibleStudent).discipline(DisciplineType.RUN_50).result(6.6F).build());
+			inaccessibleStudentsResult = sportResultRepository.save(SportResult.builder().student(inaccessibleStudent).discipline(DisciplineType.RUN_50).result(6.6F).build());
 
 			return true;
 		} else {

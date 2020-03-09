@@ -14,8 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import com.bjs.bjsapi.database.model.Class;
 import com.bjs.bjsapi.database.model.Student;
-import com.bjs.bjsapi.database.model.helper.ClassBuilder;
-import com.bjs.bjsapi.database.model.helper.StudentBuilder;
 import com.bjs.bjsapi.database.repository.ClassRepository;
 import com.bjs.bjsapi.database.repository.StudentRepository;
 import com.bjs.bjsapi.security.evaluators.StudentPermissionEvaluator;
@@ -83,71 +81,71 @@ public class TopStudentsControllerTest {
 
 	private void setupScenario() {
 		//GIVEN
-		Class class7A = new ClassBuilder().setGrade("7").setClassName("A").createClass();
+		Class class7A = Class.builder().grade("7").className("A").build();
 
-		class7A_student1 = new StudentBuilder()
-			.setFirstName("Liam")
-			.setLastName("Heß")
-			.setFemale(false)
-			.setSchoolClass(class7A)
-			.createStudent();
-		Student class7A_student2 = new StudentBuilder()
-			.setFirstName("Ayk")
-			.setLastName("Borstelmann")
-			.setFemale(false)
-			.setSchoolClass(class7A)
-			.createStudent();
-		class7A_student3 = new StudentBuilder()
-			.setFirstName("Lucy")
-			.setLastName("Schmitz")
-			.setFemale(true)
-			.setSchoolClass(class7A)
-			.createStudent();
-		Student class7A_student4 = new StudentBuilder()
-			.setFirstName("Domenic")
-			.setLastName("Becker")
-			.setFemale(false)
-			.setSchoolClass(class7A)
-			.createStudent();
-		class7A_student5 = new StudentBuilder()
-			.setFirstName("Lisa")
-			.setLastName("Pahlings")
-			.setFemale(true)
-			.setSchoolClass(class7A)
-			.createStudent();
+		class7A_student1 = Student.builder()
+			.firstName("Liam")
+			.lastName("Heß")
+			.female(false)
+			.schoolClass(class7A)
+			.build();
+		Student class7A_student2 = Student.builder()
+			.firstName("Ayk")
+			.lastName("Borstelmann")
+			.female(false)
+			.schoolClass(class7A)
+			.build();
+		class7A_student3 = Student.builder()
+			.firstName("Lucy")
+			.lastName("Schmitz")
+			.female(true)
+			.schoolClass(class7A)
+			.build();
+		Student class7A_student4 = Student.builder()
+			.firstName("Domenic")
+			.lastName("Becker")
+			.female(false)
+			.schoolClass(class7A)
+			.build();
+		class7A_student5 = Student.builder()
+			.firstName("Lisa")
+			.lastName("Pahlings")
+			.female(true)
+			.schoolClass(class7A)
+			.build();
 
-		Class class7B = new ClassBuilder().setGrade("7").setClassName("B").createClass();
+		Class class7B = Class.builder().grade("7").className("B").build();
 
-		class7B_student1 = new StudentBuilder()
-			.setFirstName("Marius")
-			.setLastName("Runkel")
-			.setFemale(false)
-			.setSchoolClass(class7B)
-			.createStudent();
-		class7B_student2 = new StudentBuilder()
-			.setFirstName("Patrick")
-			.setLastName("Salz")
-			.setFemale(false)
-			.setSchoolClass(class7B)
-			.createStudent();
-		Student class7B_student3 = new StudentBuilder()
-			.setFirstName("Jalen")
-			.setLastName("Buscemi")
-			.setFemale(false)
-			.setSchoolClass(class7B)
-			.createStudent();
-		Student class7B_student4 = new StudentBuilder()
-			.setFirstName("Tim")
-			.setLastName("Schmitt")
-			.setFemale(false)
-			.setSchoolClass(class7B)
-			.createStudent();
-		class7B_student5 = new StudentBuilder()
-			.setFirstName("Johanna")
-			.setLastName("Müller")
-			.setFemale(true)
-			.setSchoolClass(class7B)
-			.createStudent();
+		class7B_student1 = Student.builder()
+			.firstName("Marius")
+			.lastName("Runkel")
+			.female(false)
+			.schoolClass(class7B)
+			.build();
+		class7B_student2 = Student.builder()
+			.firstName("Patrick")
+			.lastName("Salz")
+			.female(false)
+			.schoolClass(class7B)
+			.build();
+		Student class7B_student3 = Student.builder()
+			.firstName("Jalen")
+			.lastName("Buscemi")
+			.female(false)
+			.schoolClass(class7B)
+			.build();
+		Student class7B_student4 = Student.builder()
+			.firstName("Tim")
+			.lastName("Schmitt")
+			.female(false)
+			.schoolClass(class7B)
+			.build();
+		class7B_student5 = Student.builder()
+			.firstName("Johanna")
+			.lastName("Müller")
+			.female(true)
+			.schoolClass(class7B)
+			.build();
 
 		doReturn(1024).when(studentRestService).calculateScore(class7A_student1);
 		doReturn(921).when(studentRestService).calculateScore(class7A_student2);
