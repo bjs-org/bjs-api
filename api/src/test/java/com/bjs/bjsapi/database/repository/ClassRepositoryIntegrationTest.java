@@ -240,6 +240,10 @@ class ClassRepositoryIntegrationTest extends RepositoryIntegrationTest {
 				pathParameters(idDescriptor)))
 			.andExpect(status().isNoContent());
 
+		mvc.perform(get("/api/v1/classes/{id}", testData.accessibleClass.getId())
+			.with(asAdmin()))
+			.andExpect(status().isNotFound());
+
 		mvc.perform(delete("/api/v1/classes/{id}", testData.inaccessibleClass.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());

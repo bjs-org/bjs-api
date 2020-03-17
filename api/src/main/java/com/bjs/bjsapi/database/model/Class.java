@@ -43,4 +43,8 @@ public class Class {
 	@OneToMany(mappedBy = "schoolClass")
 	private List<Student> students;
 
+	@EqualsAndHashCode.Exclude
+	@OneToMany(mappedBy = "accessibleClass")
+	private List<UserPrivilege> privileges;
+
 }

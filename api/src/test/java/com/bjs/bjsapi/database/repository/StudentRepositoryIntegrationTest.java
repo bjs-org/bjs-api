@@ -452,6 +452,10 @@ class StudentRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
 
+		mvc.perform(get("/api/v1/students/{id}", testData.accessibleStudent.getId())
+			.with(asAdmin()))
+			.andExpect(status().isNotFound());
+
 		mvc.perform(delete("/api/v1/students/{id}", testData.inaccessibleStudent.getId())
 			.with(asAdmin()))
 			.andExpect(status().isNoContent());
