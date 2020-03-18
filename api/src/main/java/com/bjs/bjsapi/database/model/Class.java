@@ -49,4 +49,7 @@ public class Class {
 	@OneToMany(mappedBy = "accessibleClass")
 	private List<UserPrivilege> privileges;
 
+	public void setClosed(boolean closed){
+		classClosed = closed;
+	}
 }
