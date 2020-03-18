@@ -39,6 +39,8 @@ public class Class {
 
 	private String classTeacherName;
 
+	private boolean classClosed;
+
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "schoolClass")
 	private List<Student> students;
