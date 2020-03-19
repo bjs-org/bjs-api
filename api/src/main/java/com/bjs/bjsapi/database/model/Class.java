@@ -43,10 +43,12 @@ public class Class {
 
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "schoolClass")
+	@ToString.Exclude
 	private List<Student> students;
 
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "accessibleClass")
+	@ToString.Exclude
 	private List<UserPrivilege> privileges;
 
 }

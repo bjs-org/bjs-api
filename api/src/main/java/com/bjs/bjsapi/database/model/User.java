@@ -39,6 +39,7 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	private List<UserPrivilege> userPrivileges;
 
 	@Builder.Default

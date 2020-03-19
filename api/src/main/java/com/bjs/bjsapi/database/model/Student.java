@@ -63,6 +63,7 @@ public class Student {
 
 	@OneToMany(mappedBy = "student")
 	@EqualsAndHashCode.Exclude
+	@ToString.Exclude
 	private List<SportResult> sportResults;
 
 	public int getAgeByYear(Clock clock) {
