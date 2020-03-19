@@ -39,7 +39,7 @@ public class Class {
 
 	private String classTeacherName;
 
-	private boolean classClosed;
+	private Boolean classClosed;
 
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "schoolClass")
@@ -49,7 +49,4 @@ public class Class {
 	@OneToMany(mappedBy = "accessibleClass")
 	private List<UserPrivilege> privileges;
 
-	public void setClosed(boolean closed){
-		classClosed = closed;
-	}
 }
