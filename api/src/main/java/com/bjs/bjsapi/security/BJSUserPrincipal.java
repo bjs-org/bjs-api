@@ -53,13 +53,17 @@ public class BJSUserPrincipal implements UserDetails {
 		return user.getEnabled();
 	}
 
-	public User getUser() {
-		return user;
-	}
-
 	@Override
 	public String toString() {
 		return String.format("BJSUserPrincipal{user=%s}", user);
+	}
+
+	public UserInfo toUserInfo() {
+		return UserInfo.builder()
+			.enabled(user.getEnabled())
+			.username(user.getUsername())
+			.administrator(user.getAdministrator())
+			.build();
 	}
 
 }
