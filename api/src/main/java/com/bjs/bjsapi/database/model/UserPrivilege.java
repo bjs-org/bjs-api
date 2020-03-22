@@ -30,12 +30,12 @@ public class UserPrivilege {
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	@EqualsAndHashCode.Exclude
 	private User user;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(nullable = false)
 	@EqualsAndHashCode.Exclude
 	private Class accessibleClass;
 
