@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.bjs.bjsapi.database.model.Class;
+import com.bjs.bjsapi.database.model.ClassExcerpt;
 
 @RepositoryRestResource(collectionResourceRel = "classes", path = "classes")
 public interface ClassRepository extends CrudRepository<Class, Long> {

@@ -8,6 +8,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import com.bjs.bjsapi.database.model.User;
+import com.bjs.bjsapi.database.model.ClassExcerpt;
 
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RepositoryRestResource(path = "users", collectionResourceRel = "users")
