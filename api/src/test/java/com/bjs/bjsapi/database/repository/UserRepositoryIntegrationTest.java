@@ -60,7 +60,7 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 		super.setUp();
 		JacksonTester.initFields(this, objectMapper);
 		RunWithAuthentication.runAsAdmin(() -> {
-			testData.setupUsers();
+			testData.setupClasses();
 		});
 		SecurityHelper.reset();
 	}
@@ -236,6 +236,10 @@ class UserRepositoryIntegrationTest extends RepositoryIntegrationTest {
 			.andDo(document("users-delete", pathParameters(
 				parameterWithName("id").description("The user's id")
 			)));
+
+		mvc.perform(get("/api/v1/users/{id}", testData.user.getId())
+			.with(asAdmin()))
+			.andExpect(status().isNotFound());
 	}
 
 }
