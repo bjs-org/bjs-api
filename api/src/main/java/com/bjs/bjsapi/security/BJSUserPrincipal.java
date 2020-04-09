@@ -60,7 +60,6 @@ public class BJSUserPrincipal implements UserDetails {
 
 	public UserInfo toUserInfo() {
 		return UserInfo.builder()
-			.enabled(user.getEnabled())
 			.username(user.getUsername())
 			.administrator(user.getAdministrator())
 			.build();
