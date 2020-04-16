@@ -1,4 +1,4 @@
-package com.bjs.bjsapi.controllers;
+package com.bjs.bjsapi.controllers.auth;
 
 import java.util.Optional;
 
@@ -20,8 +20,7 @@ public class AuthenticationController {
 	public ResponseEntity<?> getAuthenticationInformation(Authentication authentication) {
 		return Optional
 			.of(authentication)
-			.map(Authentication::getPrincipal)
-			.map(principal -> principal instanceof BJSUserPrincipal ? (BJSUserPrincipal) principal : null)
+			.map(AuthenticationHelper::convertToUserPrinciple)
 			.map(BJSUserPrincipal::toUserInfo)
 			.map(ResponseEntity::ok)
 			.orElse(ResponseEntity

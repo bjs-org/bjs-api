@@ -15,10 +15,10 @@ import com.bjs.bjsapi.security.BJSUserPrincipal;
 import com.bjs.bjsapi.security.UserInfo;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 class UserInfoController {
 
-	@GetMapping("/auth")
+	@GetMapping("")
 	public ResponseEntity<?> principal(Principal principal) {
 		if (principal instanceof UsernamePasswordAuthenticationToken) {
 			final UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;

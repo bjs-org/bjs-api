@@ -23,7 +23,7 @@ import com.bjs.bjsapi.database.model.Class;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/classes/upload")
 @Import(MvcConfiguration.class)
 @Slf4j
 public class LoadCsvController {
@@ -37,7 +37,7 @@ public class LoadCsvController {
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@PostMapping("/classes/upload")
+	@PostMapping("")
 	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile multipartFile) {
 		try {
 			final List<String> input = parseLines(multipartFile);

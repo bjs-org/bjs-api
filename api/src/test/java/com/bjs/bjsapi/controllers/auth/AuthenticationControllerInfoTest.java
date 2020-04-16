@@ -1,4 +1,4 @@
-package com.bjs.bjsapi.controllers;
+package com.bjs.bjsapi.controllers.auth;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -14,12 +14,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.bjs.bjsapi.controllers.auth.AuthenticationController;
 import com.bjs.bjsapi.database.model.User;
 import com.bjs.bjsapi.security.BJSUserDetailsService;
 import com.bjs.bjsapi.security.BJSUserPrincipal;
 
 @WebMvcTest(AuthenticationController.class)
-class AuthenticationControllerTest {
+class AuthenticationControllerInfoTest {
 
 	@MockBean
 	private BJSUserDetailsService bjsUserDetailsService;
